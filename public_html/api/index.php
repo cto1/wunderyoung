@@ -76,15 +76,27 @@ $router->addRoute('GET', '/auth/verify', function($params, $data, $context) use 
 });
 
 // Generate JWT token (after magic link verification)
-$router->addRoute('POST', '/auth/token', function($params, $data, $context) use ($jwtAuth) {
+$router->addRoute('POST', '/auth/token', function($params, $data, $context) use ($jwtAuth, $userAuthAPI) {
     if (!isset($data['id']) || !isset($data['email'])) {
         return ['status' => 'error', 'message' => 'User ID and email are required'];
     }
     
+    // Verify user exists in database and email matches
+    $profileResult = $userAuthAPI->getProfile($data['id']);
+    if ($profileResult['status'] !== 'success') {
+        return ['status' => 'error', 'message' => 'User not found'];
+    }
+    
+    // Verify email matches the user in database
+    if ($profileResult['user']['email'] !== $data['email']) {
+        return ['status' => 'error', 'message' => 'Email mismatch'];
+    }
+    
+    // Use actual user data from database (not from request)
     $userData = [
-        'id' => $data['id'],
-        'email' => $data['email'],
-        'plan' => $data['plan'] ?? 'free'
+        'id' => $profileResult['user']['id'],
+        'email' => $profileResult['user']['email'],
+        'plan' => $profileResult['user']['plan']
     ];
     
     $token = $jwtAuth->generateToken($userData);
