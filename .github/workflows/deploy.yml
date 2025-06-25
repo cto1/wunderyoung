@@ -18,17 +18,9 @@ jobs:
           138.199.204.246 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBGS4Syof9Q1yXo+/40ugg7C9VPxcDsyJUz7Kz6zFr0v4tGDnz7eRGtuLpy8/foujnQCGbh6BFUiXtSP79hrIG4=
           138.199.204.246 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILhYbyu5jAdq32voODMDlUDmBNqCsouqx0VE9zItq+cz
     
-    - name: Deploy app folder
+    - name: Allfolder
       run: |
-        rsync -avz --delete --exclude='.env*' --exclude='vendor/' --exclude='.htaccess' ./public_html/app/ root@138.199.204.246:/var/www/dailyhomework/public_html/app/
-        
-    - name: Deploy API folder
-      run: |
-        rsync -avz --delete --exclude='.env*' --exclude='vendor/' --exclude='database/' --exclude='.htaccess' ./public_html/api/ root@138.199.204.246:/var/www/dailyhomework/public_html/api/
-        
-    - name: Deploy website folder
-      run: |
-        rsync -avz --delete --exclude='.env*' --exclude='vendor/' --exclude='.htaccess' ./public_html/website/ root@138.199.204.246:/var/www/dailyhomework/public_html/website/
+        rsync -avz --delete --exclude='.env*'  --exclude='database/' --exclude='vendor/' --exclude='.htaccess' ./public_html/ root@138.199.204.246:/var/www/dailyhomework/public_html/
         
     - name: Deploy Apache configuration
       run: |
