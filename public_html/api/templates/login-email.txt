@@ -1,0 +1,13 @@
+Your DailyHome.Work Login Link
+
+Click the link below to securely log into your DailyHome.Work account:
+
+{{LOGIN_LINK}}
+
+SECURITY NOTE: This link will expire in 1 hour for your security. If you didn't request this login link, please ignore this email.
+
+Happy learning!
+The DailyHome.Work Team
+
+---
+This email was sent to {{EMAIL}}. If you didn't request this login link, please ignore this email. 

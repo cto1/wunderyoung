@@ -68,10 +68,22 @@ class UserAuthAPI {
     private function sendLoginEmail($email, $token) {
         $loginLink = getenv('APP_URL') . "/verify.php?token=" . $token . "&email=" . urlencode($email);
         error_log('Login link: ' . $loginLink);
-        $subject = "Your Daily Homework Login Link";
-        $textContent = "Click here to login: " . $loginLink;
-        $htmlContent = "<p>Click <a href='" . $loginLink . "'>here to login</a> to Daily Homework.</p>";
-        return $this->sendEmail($email, $subject, $textContent, $htmlContent);
+        
+        require_once 'EmailTemplates.php';
+        $emailTemplates = new EmailTemplates();
+        $template = $emailTemplates->getLoginEmail($email, $loginLink);
+        
+        return $this->sendEmail($email, $template['subject'], $template['text'], $template['html']);
+    }
+
+    private function sendWelcomeEmail($email, $token) {
+        $loginLink = getenv('APP_URL') . "/verify.php?token=" . $token . "&email=" . urlencode($email);
+        
+        require_once 'EmailTemplates.php';
+        $emailTemplates = new EmailTemplates();
+        $template = $emailTemplates->getWelcomeEmail($email, $loginLink);
+        
+        return $this->sendEmail($email, $template['subject'], $template['text'], $template['html']);
     }
 
     // 1. Sign up with email
@@ -103,8 +115,30 @@ class UserAuthAPI {
             $stmt->execute([$data['email']]);
             $userId = $this->pdo->lastInsertId();
 
+            // Generate welcome token for immediate access
+            $token = bin2hex(random_bytes(32));
+            $expires = date('Y-m-d H:i:s', strtotime('+24 hours')); // 24 hour expiry for welcome email
+
+            // Save welcome token
+            $stmt = $this->pdo->prepare("
+                INSERT INTO magic_links (user_id, token, expires_at) 
+                VALUES (?, ?, ?)
+            ");
+            $stmt->execute([$userId, $token, $expires]);
+
             $this->pdo->commit();
-            return ['status' => 'success', 'user_id' => $userId];
+
+            // Send welcome email with login link
+            if (!$this->sendWelcomeEmail($data['email'], $token)) {
+                error_log("Failed to send welcome email to: " . $data['email']);
+                // Don't fail signup if email fails - user can still request login later
+            }
+
+            return [
+                'status' => 'success', 
+                'user_id' => $userId,
+                'message' => 'Account created successfully! Check your email for getting started instructions.'
+            ];
 
         } catch (Exception $e) {
             if ($this->pdo->inTransaction()) {
