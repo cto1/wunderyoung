@@ -1,0 +1,44 @@
+name: Deploy Daily Homework App and API
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up SSH
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        known_hosts: |
+          138.199.204.246 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCsps4S1lCBQ64qCRC2g2K7mqyZVJPjBXQt3TLqLn/QTTxYc+YSmQx/B7v8oVFsFzqPnQ9DvM34MPBT8KS34zsHyy7V2G0/yNS7F/ji5SM5e8K/nLwhmqVqjsFsm/HUkpyaX17qvPQtm6TQ6yHIACCvtjGuKF7JWHlj9AYXvh/pYvik1MRkmuptFgQBO9jZYg0yLz5r30AG8tH2eT/TcWEZ1Q/NpaSB2TsETtfjVwUNEk2R0oCal6UNvXowwOwwCwD5LPjiBMj7PIaJBqpoek1Sj3fiNBr8INqSUpsYMU5NhovNJWPii3oXxsZStcz6JrdV8m0hMQQx+v6803KUmoUng0Yr49pO8D3ePxh2aBpADdZcfmGysqItFNIb4suyOXLT0q7mIO6OsurxGf0GvKj0/Ol5CuOZw39MIfSyWJmhQudfMdtCCEcZtSU7nJWnztnZC9mx1HWlU/vto4LOPwzHWShcq091RCeCj+IeHYmQ1rBnXeGD/ud7lMrVsyGWeyk=
+          138.199.204.246 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBGS4Syof9Q1yXo+/40ugg7C9VPxcDsyJUz7Kz6zFr0v4tGDnz7eRGtuLpy8/foujnQCGbh6BFUiXtSP79hrIG4=
+          138.199.204.246 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILhYbyu5jAdq32voODMDlUDmBNqCsouqx0VE9zItq+cz
+    
+    - name: Deploy app folder
+      run: |
+        rsync -avz --delete --exclude='.env*' --exclude='vendor/' --exclude='.htaccess' ./public_html/app/ root@138.199.204.246:/var/www/dailyhomework/public_html/app/
+        
+    - name: Deploy API folder
+      run: |
+        rsync -avz --delete --exclude='.env*' --exclude='vendor/' --exclude='database/' --exclude='.htaccess' ./public_html/api/ root@138.199.204.246:/var/www/dailyhomework/public_html/api/
+        
+    - name: Deploy website folder
+      run: |
+        rsync -avz --delete --exclude='.env*' --exclude='vendor/' --exclude='.htaccess' ./public_html/website/ root@138.199.204.246:/var/www/dailyhomework/public_html/website/
+        
+    - name: Deploy Apache configuration
+      run: |
+        rsync -avz ./apache/dailyhomework.conf root@138.199.204.246:/etc/apache2/sites-available/
+        ssh root@138.199.204.246 "a2ensite dailyhomework.conf && systemctl reload apache2"
+        
+    - name: Set proper permissions
+      run: |
+        ssh root@138.199.204.246 "chown -R www-data:www-data /var/www/dailyhomework/public_html && chmod -R 755 /var/www/dailyhomework/public_html && chmod -R 700 /var/www/dailyhomework/public_html/api/database"
+        
+    - name: Log deployment
+      run: |
+        ssh root@138.199.204.246 "echo \"[$(date)] Daily Homework deployment completed\" >> /var/www/deploy-logs.txt" 
