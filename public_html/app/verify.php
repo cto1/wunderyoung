@@ -15,7 +15,7 @@ if (empty($token) || empty($email)) {
 <!DOCTYPE html>
 <html data-theme="winter">
 <head>
-    <title>Verifying Login - ExactSum</title>
+    <title>Verifying Login - Daily Homework</title>
     
     <?php
     // Add Hotjar tracking code only for production environment (exactsum.com)
@@ -51,10 +51,9 @@ if (empty($token) || empty($email)) {
             const email = "<?php echo htmlspecialchars($email); ?>";
             const token = "<?php echo htmlspecialchars($token); ?>";
             
-            console.log(email);
-            console.log(token);
+            console.log("Email:", email);
+            console.log("Token:", token);
 
-    
             try {
                 // Step 1: Verify the email token
                 console.log("Verifying email token...");
@@ -66,34 +65,16 @@ if (empty($token) || empty($email)) {
                     throw new Error(verifyData.message || 'Verification failed');
                 }
                 
-                // Check if this is an email client crawler accessing the link
-                if (verifyData.crawler_access === true) {
-                    console.log("Email client crawler detected - showing success page");
-                    document.getElementById('loading-container').innerHTML = `
-                        <h2 class="var-head-content text-3xl">Link Verified</h2>
-                        <p class="var-text-content text-lg">Your invitation link is valid and ready to use.</p>
-                        <p class="text-sm text-gray-500 mt-4">Please click the link in your email from your browser to complete the login process.</p>
-                    `;
-                    return; // Don't proceed with authentication for crawler access
-                }
-                
-                // Get the user_id from the verification response
-                const userId = verifyData.user_id;
-                
-                if (!userId) {
-                    throw new Error('User ID not returned from verification');
-                }
-                
-                // Step 2: Get a JWT token using the user_id
-                console.log("Getting JWT token with user_id:", userId);
+                // Step 2: Get a JWT token using the verified user data
+                console.log("Getting JWT token...");
                 const tokenResponse = await fetch('/api/auth/token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ 
-                        user_id: userId,
-                        email: email 
+                        user_id: verifyData.id,
+                        email: verifyData.email 
                     }),
                 });
                 
@@ -106,17 +87,13 @@ if (empty($token) || empty($email)) {
                 
                 // Save JWT token and user info to localStorage
                 localStorage.setItem('jwt_token', tokenData.token);
-                
-                if (tokenData.user) {
-                    localStorage.setItem('user_id', tokenData.user.user_id);
-                    localStorage.setItem('org_id', tokenData.user.org_id);
-                    localStorage.setItem('user_email', tokenData.user.email);
-                    localStorage.setItem('user_role', tokenData.user.role);
-                }
+                localStorage.setItem('user_id', verifyData.id);
+                localStorage.setItem('user_email', verifyData.email);
+                localStorage.setItem('user_plan', verifyData.plan);
                 
                 console.log("Authentication successful, redirecting to dashboard");
                 // Redirect to dashboard
-                window.location.href = '/app/vault.php';
+                window.location.href = '/app/';
                 
             } catch (error) {
                 console.error('Authentication error:', error);
@@ -130,7 +107,7 @@ if (empty($token) || empty($email)) {
         window.onload = getJwtToken;
     </script>
     <style>
-        body,h2,p{
+        body, h2, p {
             margin: 0 !important;
             padding: 0 !important;
         }
@@ -148,7 +125,7 @@ if (empty($token) || empty($email)) {
         }
         .loader-container {
             display: flex;
-            justify-content: center; /* Center horizontally */
+            justify-content: center;
         }
         .loader {
             width: 85px;
@@ -160,35 +137,31 @@ if (empty($token) || empty($email)) {
                               linear-gradient(#463AA2 50px, transparent 0),
                               linear-gradient(#463AA2 50px, transparent 0),
                               linear-gradient(#463AA2 50px, transparent 0);
-            background-position: 0px center, 15px center, 30px center, 45px center, 60px center, 75px center, 90px center;
+            background-position: 0px center, 15px center, 30px center, 45px center, 60px center, 75px center;
             animation: rikSpikeRoll 0.65s linear infinite alternate;
-          }
-        @keyframes rikSpikeRoll {
-          0% { background-size: 10px 3px;}
-          16% { background-size: 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px, 10px 3px}
-          33% { background-size: 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px}
-          50% { background-size: 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px}
-          66% { background-size: 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px}
-          83% { background-size: 10px 3px, 10px 3px,  10px 10px, 10px 30px, 10px 50px, 10px 3px}
-          100% { background-size: 10px 3px, 10px 3px, 10px 3px,  10px 10px, 10px 30px, 10px 50px}
         }
-        .var-head-content{
+        @keyframes rikSpikeRoll {
+            0% { background-size: 10px 3px; }
+            16% { background-size: 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px, 10px 3px; }
+            33% { background-size: 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px; }
+            50% { background-size: 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px; }
+            66% { background-size: 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px; }
+            83% { background-size: 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px; }
+            100% { background-size: 10px 3px, 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px; }
+        }
+        .var-head-content {
             font-size: 2rem;
             margin-bottom: 1rem !important;
         }
-        .var-text-content{
+        .var-text-content {
             font-size: 1.2rem;
             margin-bottom: 2.5rem !important;
         }
-        .x_icon{
-            width: 5rem;
-            margin-bottom: 1rem !important;
-        }
-        .err-head-content{
+        .err-head-content {
             font-size: 2rem;
             margin-bottom: 1rem !important;
         }
-        .err-text-content{
+        .err-text-content {
             font-size: 1.2rem;
             color: #FF4C4C;
             text-decoration: underline;
@@ -239,25 +212,24 @@ if (empty($token) || empty($email)) {
     
 </head>
 <body>
-    <div class="main-cont bg-base-300">
-
-        <div id="loading-container" class="m-5 p-5 sm:p-10 rounded-md space-y-2 border border-gray-400/50 bg-base-100 shadow-2xl">
-            <h2 class="var-head-content text-3xl">Verifying your login</h2>
-            <p class="var-text-content text-lg">Please wait while we complete the authentication process.</p>
-            <div class="loader-container">
-                <div class="loader"></div>
+    <div class="main-cont">
+        <div>
+            <div id="loading-container">
+                <div>
+                    <div class="loader-container">
+                        <div class="loader"></div>
+                    </div>
+                    <h2 class="var-head-content">Verifying Your Login</h2>
+                    <p class="var-text-content">Please wait while we verify your login link...</p>
+                </div>
+            </div>
+            
+            <div id="error-container">
+                <h2 class="err-head-content">Verification Failed</h2>
+                <p class="err-text-content" id="error-message">An error occurred during verification.</p>
+                <a href="/app/login.php" style="color: #463AA2; text-decoration: underline;">Try logging in again</a>
             </div>
         </div>
-        
-        <div id="error-container" class="m-5 p-5 sm:p-10 rounded-md space-y-2 border border-gray-400/50 bg-base-100 shadow-2xl">
-            <img src="./assets/icons/x_icon.png" alt="x-icon" class="x_icon mx-auto">
-            <h2 class="err-head-content text-3xl">Authentication Error!</h2>
-            <p id="error-message" class="err-text-content"></p>
-            <a href="./login.php">
-                <button class="back-button" role="button">Return to Login</button>
-            </a>
-        </div>
-        
     </div>
 </body>
 </html>

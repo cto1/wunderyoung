@@ -15,15 +15,58 @@ class UserAuthAPI {
     }
 
     private function sendEmail($to, $subject, $textContent, $htmlContent) {
-        // For now, we'll just log the email - you can implement actual email sending later
-        error_log("Email to: $to");
-        error_log("Subject: $subject");
-        error_log("Login link: " . strip_tags($textContent));
-        return true; // Simulate successful sending
+        $mailgunDomain = getenv('MAILGUN_DOMAIN');
+        $mailgunApiKey = getenv('MAILGUN_API_KEY');
+        
+        if (!$mailgunDomain || !$mailgunApiKey) {
+            error_log("Mailgun not configured - logging email instead");
+            error_log("Email to: $to");
+            error_log("Subject: $subject");
+            error_log("Login link: " . strip_tags($textContent));
+            return true; // Simulate successful sending
+        }
+
+        $url = "https://api.mailgun.net/v3/{$mailgunDomain}/messages";
+        
+        $postData = [
+            'from' => "Daily Homework <noreply@{$mailgunDomain}>",
+            'to' => $to,
+            'subject' => $subject,
+            'text' => $textContent,
+            'html' => $htmlContent
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt($ch, CURLOPT_USERPWD, "api:{$mailgunApiKey}");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/x-www-form-urlencoded'
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            error_log("Curl error: " . $error);
+            return false;
+        }
+
+        if ($httpCode >= 200 && $httpCode < 300) {
+            error_log("Email sent successfully to: $to");
+            return true;
+        } else {
+            error_log("Failed to send email. HTTP Code: $httpCode, Response: $response");
+            return false;
+        }
     }
 
     private function sendLoginEmail($email, $token) {
-        $loginLink = getenv('APP_URL') . "/app/verify.php?token=" . $token . "&email=" . urlencode($email);
+        $loginLink = getenv('APP_URL') . "/verify.php?token=" . $token . "&email=" . urlencode($email);
         error_log('Login link: ' . $loginLink);
         $subject = "Your Daily Homework Login Link";
         $textContent = "Click here to login: " . $loginLink;

@@ -15,6 +15,78 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body data-theme="light">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"></path>
+                    </svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li>
+                        <details>
+                            <summary>Homework</summary>
+                            <ul>
+                                <li class="menu-title">By Age</li>
+                                <li><a href="#age-3">Age 3 (Nursery)</a></li>
+                                <li><a href="#age-4">Age 4 (Reception)</a></li>
+                                <li><a href="#age-5">Age 5 (Year 1)</a></li>
+                                <li><a href="#age-6">Age 6 (Year 2)</a></li>
+                                <li><a href="#age-7">Age 7 (Year 3)</a></li>
+                                <li><a href="#age-8">Age 8 (Year 4)</a></li>
+                                <li><a href="#age-9">Age 9 (Year 5)</a></li>
+                                <li><a href="#age-10">Age 10 (Year 6)</a></li>
+                                <li><a href="#age-11">Age 11 (Year 6)</a></li>
+                                <li class="menu-title">By Subject</li>
+                                <li><a href="#english">English</a></li>
+                                <li><a href="#maths">Maths</a></li>
+                                <li><a href="#spanish">Spanish</a></li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#samples">Free Sample</a></li>
+                    <li><a href="#signup" class="btn btn-primary btn-sm">Start Now</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl font-bold">Daily Homework</a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li>
+                    <details>
+                        <summary>Homework</summary>
+                        <ul class="p-2 bg-base-100 rounded-t-none min-w-max">
+                            <li class="menu-title">By Age</li>
+                            <li><a href="#age-3">Age 3 (Nursery)</a></li>
+                            <li><a href="#age-4">Age 4 (Reception)</a></li>
+                            <li><a href="#age-5">Age 5 (Year 1)</a></li>
+                            <li><a href="#age-6">Age 6 (Year 2)</a></li>
+                            <li><a href="#age-7">Age 7 (Year 3)</a></li>
+                            <li><a href="#age-8">Age 8 (Year 4)</a></li>
+                            <li><a href="#age-9">Age 9 (Year 5)</a></li>
+                            <li><a href="#age-10">Age 10 (Year 6)</a></li>
+                            <li><a href="#age-11">Age 11 (Year 6)</a></li>
+                            <li class="menu-title">By Subject</li>
+                            <li><a href="#english">English</a></li>
+                            <li><a href="#maths">Maths</a></li>
+                            <li><a href="#spanish">Spanish</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#samples">Free Sample</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end">
+            <a href="#signup" class="btn btn-primary">Start Now</a>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <div class="hero min-h-screen bg-gradient-to-br from-primary to-secondary">
         <div class="hero-content text-center text-primary-content">
@@ -35,7 +107,7 @@
     </div>
 
     <!-- How It Works -->
-    <section class="py-16 bg-base-100">
+    <section id="how-it-works" class="py-16 bg-base-100">
         <div class="container mx-auto px-4">
             <h2 class="text-4xl font-bold text-center mb-12">How It Works</h2>
             <div class="grid md:grid-cols-3 gap-8">
@@ -127,7 +199,7 @@
     </section>
 
     <!-- Examples Preview Gallery -->
-    <section class="py-16 bg-base-100">
+    <section id="samples" class="py-16 bg-base-100">
         <div class="container mx-auto px-4">
             <h2 class="text-4xl font-bold text-center mb-12">Sample Worksheets</h2>
             <div class="grid md:grid-cols-3 gap-8">
@@ -175,7 +247,7 @@
     </section>
 
     <!-- Pricing -->
-    <section class="py-16 bg-base-200">
+    <section id="pricing" class="py-16 bg-base-200">
         <div class="container mx-auto px-4">
             <h2 class="text-4xl font-bold text-center mb-12">Simple Pricing</h2>
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -281,8 +353,8 @@
             <div class="grid grid-flow-col gap-4">
                 <a href="/app/" class="link link-hover">App</a>
                 <a href="/api/" class="link link-hover">API</a>
-                <a href="#" class="link link-hover">Privacy</a>
-                <a href="#" class="link link-hover">Terms</a>
+                <a href="/privacy.php" class="link link-hover">Privacy Policy</a>
+                <a href="/terms.php" class="link link-hover">Terms of Service</a>
             </div>
         </nav>
     </footer>
