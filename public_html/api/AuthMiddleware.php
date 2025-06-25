@@ -15,20 +15,8 @@ class AuthMiddleware {
             // Auth endpoints
             ['method' => 'POST', 'path' => '/api/auth/signup'],
             ['method' => 'POST', 'path' => '/api/auth/login'],
-            ['method' => 'POST', 'path' => '/api/auth/password-login'],
             ['method' => 'GET', 'path' => '/api/auth/verify'],
             ['method' => 'POST', 'path' => '/api/auth/token'],
-            
-            // Client-facing endpoints (using special tokens)
-            ['method' => 'GET', 'pathPattern' => '#^/api/auth/client-access/[^/]+$#'],
-            ['method' => 'POST', 'pathPattern' => '#^/api/client/requests/[^/]+/comments$#'],
-            ['method' => 'POST', 'pathPattern' => '#^/api/client/requests/[^/]+/files/[^/]+$#'],
-            ['method' => 'GET', 'pathPattern' => '#^/api/client/requests/[^/]+/files/[^/]+$#'],
-            ['method' => 'POST', 'pathPattern' => '#^/api/client/requests/[^/]+/comments/[^/]+$#'],
-            ['method' => 'GET', 'pathPattern' => '#^/api/client/requests/[^/]+/comments/[^/]+$#'],
-            ['method' => 'GET', 'pathPattern' => '#^/api/client/requests/[^/]+/activities/[^/]+$#'],
-            ['method' => 'GET', 'pathPattern' => '#^/api/client/cases/[^/]+/emails/[^/]+$#'],
-            ['method' => 'PUT', 'pathPattern' => '#^/api/client/requests/[^/]+/reassign/[^/]+$#'],
             
             // Public health check
             ['method' => 'GET', 'path' => '/api/health'],
@@ -93,27 +81,5 @@ class AuthMiddleware {
         }
         
         return $userData;
-    }
-
-    /**
-     * Check if user has access to an organization resource
-     * 
-     * @param array $userData User data from the token
-     * @param string $orgId Organization ID from the request
-     * @return bool True if the user has access to the organization
-     */
-    public function hasOrgAccess($userData, $orgId) {
-        return $userData['org_id'] === $orgId;
-    }
-
-    /**
-     * Check if user has appropriate role for an action
-     * 
-     * @param array $userData User data from the token
-     * @param array $allowedRoles Roles that are allowed to perform the action
-     * @return bool True if the user has the appropriate role
-     */
-    public function hasRole($userData, $allowedRoles) {
-        return in_array($userData['role'], $allowedRoles);
     }
 }

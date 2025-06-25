@@ -1,5 +1,5 @@
 <?php
-// index.php
+// Daily Homework API - Main entry point
 require_once 'env.php';
 loadEnv();
 
@@ -12,62 +12,96 @@ if ($isDebugMode) {
     ini_set('display_errors', 0);
     error_reporting(0);
     ini_set('log_errors', 1);
-    ini_set('error_log', '/var/www/parsebank/logs/error.log');
+    ini_set('error_log', '/var/log/dailyhomework/error.log');
 }
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-require_once 'vendor/autoload.php';
-
-//try {
-  //$this->functionFailsForSure();
-//} catch (\Throwable $exception) {
-  //\Sentry\captureException($exception);
-//}
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    exit(0);
+}
 
 require_once 'conf.php';
 require_once 'Router.php';
-require_once 'OrgAPI.php';
 require_once 'UserAuthAPI.php';
-require_once 'SettingsAPI.php';
+require_once 'WorksheetAPI.php';
 require_once 'JWTAuth.php';
 require_once 'AuthMiddleware.php';
 
-require_once 'VaultAPI.php';
-require_once 'VaultOcrAPI.php';
-require_once 'BankStatementAI_API.php';
-require_once 'UsageTracker.php';
-
 // Initialize APIs and Router
-$orgAPI = new OrgAPI();
 $userAuthAPI = new UserAuthAPI();
+$worksheetAPI = new WorksheetAPI();
 $router = new Router();
-$settingsAPI = new SettingsAPI();
 $jwtAuth = new JWTAuth();
-$vaultAPI = new VaultAPI();
-$vaultOcrAPI = new VaultOcrAPI();
-$bankStatementAPI = new BankStatementAI_API();
-$usageTracker = new UsageTracker();
 
-// Include and register all route files AFTER the router is initialized
-require_once 'public_routes.php';
-require_once 'vault_routes.php';
-require_once 'vault_ocr_routes.php';
-require_once 'usage_routes.php';
-require_once 'bank_statement_routes.php';
-require_once 'company_routes.php';
-require_once 'ideas_routes.php';
+// Health check endpoint
+$router->addRoute('GET', '/health', function($params, $data, $context) {
+    return [
+        'status' => 'success',
+        'message' => 'Daily Homework API is running',
+        'timestamp' => date('Y-m-d H:i:s'),
+        'version' => '1.0.0'
+    ];
+});
+
+// ==================== AUTH ROUTES ====================
+
+// Sign up
+$router->addRoute('POST', '/auth/signup', function($params, $data, $context) use ($userAuthAPI) {
+    return $userAuthAPI->signup($data);
+});
+
+// Request login (magic link)
+$router->addRoute('POST', '/auth/login', function($params, $data, $context) use ($userAuthAPI) {
+    if (!isset($data['email'])) {
+        return ['status' => 'error', 'message' => 'Email is required'];
+    }
+    return $userAuthAPI->requestLogin($data['email']);
+});
+
+// Verify login token
+$router->addRoute('GET', '/auth/verify', function($params, $data, $context) use ($userAuthAPI) {
+    $email = $_GET['email'] ?? null;
+    $token = $_GET['token'] ?? null;
+    
+    if (!$email || !$token) {
+        return ['status' => 'error', 'message' => 'Email and token are required'];
+    }
+    
+    return $userAuthAPI->verifyLogin($email, $token);
+});
+
+// Generate JWT token (after magic link verification)
+$router->addRoute('POST', '/auth/token', function($params, $data, $context) use ($jwtAuth) {
+    if (!isset($data['id']) || !isset($data['email'])) {
+        return ['status' => 'error', 'message' => 'User ID and email are required'];
+    }
+    
+    $userData = [
+        'id' => $data['id'],
+        'email' => $data['email'],
+        'plan' => $data['plan'] ?? 'free'
+    ];
+    
+    $token = $jwtAuth->generateToken($userData);
+    
+    return [
+        'status' => 'success',
+        'token' => $token,
+        'user' => $userData
+    ];
+});
 
 // Refresh token endpoint (protected)
 $router->addRoute('POST', '/auth/refresh-token', function($params, $data, $context) use ($jwtAuth) {
     if (!isset($context['userData'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Authentication required'
-        ];
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    // Generate a new token using current user data
     $newToken = $jwtAuth->generateToken($context['userData']);
     
     return [
@@ -76,260 +110,188 @@ $router->addRoute('POST', '/auth/refresh-token', function($params, $data, $conte
     ];
 });
 
-// Password management endpoints (protected)
-$router->addRoute('GET', '/auth/password-status', function($params, $data, $context) use ($userAuthAPI) {
+// ==================== USER ROUTES ====================
+
+// Get user profile (protected)
+$router->addRoute('GET', '/users/profile', function($params, $data, $context) use ($userAuthAPI) {
     if (!isset($context['userData'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Authentication required'
-        ];
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    return $userAuthAPI->hasPassword($context['userData']['user_id']);
+    return $userAuthAPI->getProfile($context['userData']['id']);
 });
 
-$router->addRoute('POST', '/auth/set-password', function($params, $data, $context) use ($userAuthAPI) {
+// Update user profile (protected)
+$router->addRoute('PUT', '/users/profile', function($params, $data, $context) use ($userAuthAPI) {
     if (!isset($context['userData'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Authentication required'
-        ];
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    if (!isset($data['password'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Password is required'
-        ];
-    }
-    
-    return $userAuthAPI->setPassword($context['userData']['user_id'], $data['password']);
+    return $userAuthAPI->updateProfile($context['userData']['id'], $data);
 });
 
-$router->addRoute('POST', '/auth/change-password', function($params, $data, $context) use ($userAuthAPI) {
+// ==================== CHILDREN ROUTES ====================
+
+// Get user's children (protected)
+$router->addRoute('GET', '/children', function($params, $data, $context) use ($userAuthAPI) {
     if (!isset($context['userData'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Authentication required'
-        ];
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    if (!isset($data['current_password']) || !isset($data['new_password'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Current and new passwords are required'
-        ];
-    }
-    
-    return $userAuthAPI->changePassword(
-        $context['userData']['user_id'], 
-        $data['current_password'], 
-        $data['new_password']
-    );
+    return $userAuthAPI->getChildren($context['userData']['id']);
 });
 
-$router->addRoute('POST', '/auth/remove-password', function($params, $data, $context) use ($userAuthAPI) {
+// Add child (protected)
+$router->addRoute('POST', '/children', function($params, $data, $context) use ($userAuthAPI) {
     if (!isset($context['userData'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Authentication required'
-        ];
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    if (!isset($data['current_password'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Current password is required'
-        ];
-    }
-    
-    return $userAuthAPI->removePassword($context['userData']['user_id'], $data['current_password']);
+    return $userAuthAPI->addChild($context['userData']['id'], $data);
 });
 
-// Admin reset user password endpoint (admin/owner only)
-$router->addRoute('POST', '/auth/admin-reset-password', function($params, $data, $context) use ($userAuthAPI) {
+// Update child (protected)
+$router->addRoute('PUT', '/children/{child_id}', function($params, $data, $context) use ($userAuthAPI) {
     if (!isset($context['userData'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Authentication required'
-        ];
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    // Only admins and owners can reset passwords
-    if (!in_array($context['userData']['role'], ['owner', 'admin'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Only admins and owners can reset user passwords'
-        ];
-    }
-    
-    if (!isset($data['target_user_id']) || !isset($data['new_password'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Target user ID and new password are required'
-        ];
-    }
-    
-    return $userAuthAPI->adminResetPassword(
-        $context['userData']['user_id'], 
-        $data['target_user_id'], 
-        $data['new_password']
-    );
+    return $userAuthAPI->updateChild($context['userData']['id'], $params['child_id'], $data);
 });
 
-// Security monitoring endpoint (admin/owner only)
-$router->addRoute('GET', '/auth/login-attempts', function($params, $data, $context) use ($userAuthAPI) {
+// Delete child (protected)
+$router->addRoute('DELETE', '/children/{child_id}', function($params, $data, $context) use ($userAuthAPI) {
     if (!isset($context['userData'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Authentication required'
-        ];
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    // Only admins and owners can view login attempts
-    if (!in_array($context['userData']['role'], ['owner', 'admin'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Insufficient permissions'
-        ];
+    return $userAuthAPI->deleteChild($context['userData']['id'], $params['child_id']);
+});
+
+// ==================== WORKSHEET ROUTES ====================
+
+// Get all worksheets for user (protected)
+$router->addRoute('GET', '/worksheets', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    return $userAuthAPI->getLoginAttempts($context['userData']['org_id']);
+    $limit = $_GET['limit'] ?? 50;
+    return $worksheetAPI->getUserWorksheets($context['userData']['id'], $limit);
 });
 
-// Organization Routes (protected)
-$router->addRoute('POST', '/organizations', function($params, $data, $context) use ($orgAPI) {
-    return $orgAPI->create($data);
-});
-
-$router->addRoute('GET', '/organizations/{org_id}', function($params, $data, $context) use ($orgAPI) {
-    return $orgAPI->read($params['org_id']);
-});
-
-$router->addRoute('PUT', '/organizations/{org_id}', function($params, $data, $context) use ($orgAPI) {
-    return $orgAPI->update($params['org_id'], $data);
-});
-
-$router->addRoute('DELETE', '/organizations/{org_id}', function($params, $data, $context) use ($orgAPI) {
-    // Verify user has owner role
-    if ($context['userData']['role'] !== 'owner') {
-        return [
-            'status' => 'error',
-            'message' => 'Only organization owners can delete organizations'
-        ];
-    }
-    return $orgAPI->delete($params['org_id']);
-});
-
-// Get all organizations (admin only)
-$router->addRoute('GET', '/organizations', function($params, $data, $context) use ($orgAPI) {
-    // Verify user has appropriate role
-    if ($context['userData']['role'] !== 'owner') {
-        return [
-            'status' => 'error',
-            'message' => 'Unauthorized access'
-        ];
-    }
-    return $orgAPI->getAllOrgs();
-});
-
-// User Routes (protected)
-$router->addRoute('GET', '/auth/{org_id}/users', function($params, $data, $context) use ($userAuthAPI) {
-    return $userAuthAPI->getOrgUsers($params['org_id']);
-});
-
-$router->addRoute('PUT', '/users/{user_id}', function($params, $data, $context) use ($userAuthAPI) {
-    // Users can only update their own profile, unless they're an admin/owner
-    if ($params['user_id'] !== $context['userData']['user_id'] && 
-        !in_array($context['userData']['role'], ['owner', 'admin'])) {
-        return [
-            'status' => 'error',
-            'message' => 'You can only update your own profile'
-        ];
-    }
-    return $userAuthAPI->updateProfile($params['user_id'], $data);
-});
-
-$router->addRoute('POST', '/organizations/{org_id}/users', function($params, $data, $context) use ($userAuthAPI) {
-    // Verify user data exists
-    if (!isset($context['userData']) || !isset($context['userData']['user_id']) || !isset($context['userData']['role'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Invalid authentication data'
-        ];
+// Get worksheets for specific child (protected)
+$router->addRoute('GET', '/children/{child_id}/worksheets', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    // Only admins and owners can invite users
-    if (!in_array($context['userData']['role'], ['owner', 'admin'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Only admins and owners can invite users'
-        ];
-    }
-    
-    $inviterId = $context['userData']['user_id'];
-    return $userAuthAPI->inviteUser($params['org_id'], $data, $inviterId);
+    $limit = $_GET['limit'] ?? 30;
+    return $worksheetAPI->getWorksheets($params['child_id'], $limit);
 });
 
-$router->addRoute('DELETE', '/organizations/{org_id}/users/{user_id}', function($params, $data, $context) use ($userAuthAPI) {
-    // Only admins and owners can delete users
-    if (!in_array($context['userData']['role'], ['owner', 'admin'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Only admins and owners can delete users'
-        ];
+// Create worksheet (protected)
+$router->addRoute('POST', '/worksheets', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    $deleterId = $context['userData']['user_id'];
-    return $userAuthAPI->deleteUser($params['org_id'], $params['user_id'], $deleterId);
+    return $worksheetAPI->createWorksheet($data);
 });
 
-$router->addRoute('PUT', '/organizations/{org_id}/users/{user_id}/role', function($params, $data, $context) use ($userAuthAPI) {
-    // Verify user is authenticated and has provided a new role
-    if (!isset($context['userData']) || !isset($data['role'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Missing required data'
-        ];
+// Get specific worksheet (protected)
+$router->addRoute('GET', '/worksheets/{worksheet_id}', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    return $userAuthAPI->changeUserRole(
-        $params['org_id'],
-        $params['user_id'],
-        $data['role'],
-        $context['userData']['user_id']
-    );
-});
-
-// Settings Routes (protected)
-$router->addRoute('GET', '/organizations/{org_id}/settings', function($params, $data, $context) use ($settingsAPI) {
-    return $settingsAPI->getSettings($params['org_id']);
-});
-
-$router->addRoute('PUT', '/organizations/{org_id}/settings', function($params, $data, $context) use ($settingsAPI) {
-    // Only admins and owners can update settings
-    if (!in_array($context['userData']['role'], ['owner', 'admin'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Only admins and owners can update organization settings'
-        ];
+    $result = $worksheetAPI->getWorksheet($params['worksheet_id']);
+    
+    // Verify worksheet belongs to the user
+    if ($result['status'] === 'success') {
+        if ($result['worksheet']['user_id'] !== $context['userData']['id']) {
+            return ['status' => 'error', 'message' => 'Unauthorized access'];
+        }
     }
     
-    return $settingsAPI->saveSettings($params['org_id'], $data);
+    return $result;
 });
 
-$router->addRoute('POST', '/organizations/{org_id}/settings/reset', function($params, $data, $context) use ($settingsAPI) {
-    // Only admins and owners can reset settings
-    if (!in_array($context['userData']['role'], ['owner', 'admin'])) {
-        return [
-            'status' => 'error',
-            'message' => 'Only admins and owners can reset organization settings'
-        ];
+// Update worksheet (protected)
+$router->addRoute('PUT', '/worksheets/{worksheet_id}', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    return $settingsAPI->resetSettings($params['org_id']);
+    // Verify worksheet belongs to user before updating
+    $worksheetResult = $worksheetAPI->getWorksheet($params['worksheet_id']);
+    if ($worksheetResult['status'] !== 'success') {
+        return $worksheetResult;
+    }
+    
+    if ($worksheetResult['worksheet']['user_id'] !== $context['userData']['id']) {
+        return ['status' => 'error', 'message' => 'Unauthorized access'];
+    }
+    
+    return $worksheetAPI->updateWorksheet($params['worksheet_id'], $data);
+});
+
+// Delete worksheet (protected)
+$router->addRoute('DELETE', '/worksheets/{worksheet_id}', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    // Verify worksheet belongs to user before deleting
+    $worksheetResult = $worksheetAPI->getWorksheet($params['worksheet_id']);
+    if ($worksheetResult['status'] !== 'success') {
+        return $worksheetResult;
+    }
+    
+    if ($worksheetResult['worksheet']['user_id'] !== $context['userData']['id']) {
+        return ['status' => 'error', 'message' => 'Unauthorized access'];
+    }
+    
+    return $worksheetAPI->deleteWorksheet($params['worksheet_id']);
+});
+
+// Mark worksheet as downloaded (protected)
+$router->addRoute('POST', '/worksheets/{worksheet_id}/download', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    // Verify worksheet belongs to user
+    $worksheetResult = $worksheetAPI->getWorksheet($params['worksheet_id']);
+    if ($worksheetResult['status'] !== 'success') {
+        return $worksheetResult;
+    }
+    
+    if ($worksheetResult['worksheet']['user_id'] !== $context['userData']['id']) {
+        return ['status' => 'error', 'message' => 'Unauthorized access'];
+    }
+    
+    return $worksheetAPI->markAsDownloaded($params['worksheet_id']);
+});
+
+// Get worksheet statistics (protected)
+$router->addRoute('GET', '/stats/worksheets', function($params, $data, $context) use ($worksheetAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    return $worksheetAPI->getWorksheetStats($context['userData']['id']);
 });
 
 // Handle the request
-$response = $router->handle($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-echo json_encode($response);
+try {
+    $response = $router->handle($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+    echo json_encode($response);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Internal server error',
+        'details' => $isDebugMode ? $e->getMessage() : null
+    ]);
+}
