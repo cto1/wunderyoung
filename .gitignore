@@ -23,3 +23,12 @@
 /app/Config/core.php
 /app/Config/database.php
 /vendors/*
+
+# Environment files with sensitive data
+.env
+public_html/api/.env
+
+# Database files
+public_html/api/database/database.sqlite
+
+.env
