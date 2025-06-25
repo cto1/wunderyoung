@@ -33,3 +33,4 @@ public_html/api/database/database.sqlite
 
 .env
 public_html/api/.env
+inspiration/*
