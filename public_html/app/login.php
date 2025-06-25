@@ -10,14 +10,13 @@ require_once 'config.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-theme="winter">
+<html lang="en" data-theme="light">
     
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <?=__("website_title"); ?>
-    </title>
+    <title>Sign In - Daily Homework</title>
+    <meta name="description" content="Sign in to your Daily Homework account and manage your child's learning journey.">
 
     <?php
     // Add Hotjar tracking code only for production environment (exactsum.com)
@@ -66,97 +65,148 @@ require_once 'config.php';
     <!-- Include SheetJS CDN / xlsx library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
-    <!-- jQuery & DataTables JS -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
-    <!-- Custom CSS -->
-    <!-- <link rel="stylesheet" href="css/styles.css"> -->
 
 </head>
 
-<body>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50">
 
-    <section class="w-full h-full min-h-screen flex justify-center items-center p-5 bg-base-300">
+    <!-- Navigation -->
+    <nav class="navbar bg-white shadow-lg">
+        <div class="navbar-start">
+            <a href="/website/" class="btn btn-ghost text-xl font-bold text-primary">
+                <i class="fas fa-home mr-2"></i>
+                DailyHome.Work
+            </a>
+        </div>
+        <div class="navbar-end">
+            <a href="signup.php" class="btn btn-primary">Sign Up</a>
+        </div>
+    </nav>
 
-        <div class="w-full max-w-md bg-base-100 p-5 sm:p-10 shadow-2xl h-full text-center flex flex-col justify-between">
-
-            <!-- Logo -->
-            <div class="mb-6">
-                <img src="./assets/logos/exactsum.png"
-                     class="w-12 mx-auto dynamic_main_logo"
-                     style="filter: drop-shadow(0 0.5px 1px white);">
-            </div>
-
-
-            <!-- Center componets -->
-            <div>
-
-                <!-- Login content -->
-                <div>
-
-                    <!-- Welcome text -->
-                    <h1 class="text-4xl font-semibold mb-4"><?= __("welcome_text"); ?></h1>
-
-                    <!-- Email input -->
-                    <div class="relative pb-4 mb-1">
-
-                        <!-- Input field -->
-                        <input type="email" id="loginEmailInput"
-                            class=" w-full mt-2 rounded-md p-4 text-sm sm:text-base bg-transparent border border-secondary/50 focus:border-secondary"
-                            placeholder="<?= __('email_label') ?>" autocomplete="">
-
-                        <!-- Message container -->
-                        <p id="messageContainer" class="">
-                        </p>
-
+    <!-- Main Content -->
+    <section class="min-h-screen flex justify-center items-center p-5">
+        <div class="w-full max-w-md">
+            
+            <!-- Welcome Card -->
+            <div class="card bg-white shadow-2xl">
+                <div class="card-body p-8">
+                    
+                    <!-- Logo -->
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-book-open text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-800">Welcome Back!</h1>
+                        <p class="text-gray-600 mt-2">Sign in to continue your child's learning journey</p>
                     </div>
 
-                    <!-- Password input (now visible by default) -->
-                    <div id="passwordField" class="relative pb-4">
-                        <input type="password" id="loginPasswordInput"
-                            class="w-full mt-2 rounded-md p-4 text-sm sm:text-base bg-transparent border border-secondary/50 focus:border-secondary"
-                            placeholder="Password (at least 8 characters)" autocomplete="current-password">
-                    </div>
+                    <!-- Login Form -->
+                    <div class="space-y-6">
+                        
+                        <!-- Email Input -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Email Address</span>
+                            </label>
+                            <div class="relative">
+                                <input type="email" id="loginEmailInput"
+                                    class="input input-bordered w-full pr-12" 
+                                    placeholder="parent@email.com" 
+                                    autocomplete="email">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
 
-                    <!-- Auth method toggle -->
-                    <div class="text-center mb-4">
-                        <button type="button" id="toggleAuthMethod" class="text-sm text-secondary underline hover:text-secondary/80">
-                            Or use magic link instead
+                        <!-- Password Input -->
+                        <div id="passwordField" class="form-control">
+                            <label class="label">
+                                <span class="label-text">Password</span>
+                            </label>
+                            <div class="relative">
+                                <input type="password" id="loginPasswordInput"
+                                    class="input input-bordered w-full pr-12" 
+                                    placeholder="Enter your password" 
+                                    autocomplete="current-password">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Auth method toggle -->
+                        <div class="text-center">
+                            <button type="button" id="toggleAuthMethod" class="text-sm text-primary underline hover:text-primary/80">
+                                Or use magic link instead
+                            </button>
+                        </div>
+
+                        <!-- Message Container -->
+                        <div id="messageContainer" class="hidden">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <span id="messageText"></span>
+                            </div>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button id="loginButton" class="btn btn-primary w-full btn-lg">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Sign In
                         </button>
-                    </div>
 
-                    <!-- Login button -->
-                    <button id="loginButton" class="w-full bg-secondary text-base-100 font-semibold py-3 rounded-md">
-                        <?= __("login_link_text"); ?>
-                    </button>
+                        <!-- Sign Up Link -->
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">
+                                Don't have an account?
+                                <a href="signup.php" class="font-medium text-primary underline hover:text-primary/80">
+                                    Create one for free
+                                </a>
+                            </p>
+                        </div>
+
+                    </div>
 
                 </div>
-
             </div>
 
-            <!-- Footer links -->
-            <div class="mt-6 text-sm text-secondary">
-
-                <a href="#" class="underline">
-                    <?= __("footer_terms_text"); ?>
-                </a>
-                <span class="text-secondary mx-1">|</span>
-                <a href="#" class="underline">
-                    <?= __("footer_privacy_text"); ?>
-                </a>
-
+            <!-- Benefits Reminder -->
+            <div class="mt-8 text-center">
+                <div class="bg-white/80 backdrop-blur-sm rounded-lg p-6">
+                    <h3 class="font-semibold text-gray-800 mb-4">Why Daily Homework?</h3>
+                    <div class="grid grid-cols-1 gap-3 text-sm text-gray-600">
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Daily worksheets delivered to your inbox</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>Personalized for your child's interests</span>
+                        </div>
+                        <div class="flex items-center justify-center space-x-2">
+                            <i class="fas fa-check text-green-500"></i>
+                            <span>No apps, no screens - just print and learn</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
-
     </section>
 
+    <!-- Footer -->
+    <footer class="footer footer-center p-4 bg-white/80 backdrop-blur-sm text-base-content">
+        <nav class="grid grid-flow-col gap-4">
+            <a href="/privacy.php" class="link link-hover">Privacy Policy</a>
+            <a href="/terms.php" class="link link-hover">Terms of Service</a>
+            <a href="mailto:support@dailyhome.work" class="link link-hover">Contact</a>
+        </nav>
+    </footer>
 
-    <!-- ---------- JS Scripts ---------- -->
-
-    <!-- Authentication Scripts > Login Page -->
+    <!-- Authentication Scripts -->
     <script src="js/authentication-scripts/login.js"></script>
 
 </body>

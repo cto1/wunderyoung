@@ -6,17 +6,18 @@ ini_set('display_startup_errors', 1);
 
 include 'include/translations.php'; 
 
+// Get email from URL parameter if provided
+$prefilled_email = isset($_GET['email']) ? htmlspecialchars($_GET['email']) : '';
 ?>
 
 <!DOCTYPE html>
-<html lang="en" data-theme="winter">
+<html lang="en" data-theme="light">
     
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <?=__("website_title"); ?>
-    </title>
+    <title>Get Started - Daily Homework</title>
+    <meta name="description" content="Start your child's personalized learning journey with Daily Homework. Free worksheets delivered daily to your inbox.">
 
     <?php
     // Add Hotjar tracking code only for production environment (exactsum.com)
@@ -65,93 +66,160 @@ include 'include/translations.php';
     <!-- Include SheetJS CDN / xlsx library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
-    <!-- jQuery & DataTables JS -->
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
-    <!-- Custom CSS -->
-    <!-- <link rel="stylesheet" href="css/styles.css"> -->
 
 </head>
 
-<body>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50">
 
-    <section class="w-full h-full min-h-screen flex justify-center items-center p-5 bg-base-300">
+    <!-- Navigation -->
+    <nav class="navbar bg-white shadow-lg">
+        <div class="navbar-start">
+            <a href="/website/" class="btn btn-ghost text-xl font-bold text-primary">
+                <i class="fas fa-home mr-2"></i>
+                DailyHome.Work
+            </a>
+        </div>
+        <div class="navbar-end">
+            <a href="login.php" class="btn btn-ghost mr-2">Sign In</a>
+        </div>
+    </nav>
 
-        <div class="w-full max-w-md bg-base-100 p-5 sm:p-10 shadow-2xl h-full text-center flex flex-col justify-between">
+    <!-- Main Content -->
+    <section class="min-h-screen flex justify-center items-center p-5">
+        <div class="w-full max-w-md">
+            
+            <!-- Signup Card -->
+            <div class="card bg-white shadow-2xl">
+                <div class="card-body p-8">
+                    
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-rocket text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-800">Get Started Free!</h1>
+                        <p class="text-gray-600 mt-2">Create your account and get your first worksheet in 2 minutes</p>
+                    </div>
 
-            <!-- Logo -->
-            <div class="mb-6">
-                <img src="./assets/logos/exactsum.png"
-                     class="w-12 mx-auto dynamic_main_logo"
-                     style="filter: drop-shadow(0 0.5px 1px white);">
-            </div>
+                    <!-- Progress Steps -->
+                    <div class="mb-8">
+                        <ul class="steps steps-vertical lg:steps-horizontal w-full">
+                            <li class="step step-primary">Email</li>
+                            <li class="step">Child Info</li>
+                            <li class="step">First Worksheet</li>
+                        </ul>
+                    </div>
 
-            <!-- Center componets -->
-            <div>
+                    <!-- Signup Form -->
+                    <div class="space-y-6">
+                        
+                        <!-- Email Input -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Your Email Address</span>
+                            </label>
+                            <div class="relative">
+                                <input type="email" id="signupEmailInput"
+                                    class="input input-bordered w-full pr-12" 
+                                    placeholder="parent@email.com" 
+                                    value="<?php echo $prefilled_email; ?>"
+                                    autocomplete="email">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                            </div>
+                            <label class="label">
+                                <span class="label-text-alt text-gray-500">We'll send your worksheets here</span>
+                            </label>
+                        </div>
 
-                <!-- Signup content -->
-                <div class="space-y-6">
+                        <!-- Message Container -->
+                        <div id="messageContainer" class="hidden">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <span id="messageText"></span>
+                            </div>
+                        </div>
 
-                    <!-- Welcome text -->
-                    <h1 class="text-4xl font-semibold"><?= __("create_account_text"); ?></h1>
+                        <!-- Signup Button -->
+                        <button id="signupButton" class="btn btn-primary w-full btn-lg">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            Continue - It's Free!
+                        </button>
 
-                    <!-- Email input -->
+                        <!-- Benefits List -->
+                        <div class="bg-green-50 rounded-lg p-4 mt-6">
+                            <h3 class="font-semibold text-green-800 mb-3">What you'll get:</h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-center text-sm text-green-700">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Daily personalized worksheets
+                                </li>
+                                <li class="flex items-center text-sm text-green-700">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    No apps or screen time required
+                                </li>
+                                <li class="flex items-center text-sm text-green-700">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Curriculum-aligned activities
+                                </li>
+                                <li class="flex items-center text-sm text-green-700">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    Just 15 minutes per day
+                                </li>
+                            </ul>
+                        </div>
 
-                    <div class="relative pb-4">
-
-                        <!-- Input field -->
-                        <input type="email" id="signupEmailInput"
-                            class=" w-full mt-2 rounded-md p-4 text-sm sm:text-base bg-transparent border border-secondary/50 focus:border-secondary"
-                            placeholder="<?= __('email_label') ?>" autocomplete="">
-
-                        <!-- Message container -->
-                        <p id="messageContainer" class="">
-                        </p>
+                        <!-- Login Link -->
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">
+                                Already have an account?
+                                <a href="login.php" class="font-medium text-primary underline hover:text-primary/80">
+                                    Sign in here
+                                </a>
+                            </p>
+                        </div>
 
                     </div>
 
-                    <!-- Signup Continue button -->
-                    <button id="signupButton" class="w-full bg-secondary text-base-100 font-semibold py-3 rounded-md">
-                        <?= __("signup_link_text"); ?>
-                    </button>
-
-                    <!-- Sign up link -->
-                    <p class="mt-3 text-sm">
-
-                        <?= __("login_prompt"); ?>
-                        <a href="./login.php" class="font-medium underline">
-                            <?= __("login_link_text"); ?>
-                        </a>
-
-                    </p>
-
                 </div>
-
             </div>
 
-            <!-- Footer links -->
-            <div class="mt-6 text-sm text-secondary">
-
-                <a href="#" class="underline">
-                    <?= __("footer_terms_text"); ?>
-                </a>
-                <span class="text-secondary mx-1">|</span>
-                <a href="#" class="underline">
-                    <?= __("footer_privacy_text"); ?>
-                </a>
-
+            <!-- Trust Signals -->
+            <div class="mt-8 text-center">
+                <div class="bg-white/80 backdrop-blur-sm rounded-lg p-6">
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                            <div class="text-2xl font-bold text-primary">10,000+</div>
+                            <div class="text-xs text-gray-600">Worksheets Delivered</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-secondary">1,500+</div>
+                            <div class="text-xs text-gray-600">Happy Children</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-accent">100%</div>
+                            <div class="text-xs text-gray-600">Screen-Free</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
-
     </section>
 
+    <!-- Footer -->
+    <footer class="footer footer-center p-4 bg-white/80 backdrop-blur-sm text-base-content">
+        <nav class="grid grid-flow-col gap-4">
+            <a href="/privacy.php" class="link link-hover">Privacy Policy</a>
+            <a href="/terms.php" class="link link-hover">Terms of Service</a>
+            <a href="mailto:support@dailyhome.work" class="link link-hover">Contact</a>
+        </nav>
+    </footer>
 
-    <!-- ---------- JS Scripts ---------- -->
-
-    <!-- Authentication Scripts > Signup Page -->
+    <!-- Authentication Scripts -->
     <script src="js/authentication-scripts/signup.js"></script>
 
 </body>

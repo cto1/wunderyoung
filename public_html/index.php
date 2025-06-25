@@ -1,8 +1,8 @@
 <?php
 // Load translations
 $lang = 'en_US'; // Default language
-if (file_exists(__DIR__ . "/languages/{$lang}.php")) {
-    $translations = include __DIR__ . "/languages/{$lang}.php";
+if (file_exists(__DIR__ . "/website/languages/{$lang}.php")) {
+    $translations = include __DIR__ . "/website/languages/{$lang}.php";
 }
 
 function __($key) {
@@ -23,7 +23,7 @@ function __($key) {
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Custom styles -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="website/style.css">
     
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -555,7 +555,7 @@ function __($key) {
     </footer>
 
     <!-- JavaScript -->
-    <script src="script.js"></script>
+    <script src="website/script.js"></script>
     <script>
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
