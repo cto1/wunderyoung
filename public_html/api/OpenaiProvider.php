@@ -9,21 +9,13 @@ class OpenaiProvider implements AiProviderInterface {
     private $lastTokenUsage = ['input' => 0, 'output' => 0];
     private $lastLatency = 0;
     
-    public function __construct(string $apiKey, string $model = 'gpt-4-turbo-preview') {
+    public function __construct(string $apiKey, string $model = 'gpt-4') {
         $this->apiKey = $apiKey;
         $this->model = $model;
     }
     
     public function callApi(string $prompt, string $systemPrompt, string $outputDir): ?array {
-        //echo "\n====== OpenAI ======\n";
-        //echo "Sending request to OpenAI...\n";
-        
-        $result = $this->callApiWithoutEcho($prompt, $systemPrompt);
-        if (!$result) {
-            return null;
-        }
-        
-        return $result;
+        return $this->callApiWithoutEcho($prompt, $systemPrompt);
     }
     
     public function callApiWithoutEcho(string $prompt, string $systemPrompt): ?array {
@@ -39,8 +31,8 @@ class OpenaiProvider implements AiProviderInterface {
                 ['role' => 'system', 'content' => $systemPrompt],
                 ['role' => 'user', 'content' => $prompt]
             ],
-            'temperature' => 0.2,
-            'max_tokens' => 1000
+            'temperature' => 0.3,
+            'max_tokens' => 2000
         ];
         
         $headers = [
@@ -51,7 +43,7 @@ class OpenaiProvider implements AiProviderInterface {
         while ($retryCount <= $this->maxRetries && !$success) {
             if ($retryCount > 0) {
                 $sleepTime = pow(2, $retryCount - 1);
-                echo "Retrying OpenAI request ($retryCount/$this->maxRetries) after {$sleepTime}s delay...\n";
+                error_log("Retrying OpenAI request ($retryCount/$this->maxRetries) after {$sleepTime}s delay...");
                 sleep($sleepTime);
             }
             
@@ -61,6 +53,7 @@ class OpenaiProvider implements AiProviderInterface {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
             
             $startTime = microtime(true);
             $response = curl_exec($ch);
@@ -80,12 +73,12 @@ class OpenaiProvider implements AiProviderInterface {
             }
             
             if ($retryCount < $this->maxRetries) {
-                echo "HTTP Code: " . $httpCode . "\n";
+                error_log("OpenAI API Error - HTTP Code: " . $httpCode);
                 if (!empty($error)) {
-                    echo "cURL Error: " . $error . "\n";
+                    error_log("cURL Error: " . $error);
                 }
                 if (!empty($response)) {
-                    echo "Response: " . $response . "\n";
+                    error_log("Response: " . $response);
                 }
             }
             
@@ -93,7 +86,7 @@ class OpenaiProvider implements AiProviderInterface {
         }
         
         if (!$success) {
-            echo "Failed to get response from OpenAI after $this->maxRetries retries.\n";
+            error_log("Failed to get response from OpenAI after $this->maxRetries retries.");
             return null;
         }
         
@@ -128,82 +121,5 @@ class OpenaiProvider implements AiProviderInterface {
     public function getLastLatency(): int {
         return $this->lastLatency;
     }
-
-    public function getAvailableModels(): array {
-        $retryCount = 0;
-        $success = false;
-        $response = null;
-        $responseData = null;
-        $httpCode = 0;
-        
-        $headers = [
-            'Authorization: Bearer ' . $this->apiKey,
-            'Content-Type: application/json'
-        ];
-        
-        while ($retryCount <= $this->maxRetries && !$success) {
-            if ($retryCount > 0) {
-                $sleepTime = pow(2, $retryCount - 1);
-                echo "Retrying OpenAI models request ($retryCount/$this->maxRetries) after {$sleepTime}s delay...\n";
-                sleep($sleepTime);
-            }
-            
-            $ch = curl_init('https://api.openai.com/v1/models');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-            
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $error = curl_error($ch);
-            curl_close($ch);
-            
-            if ($httpCode === 200) {
-                $responseData = json_decode($response, true);
-                if (isset($responseData['data'])) {
-                    $success = true;
-                    break;
-                }
-            }
-            
-            if ($retryCount < $this->maxRetries) {
-                echo "HTTP Code: " . $httpCode . "\n";
-                if (!empty($error)) {
-                    echo "cURL Error: " . $error . "\n";
-                }
-                if (!empty($response)) {
-                    echo "Response: " . $response . "\n";
-                }
-            }
-            
-            $retryCount++;
-        }
-        
-        if (!$success) {
-            return [
-                'status' => 'error',
-                'message' => 'Failed to fetch models from OpenAI',
-                'models' => []
-            ];
-        }
-        
-        $models = [];
-        foreach ($responseData['data'] as $model) {
-            // Only include chat models
-            if (strpos($model['id'], 'gpt') === 0) {
-                $models[] = [
-                    'id' => $model['id'],
-                    'name' => $model['id'],
-                    'type' => 'chat',
-                    'context_length' => $model['context_length'] ?? null,
-                    'description' => $model['description'] ?? null
-                ];
-            }
-        }
-        
-        return [
-            'status' => 'success',
-            'models' => $models
-        ];
-    }
-} 
+}
+?> 

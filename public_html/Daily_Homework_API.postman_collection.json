@@ -52,6 +52,23 @@
               "path": ["health"]
             }
           }
+        },
+        {
+          "name": "Test OpenAI Connection",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/test-openai",
+              "host": ["{{base_url}}"],
+              "path": ["test-openai"]
+            }
+          }
         }
       ]
     },
@@ -333,7 +350,7 @@
           }
         },
         {
-          "name": "Create Worksheet",
+          "name": "Create Worksheet (Manual)",
           "event": [
             {
               "listen": "test",
@@ -363,12 +380,96 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"child_id\": {{child_id}},\n  \"date\": \"2025-01-20\",\n  \"content\": \"# Daily Homework - Year 3\\n\\n## Mathematics\\n1. 25 + 17 = ?\\n2. 42 - 18 = ?\\n\\n## English\\n1. Write 3 sentences using: happy, garden, butterfly\\n\\n## Science\\n1. Name 3 living things in your garden\"\n}"
+              "raw": "{\n  \"child_id\": \"{{child_id}}\",\n  \"date\": \"2025-01-20\",\n  \"content\": \"# Daily Homework - Year 3\\n\\n## Mathematics\\n1. 25 + 17 = ?\\n2. 42 - 18 = ?\\n\\n## English\\n1. Write 3 sentences using: happy, garden, butterfly\\n\\n## Science\\n1. Name 3 living things in your garden\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/worksheets",
               "host": ["{{base_url}}"],
               "path": ["worksheets"]
+            }
+          }
+        },
+        {
+          "name": "Generate AI Worksheet for Child",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.status === 'success') {",
+                  "        pm.collectionVariables.set('worksheet_id', response.worksheet_id);",
+                  "        console.log('Generated worksheet for:', response.child_name);",
+                  "        console.log('Age group:', response.age_group);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2025-01-20\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/children/{{child_id}}/generate-worksheet",
+              "host": ["{{base_url}}"],
+              "path": ["children", "{{child_id}}", "generate-worksheet"]
+            }
+          }
+        },
+        {
+          "name": "Preview AI Worksheet",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/children/{{child_id}}/preview-worksheet",
+              "host": ["{{base_url}}"],
+              "path": ["children", "{{child_id}}", "preview-worksheet"]
+            }
+          }
+        },
+        {
+          "name": "Generate Worksheets for All Children (Paid)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2025-01-20\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/generate-worksheets-bulk",
+              "host": ["{{base_url}}"],
+              "path": ["generate-worksheets-bulk"]
             }
           }
         }

@@ -29,12 +29,14 @@ require_once 'conf.php';
 require_once 'Router.php';
 require_once 'UserAuthAPI.php';
 require_once 'WorksheetAPI.php';
+require_once 'WorksheetGeneratorAPI.php';
 require_once 'JWTAuth.php';
 require_once 'AuthMiddleware.php';
 
 // Initialize APIs and Router
 $userAuthAPI = new UserAuthAPI();
 $worksheetAPI = new WorksheetAPI();
+$worksheetGeneratorAPI = new WorksheetGeneratorAPI();
 $router = new Router();
 $jwtAuth = new JWTAuth();
 
@@ -293,6 +295,72 @@ $router->addRoute('GET', '/stats/worksheets', function($params, $data, $context)
     }
     
     return $worksheetAPI->getWorksheetStats($context['userData']['id']);
+});
+
+// ==================== AI WORKSHEET GENERATION ROUTES ====================
+
+// Generate personalized worksheet for a specific child (protected)
+$router->addRoute('POST', '/children/{child_id}/generate-worksheet', function($params, $data, $context) use ($worksheetGeneratorAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    $date = $data['date'] ?? null;
+    return $worksheetGeneratorAPI->generateWorksheet($context['userData']['id'], $params['child_id'], $date);
+});
+
+// Preview worksheet content without saving (protected)
+$router->addRoute('GET', '/children/{child_id}/preview-worksheet', function($params, $data, $context) use ($worksheetGeneratorAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    return $worksheetGeneratorAPI->previewWorksheet($context['userData']['id'], $params['child_id']);
+});
+
+// Generate worksheets for all children (paid users only) (protected)
+$router->addRoute('POST', '/generate-worksheets-bulk', function($params, $data, $context) use ($worksheetGeneratorAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    $date = $data['date'] ?? null;
+    return $worksheetGeneratorAPI->generateWorksheetForAllChildren($context['userData']['id'], $date);
+});
+
+// Test OpenAI connection (protected)
+$router->addRoute('GET', '/test-openai', function($params, $data, $context) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    try {
+        $apiKey = $_ENV['OPENAI_API_KEY'] ?? null;
+        if (!$apiKey) {
+            return ['status' => 'error', 'message' => 'OPENAI_API_KEY not configured'];
+        }
+        
+        $openai = new OpenaiProvider($apiKey, 'gpt-4');
+        $result = $openai->callApiWithoutEcho(
+            "Say 'Hello from Daily Homework API!' and confirm you can help create educational worksheets.",
+            "You are a helpful AI assistant for educational content creation."
+        );
+        
+        if ($result) {
+            return [
+                'status' => 'success',
+                'message' => 'OpenAI connection successful',
+                'response' => $result['content'],
+                'tokens_used' => $result['tokens_in'] + $result['tokens_out'],
+                'latency_ms' => $result['latency_ms']
+            ];
+        } else {
+            return ['status' => 'error', 'message' => 'Failed to connect to OpenAI'];
+        }
+        
+    } catch (Exception $e) {
+        return ['status' => 'error', 'message' => $e->getMessage()];
+    }
 });
 
 // Handle the request
