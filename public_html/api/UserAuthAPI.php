@@ -106,14 +106,14 @@ class UserAuthAPI {
                 throw new Exception('User already exists');
             }
 
-            // Create user
+            // Generate user ID and create user
+            $userId = Database::generateUserId();
             $stmt = $this->pdo->prepare("
-                INSERT INTO users (email, plan, is_verified) 
-                VALUES (?, 'free', 0)
+                INSERT INTO users (id, email, plan, is_verified) 
+                VALUES (?, ?, 'free', 0)
             ");
             
-            $stmt->execute([$data['email']]);
-            $userId = $this->pdo->lastInsertId();
+            $stmt->execute([$userId, $data['email']]);
 
             // Generate welcome token for immediate access
             $token = bin2hex(random_bytes(32));
@@ -308,20 +308,21 @@ class UserAuthAPI {
                 throw new Exception('Name and age group are required');
             }
 
+            // Generate child ID
+            $childId = Database::generateChildId();
             $stmt = $this->pdo->prepare("
-                INSERT INTO children (user_id, name, age_group, interest1, interest2) 
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO children (id, user_id, name, age_group, interest1, interest2) 
+                VALUES (?, ?, ?, ?, ?, ?)
             ");
             
             $stmt->execute([
+                $childId,
                 $userId,
                 $data['name'],
                 $data['age_group'],
                 $data['interest1'] ?? null,
                 $data['interest2'] ?? null
             ]);
-
-            $childId = $this->pdo->lastInsertId();
 
             return [
                 'status' => 'success',

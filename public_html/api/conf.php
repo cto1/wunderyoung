@@ -35,7 +35,7 @@ class Database {
     private function createTables() {
         // 🧑 Parent accounts
         $sql = "CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             email TEXT UNIQUE NOT NULL,
             plan TEXT NOT NULL DEFAULT 'free',
             is_verified INTEGER NOT NULL DEFAULT 0,
@@ -49,7 +49,7 @@ class Database {
         // ✉️ Passwordless login tokens
         $sql = "CREATE TABLE IF NOT EXISTS magic_links (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
+            user_id TEXT NOT NULL,
             token TEXT NOT NULL,
             expires_at DATETIME NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -59,8 +59,8 @@ class Database {
 
         // 👧 Children (siblings)
         $sql = "CREATE TABLE IF NOT EXISTS children (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
+            id TEXT PRIMARY KEY,
+            user_id TEXT NOT NULL,
             name TEXT NOT NULL,
             age_group TEXT NOT NULL,
             interest1 TEXT,
@@ -72,8 +72,8 @@ class Database {
 
         // 📄 Daily worksheets (grouped by day, all subjects in one)
         $sql = "CREATE TABLE IF NOT EXISTS worksheets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            child_id INTEGER NOT NULL,
+            id TEXT PRIMARY KEY,
+            child_id TEXT NOT NULL,
             date DATE NOT NULL,
             content TEXT NOT NULL,
             pdf_path TEXT NOT NULL,
@@ -94,5 +94,18 @@ class Database {
 
     public function getPDO() {
         return $this->pdo;
+    }
+
+    // Generate random string IDs
+    public static function generateUserId() {
+        return 'user_' . bin2hex(random_bytes(8));
+    }
+
+    public static function generateChildId() {
+        return 'child_' . bin2hex(random_bytes(8));
+    }
+
+    public static function generateWorksheetId() {
+        return 'ws_' . strtoupper(bin2hex(random_bytes(4)));
     }
 }

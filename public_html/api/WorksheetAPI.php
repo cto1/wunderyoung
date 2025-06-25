@@ -32,21 +32,22 @@ class WorksheetAPI {
                 throw new Exception('Worksheet already exists for this date');
             }
 
+            // Generate worksheet ID
+            $worksheetId = Database::generateWorksheetId();
             $stmt = $this->pdo->prepare("
-                INSERT INTO worksheets (child_id, date, content, pdf_path) 
-                VALUES (?, ?, ?, ?)
+                INSERT INTO worksheets (id, child_id, date, content, pdf_path) 
+                VALUES (?, ?, ?, ?, ?)
             ");
             
             $pdfPath = 'worksheets/' . $data['child_id'] . '/' . $data['date'] . '.pdf';
             
             $stmt->execute([
+                $worksheetId,
                 $data['child_id'],
                 $data['date'],
                 $data['content'],
                 $pdfPath
             ]);
-
-            $worksheetId = $this->pdo->lastInsertId();
 
             return [
                 'status' => 'success',

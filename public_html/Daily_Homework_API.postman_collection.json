@@ -8,7 +8,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost/api",
+      "value": "http://dailyhome.work/api",
       "type": "string"
     },
     {
@@ -18,6 +18,11 @@
     },
     {
       "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_email",
       "value": "",
       "type": "string"
     },
@@ -76,6 +81,24 @@
         },
         {
           "name": "Request Login (Magic Link)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.status === 'success') {",
+                  "        pm.collectionVariables.set('user_id', response.user_id);",
+                  "        pm.collectionVariables.set('user_email', response.email);",
+                  "        console.log('Captured user_id:', response.user_id);",
+                  "        console.log('Captured email:', response.email);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -145,7 +168,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 1,\n  \"email\": \"test@example.com\",\n  \"plan\": \"free\"\n}"
+              "raw": "{\n  \"id\": \"{{user_id}}\",\n  \"email\": \"{{user_email}}\",\n  \"plan\": \"free\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/auth/token",
@@ -209,6 +232,7 @@
                   "    const response = pm.response.json();",
                   "    if (response.status === 'success') {",
                   "        pm.collectionVariables.set('child_id', response.child_id);",
+                  "        console.log('Captured child_id:', response.child_id);",
                   "    }",
                   "}"
                 ]
@@ -235,6 +259,48 @@
               "raw": "{{base_url}}/children",
               "host": ["{{base_url}}"],
               "path": ["children"]
+            }
+          }
+        },
+        {
+          "name": "Update Child",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Emma Updated\",\n  \"age_group\": \"Year 4\",\n  \"interest1\": \"Advanced Mathematics\",\n  \"interest2\": \"Physics\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/children/{{child_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["children", "{{child_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Child",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/children/{{child_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["children", "{{child_id}}"]
             }
           }
         }
