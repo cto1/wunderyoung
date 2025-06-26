@@ -1,0 +1,67 @@
+<!-- Home Hero Banner -->
+<section class="w-full">
+    <section class="relative z-20 w-full max-w-[90rem] mx-auto px-[5%]">
+        <div class="max-h-[60rem] pt-16 pb-0 flex flex-col justify-center items-center text-center space-y-6 max-w-4xl mx-auto">
+            
+            <span class="bg-secondary text-base-100 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Screen-Free Learning
+            </span>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+                Homework that arrives in your inbox. <br>
+                <span class="text-primary">No apps, no screens.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-base-content/80 max-w-3xl">
+                Daily printable worksheets personalised to your child — in just 15 minutes a day. 
+                Perfect for ages 3-11, curriculum-aligned, and designed by educators.
+            </p>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 mt-8">
+                <a href="#get-started" class="rounded-lg py-3 px-8 bg-secondary border border-black/10 text-base-100 text-base font-semibold cursor-pointer hover:bg-secondary/90 transition-colors">
+                    <i class="fas fa-rocket mr-2"></i>
+                    Get Started Free
+                </a>
+                <a href="#demo" class="rounded-lg py-3 px-8 border border-base-300 text-base-content font-semibold cursor-pointer hover:bg-base-200 transition-colors">
+                    <i class="fas fa-play mr-2"></i>
+                    See How It Works
+                </a>
+            </div>
+            
+            <!-- Email Capture -->
+            <div class="mt-8 w-full max-w-md">
+                <div class="bg-base-200/50 backdrop-blur-sm rounded-lg p-6">
+                    <h3 class="font-semibold mb-3 text-sm uppercase tracking-wider">Try it now:</h3>
+                    <form class="join w-full" onsubmit="handleEmailCapture(event)">
+                        <input type="email" placeholder="parent@email.com" class="input input-bordered join-item flex-1" required />
+                        <button type="submit" class="btn btn-secondary join-item">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                    <p class="text-xs mt-2 text-base-content/60">Get your first worksheet in 2 minutes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wrapper for Visual Content -->
+    <div class="lg:relative lg:-top-12 w-full overflow-hidden mt-12">
+        
+        <!-- Top Blur Overlay -->
+        <div class="absolute top-0 left-0 w-full h-24 z-10 pointer-events-none bg-gradient-to-b from-white/90 to-transparent backdrop-blur-sm hidden lg:block"></div>
+
+        <!-- Bottom Blur Overlay -->
+        <div class="absolute bottom-0 left-0 w-full h-24 z-10 pointer-events-none bg-gradient-to-t from-white/90 to-transparent backdrop-blur-sm hidden lg:block"></div>
+
+        <!-- Placeholder for worksheet preview visual -->
+        <div class="w-full h-96 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center rounded-lg mx-4 lg:mx-0">
+            <div class="text-center">
+                <i class="fas fa-file-alt text-6xl text-primary/50 mb-4"></i>
+                <p class="text-lg font-semibold text-base-content/60">Worksheet Preview</p>
+                <p class="text-sm text-base-content/40">Beautiful, personalized worksheets for your child</p>
+            </div>
+        </div>
+
+    </div>
+
+</section> 

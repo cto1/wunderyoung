@@ -1,0 +1,72 @@
+<?php
+// Load translations
+$lang = 'en_US'; // Default language
+if (file_exists(__DIR__ . "/../languages/{$lang}.php")) {
+    $translations = include __DIR__ . "/../languages/{$lang}.php";
+}
+
+function __($key) {
+    global $translations;
+    return $translations[$key] ?? $key;
+}
+?>
+<!DOCTYPE html>
+<html lang="en" data-theme="lofi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Homework - Screen-free learning delivered to your inbox</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Daily printable worksheets personalised to your child. No apps, no screens. Just 15 minutes a day of screen-free learning delivered to your inbox.">
+    <meta property="og:image" content="/website/assets/images/og-image.jpg">
+    <meta property="og:site_name" content="DailyHome.Work">
+    <meta property="og:title" content="Daily Homework - Screen-free learning delivered to your inbox">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Daily Homework">
+    <meta name="twitter:description" content="Daily printable worksheets personalised to your child. No apps, no screens.">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dailyhome.work">
+
+    <!-- DaisyUI & TailwindCSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--  Favicons -->
+    <link rel="icon" type="image/png" href="./assets/favicons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicons/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicons/apple-touch-icon.png">
+    <link rel="shortcut icon" href="./assets/favicons/favicon.ico">
+
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "DailyHome.Work",
+          "url": "https://dailyhome.work",
+          "logo": "/website/assets/images/logo.png",
+          "description": "Daily printable worksheets personalised to your child. Screen-free learning delivered to your inbox."
+        }
+    </script>
+
+    <!-- Font-Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<html>
+
+<head>
+
+</head>
+</rewritten_file> 
