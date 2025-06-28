@@ -5,9 +5,9 @@ $canonical_url = 'https://yeshomework.com/pricing.php';
 include 'website/include/header.html'; 
 ?>
 
-<main>
-    <!-- Hero Section -->
-    <section class="py-16 bg-gradient-to-br from-blue-50 to-purple-50">
+<!-- Hero Section -->
+<section class="w-full py-16 bg-gradient-to-br from-blue-50 to-purple-50">
+    <div class="w-full">
         <div class="container mx-auto max-w-6xl px-4 text-center">
             <h1 class="text-5xl font-bold mb-6 text-gray-800">
                 Final Pricing Plans
@@ -21,8 +21,10 @@ include 'website/include/header.html';
                 <span class="text-gray-600">Cancel Anytime</span>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
+<main>
     <!-- Pricing Cards -->
     <section class="py-16 bg-white">
         <div class="container mx-auto max-w-7xl px-4">

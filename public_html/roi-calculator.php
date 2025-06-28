@@ -5,29 +5,31 @@
   <!-- Navbar -->
   <?php include 'website/include/navbar.html'; ?>
   
-  <main>
+  <!-- ROI Calculator Hero -->
+  <section class="w-full bg-gradient-to-br from-warning/10 to-secondary/10">
+      <div class="w-full">
+          <section class="relative z-20 w-full max-w-[90rem] mx-auto px-[5%]">
+              <div class="pt-16 pb-12 text-center space-y-8 max-w-4xl mx-auto">
+                  
+                  <span class="bg-warning text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                      ROI Calculator
+                  </span>
+                  
+                  <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight">
+                      Calculate your potential cost savings
+                  </h1>
+                  
+                  <p class="text-xl md:text-2xl text-base-content/80 max-w-3xl mx-auto leading-relaxed">
+                                              Discover how much time and money you could save by using Yes Homework, 
+                      the screen-free homework solution that eliminates planning stress.
+                  </p>
+                  
+              </div>
+          </section>
+      </div>
+  </section>
 
-    <!-- ROI Calculator Hero -->
-    <section class="w-full">
-        <section class="relative z-20 w-full max-w-[90rem] mx-auto px-[5%]">
-            <div class="pt-16 pb-12 text-center space-y-8 max-w-4xl mx-auto">
-                
-                <span class="bg-warning text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                    ROI Calculator
-                </span>
-                
-                <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight">
-                    Calculate your potential cost savings
-                </h1>
-                
-                <p class="text-xl md:text-2xl text-base-content/80 max-w-3xl mx-auto leading-relaxed">
-                                            Discover how much time and money you could save by using Yes Homework, 
-                    the screen-free homework solution that eliminates planning stress.
-                </p>
-                
-            </div>
-        </section>
-    </section>
+  <main>
 
     <!-- ROI Calculator Tool -->
     <section class="w-full max-w-[90rem] mx-auto py-[80px] px-[5%]">

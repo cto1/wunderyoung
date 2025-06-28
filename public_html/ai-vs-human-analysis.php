@@ -1,29 +1,31 @@
 <?php include 'website/include/header.html'; ?>
 
   
-  <main>
+  <!-- Hero Section -->
+  <section class="w-full bg-gradient-to-br from-info/10 to-primary/10">
+      <div class="w-full">
+          <section class="relative z-20 w-full max-w-[90rem] mx-auto px-[5%]">
+              <div class="pt-16 pb-12 text-center space-y-8 max-w-4xl mx-auto">
+                  
+                  <span class="bg-info text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                      Analysis Comparison
+                  </span>
+                  
+                  <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
+                      AI vs Human Analysis: The Future of Homework Planning
+                  </h1>
+                  
+                  <p class="text-lg md:text-xl text-base-content/80 max-w-3xl mx-auto leading-relaxed">
+                      Understanding the strengths and limitations of both approaches helps families 
+                      make informed decisions about their children's education.
+                  </p>
+                  
+              </div>
+          </section>
+      </div>
+  </section>
 
-    <!-- Hero Section -->
-    <section class="w-full">
-        <section class="relative z-20 w-full max-w-[90rem] mx-auto px-[5%]">
-            <div class="pt-16 pb-12 text-center space-y-8 max-w-4xl mx-auto">
-                
-                <span class="bg-info text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                    Analysis Comparison
-                </span>
-                
-                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
-                    AI vs Human Analysis: The Future of Homework Planning
-                </h1>
-                
-                <p class="text-lg md:text-xl text-base-content/80 max-w-3xl mx-auto leading-relaxed">
-                    Understanding the strengths and limitations of both approaches helps families 
-                    make informed decisions about their children's education.
-                </p>
-                
-            </div>
-        </section>
-    </section>
+  <main>
 
     <!-- Comparison Section -->
     <section class="w-full max-w-[90rem] mx-auto py-[80px] px-[5%]">

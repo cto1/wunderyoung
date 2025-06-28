@@ -1,10 +1,10 @@
 <?php include 'website/include/header.html'; ?>
   
 
-  <main>
+  <!-- Home Hero Banner -->
+  <?php include 'website/include/home-hero-banner.html'; ?>
 
-    <!-- Home Hero Banner -->
-    <?php include 'website/include/home-hero-banner.html'; ?>
+  <main>
 
     <!-- Home Social Proof -->
     <?php include 'website/include/home-social-proof.html'; ?>
