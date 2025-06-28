@@ -21,7 +21,7 @@
                 </h1>
                 
                 <p class="text-xl md:text-2xl text-base-content/80 max-w-3xl mx-auto leading-relaxed">
-                    Discover how much time and money you could save by using DailyHome.Work, 
+                                            Discover how much time and money you could save by using Yes Homework, 
                     the screen-free homework solution that eliminates planning stress.
                 </p>
                 
@@ -145,7 +145,7 @@
                             <div class="bg-warning/20 rounded-lg p-6 mb-6">
                                 <h4 class="font-bold text-xl mb-2">
                                     <i class="fas fa-lightbulb text-warning mr-2"></i>
-                                    DailyHome.Work Premium: €9/month
+                                    Yes Homework Premium: €9/month
                                 </h4>
                                 <p class="text-lg" id="roiMessage">See your ROI calculation above</p>
                             </div>

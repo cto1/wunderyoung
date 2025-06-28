@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms of Service - Daily Homework</title>
-    <meta name="description" content="Terms of Service for Daily Homework - dailyhome.work">
+    <meta name="description" content="Terms of Service for Yes Homework">
     
     <!-- Tailwind CSS + DaisyUI -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -32,7 +32,7 @@
 
             <div class="bg-base-200 p-6 rounded-lg mb-8">
                 <h2 class="text-2xl font-semibold mb-4">1. Agreement to Terms</h2>
-                <p>By accessing and using Daily Homework ("we", "us", "our") located at dailyhome.work, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+                <p>By accessing and using Yes Homework ("we", "us", "our"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
             </div>
 
             <div class="bg-base-100 p-6 rounded-lg mb-8">
@@ -184,7 +184,7 @@
     <!-- Footer -->
     <footer class="footer footer-center p-10 bg-neutral text-neutral-content mt-16">
         <aside>
-            <p>&copy; <?php echo date('Y'); ?> Daily Homework - dailyhome.work</p>
+            <p>&copy; <?php echo date('Y'); ?> Yes Homework</p>
         </aside>
     </footer>
 </body>

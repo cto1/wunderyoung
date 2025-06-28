@@ -44,7 +44,7 @@ include 'include/translations.php';
         <div class="navbar-start">
             <a href="/website/" class="btn btn-ghost text-xl font-bold text-primary">
                 <i class="fas fa-home mr-2"></i>
-                DailyHome.Work
+                Yes! Homework
             </a>
         </div>
         <div class="navbar-center hidden lg:flex">

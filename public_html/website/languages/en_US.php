@@ -9,7 +9,7 @@ return [
     /* -------------------- [Headers] -------------------- */
 
     // ---------- header.html ----------
-    'website_title' => 'DailyHome.Work',
+    'website_title' => 'Yes Homework',
     
     // ---------- vault & bsa Header ----------
     'logout' => 'Logout'

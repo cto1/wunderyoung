@@ -1,13 +1,13 @@
-Your DailyHome.Work Login Link
+Your Yes Homework Login Link
 
-Click the link below to securely log into your DailyHome.Work account:
+Click the link below to securely log into your Yes Homework account:
 
 {{LOGIN_LINK}}
 
 SECURITY NOTE: This link will expire in 1 hour for your security. If you didn't request this login link, please ignore this email.
 
 Happy learning!
-The DailyHome.Work Team
+The Yes Homework Team
 
 ---
 This email was sent to {{EMAIL}}. If you didn't request this login link, please ignore this email. 

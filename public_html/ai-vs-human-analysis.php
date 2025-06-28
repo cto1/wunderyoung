@@ -97,12 +97,12 @@
         </div>
     </section>
 
-    <!-- How DailyHome.Work Combines Both -->
+            <!-- How Yes Homework Combines Both -->
     <section class="w-full bg-base-200">
         <div class="w-full max-w-[90rem] mx-auto py-[80px] px-[5%]">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold mb-6">
-                    How DailyHome.Work Combines Both
+                    How Yes Homework Combines Both
                 </h2>
                 <p class="text-lg text-base-content/70 max-w-3xl mx-auto">
                     We use AI to handle the heavy lifting, so parents can focus on what matters most

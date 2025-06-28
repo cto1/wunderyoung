@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - Daily Homework</title>
-    <meta name="description" content="Privacy Policy for Daily Homework - dailyhome.work">
+    <meta name="description" content="Privacy Policy for Yes Homework">
     
     <!-- Tailwind CSS + DaisyUI -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -198,7 +198,7 @@
     <!-- Footer -->
     <footer class="footer footer-center p-10 bg-neutral text-neutral-content mt-16">
         <aside>
-            <p>&copy; <?php echo date('Y'); ?> Daily Homework - dailyhome.work</p>
+            <p>&copy; <?php echo date('Y'); ?> Yes Homework</p>
         </aside>
     </footer>
 </body>
