@@ -4,6 +4,9 @@ header('Content-Type: application/json');
 
 require_once 'conf.php';
 require_once 'EmailTemplates.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use Mailgun\Mailgun;
 
 class UserAuthAPI {
     private $db;
@@ -23,17 +26,71 @@ class UserAuthAPI {
             error_log("Email to: $to");
             error_log("Subject: $subject");
             error_log("Login link: " . strip_tags($textContent));
-            return true; // Simulate successful sending
+            return true; // Simulate successful sending in development
         }
 
+        // Try Mailgun SDK first (more robust)
+        if ($this->sendEmailViaSDK($to, $subject, $textContent, $htmlContent, $mailgunDomain, $mailgunApiKey)) {
+            return true;
+        }
+        
+        // Fallback to cURL method (your original working method)
+        error_log("Falling back to cURL method for email sending");
+        return $this->sendEmailViaCurl($to, $subject, $textContent, $htmlContent, $mailgunDomain, $mailgunApiKey);
+    }
+    
+    private function sendEmailViaSDK($to, $subject, $textContent, $htmlContent, $mailgunDomain, $mailgunApiKey) {
+        try {
+            // Initialize Mailgun client
+            $mailgun = Mailgun::create($mailgunApiKey);
+            
+            // Prepare email data
+            $fromName = getenv('MAILGUN_FROM_NAME') ?: 'Yes Homework';
+            $fromEmail = getenv('MAILGUN_FROM_EMAIL') ?: "noreply@{$mailgunDomain}";
+            
+            $messageData = [
+                'from' => "{$fromName} <{$fromEmail}>",
+                'to' => $to,
+                'subject' => $subject,
+                'text' => $textContent,
+                'html' => $htmlContent,
+                'o:tracking' => 'yes',
+                'o:tracking-clicks' => 'yes',
+                'o:tracking-opens' => 'yes'
+            ];
+
+            // Send the email
+            $result = $mailgun->messages()->send($mailgunDomain, $messageData);
+            
+            if ($result->getId()) {
+                error_log("Email sent successfully via SDK to: $to (Message ID: " . $result->getId() . ")");
+                return true;
+            } else {
+                error_log("SDK: Failed to send email to: $to - No message ID returned");
+                return false;
+            }
+            
+        } catch (\Exception $e) {
+            error_log("Mailgun SDK error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    private function sendEmailViaCurl($to, $subject, $textContent, $htmlContent, $mailgunDomain, $mailgunApiKey) {
         $url = "https://api.mailgun.net/v3/{$mailgunDomain}/messages";
         
+        $fromName = getenv('MAILGUN_FROM_NAME') ?: 'Yes Homework';
+        $fromEmail = getenv('MAILGUN_FROM_EMAIL') ?: "noreply@{$mailgunDomain}";
+        
         $postData = [
-            'from' => "Daily Homework <noreply@{$mailgunDomain}>",
+            'from' => "{$fromName} <{$fromEmail}>",
             'to' => $to,
             'subject' => $subject,
             'text' => $textContent,
-            'html' => $htmlContent
+            'html' => $htmlContent,
+            'o:tracking' => 'yes',
+            'o:tracking-clicks' => 'yes',
+            'o:tracking-opens' => 'yes'
         ];
 
         $ch = curl_init();
@@ -52,15 +109,15 @@ class UserAuthAPI {
         curl_close($ch);
 
         if ($error) {
-            error_log("Curl error: " . $error);
+            error_log("cURL error: " . $error);
             return false;
         }
 
         if ($httpCode >= 200 && $httpCode < 300) {
-            error_log("Email sent successfully to: $to");
+            error_log("Email sent successfully via cURL to: $to");
             return true;
         } else {
-            error_log("Failed to send email. HTTP Code: $httpCode, Response: $response");
+            error_log("cURL: Failed to send email. HTTP Code: $httpCode, Response: $response");
             return false;
         }
     }

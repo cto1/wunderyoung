@@ -1,0 +1,22 @@
+{
+    "name": "dailyhomework/api",
+    "description": "Daily Homework API with authentication and worksheet generation",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "mailgun/mailgun-php": "^4.0",
+        "symfony/http-client": "^6.0|^7.0",
+        "nyholm/psr7": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DailyHomework\\": "public_html/api/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "prefer-stable": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+} 

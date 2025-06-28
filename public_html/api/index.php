@@ -1,6 +1,7 @@
 <?php
 // Daily Homework API - Main entry point
 require_once 'env.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 loadEnv();
 
 // Configure error handling based on environment
