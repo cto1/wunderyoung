@@ -21,10 +21,10 @@
     <!-- Home Pricing -->
     <?php include 'website/include/home-pricing.html'; ?>
 
-    <!-- Home CTA Section -->
-    <?php include 'website/include/home-cta.html'; ?>
-
   </main>
+  
+  <!-- Home CTA Section -->
+  <?php include 'website/include/home-cta.html'; ?>
   
   <!-- Footer -->
   <?php include 'website/include/footer.html'; ?>

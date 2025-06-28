@@ -286,28 +286,29 @@ include 'website/include/header.html';
         </div>
     </section>
 
-    <!-- Final CTA -->
-    <section class="w-full py-16 bg-gradient-to-r from-primary to-secondary">
-        <div class="w-full">
-            <div class="container mx-auto max-w-4xl px-4 text-center text-white">
-                <h2 class="text-4xl font-bold mb-6">Ready to Start Screen-Free Learning?</h2>
-                <p class="text-xl mb-8 opacity-90">
-                    Join thousands of families already using Yes Homework. Start free, no credit card required.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/app/signup.php" class="btn btn-white btn-lg">
-                        <i class="fas fa-rocket mr-2"></i>
-                        Start Free Today
-                    </a>
-                    <a href="/#how-it-works" class="btn btn-outline btn-white btn-lg">
-                        <i class="fas fa-play mr-2"></i>
-                        See How It Works
-                    </a>
-                </div>
+</main>
+
+<!-- Final CTA -->
+<section class="w-full py-16 bg-gradient-to-r from-primary to-secondary">
+    <div class="w-full">
+        <div class="container mx-auto max-w-4xl px-4 text-center text-white">
+            <h2 class="text-4xl font-bold mb-6">Ready to Start Screen-Free Learning?</h2>
+            <p class="text-xl mb-8 opacity-90">
+                Join thousands of families already using Yes Homework. Start free, no credit card required.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/app/signup.php" class="btn btn-white btn-lg">
+                    <i class="fas fa-rocket mr-2"></i>
+                    Start Free Today
+                </a>
+                <a href="/#how-it-works" class="btn btn-outline btn-white btn-lg">
+                    <i class="fas fa-play mr-2"></i>
+                    See How It Works
+                </a>
             </div>
         </div>
-    </section>
-</main>
+    </div>
+</section>
 
 <!-- Footer -->
 <?php include 'website/include/footer.html'; ?>
