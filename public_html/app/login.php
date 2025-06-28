@@ -30,8 +30,8 @@ include 'include/header.html';
                 <!-- Login Method Tabs -->
                 <div class="tabs tabs-boxed mb-6">
                     <a class="tab tab-active" onclick="switchLoginMethod('passwordless')" id="passwordlessTab">
-                        <i class="fas fa-magic mr-2"></i>
-                        Magic Link
+                        <i class="fas fa-envelope mr-2"></i>
+                        Email Link
                     </a>
                     <a class="tab" onclick="switchLoginMethod('password')" id="passwordTab">
                         <i class="fas fa-key mr-2"></i>
@@ -57,7 +57,7 @@ include 'include/header.html';
                         <label class="label">
                             <span class="label-text-alt">
                                 <a href="#" onclick="switchLoginMethod('passwordless')" class="link link-primary">
-                                    Forgot password? Use magic link instead
+                                    Forgot password? Use email link instead
                                 </a>
                             </span>
                         </label>
@@ -67,11 +67,11 @@ include 'include/header.html';
                     <div id="loginExplanation" class="bg-info/10 border border-info/20 rounded-lg p-4">
                         <h4 class="font-semibold text-info mb-2">
                             <i class="fas fa-info-circle mr-2"></i>
-                            How magic link login works
+                            How email link login works
                         </h4>
                         <ol class="text-sm space-y-1 text-gray-700">
                             <li>1. Enter your email address</li>
-                            <li>2. Click "Send Magic Link"</li>
+                            <li>2. Click "Send Email Link"</li>
                             <li>3. Check your email for a login link</li>
                             <li>4. Click the link to sign in instantly</li>
                         </ol>
@@ -83,7 +83,7 @@ include 'include/header.html';
 
                     <button type="submit" class="btn btn-sophisticated w-full btn-lg">
                         <i id="loginButtonIcon" class="fas fa-paper-plane mr-2"></i>
-                        <span id="loginButtonText">Send Magic Link</span>
+                        <span id="loginButtonText">Send Email Link</span>
                     </button>
                     
                     <!-- Alternative method link -->
@@ -139,11 +139,11 @@ function switchLoginMethod(method) {
         explanation.innerHTML = `
             <h4 class="font-semibold text-info mb-2">
                 <i class="fas fa-info-circle mr-2"></i>
-                How magic link login works
+                How email link login works
             </h4>
             <ol class="text-sm space-y-1 text-gray-700">
                 <li>1. Enter your email address</li>
-                <li>2. Click "Send Magic Link"</li>
+                <li>2. Click "Send Email Link"</li>
                 <li>3. Check your email for a login link</li>
                 <li>4. Click the link to sign in instantly</li>
             </ol>
@@ -153,7 +153,7 @@ function switchLoginMethod(method) {
             </p>
         `;
         
-        buttonText.innerHTML = 'Send Magic Link';
+        buttonText.innerHTML = 'Send Email Link';
         buttonIcon.className = 'fas fa-paper-plane mr-2';
         altMethodLink.innerHTML = 'Use password instead';
         altMethodLink.onclick = () => switchLoginMethod('password');
@@ -173,13 +173,13 @@ function switchLoginMethod(method) {
             </p>
             <p class="text-xs text-gray-600 mt-3">
                 <i class="fas fa-lightbulb mr-1"></i>
-                Tip: Magic link login is more secure and convenient.
+                Tip: Email link login is more secure and convenient.
             </p>
         `;
         
         buttonText.innerHTML = 'Sign In';
         buttonIcon.className = 'fas fa-sign-in-alt mr-2';
-        altMethodLink.innerHTML = 'Use magic link instead';
+        altMethodLink.innerHTML = 'Use email link instead';
         altMethodLink.onclick = () => switchLoginMethod('passwordless');
     }
 }
