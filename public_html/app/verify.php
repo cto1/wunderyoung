@@ -138,18 +138,8 @@ if (empty($token) || empty($email)) {
             }
         }
         
-        // Manual verification for debugging
-        window.onload = function() {
-            // Show manual verification option
-            document.getElementById('loading-container').style.display = 'none';
-            document.getElementById('manual-verify-container').style.display = 'block';
-        };
-        
-        function manualVerify() {
-            document.getElementById('manual-verify-container').style.display = 'none';
-            document.getElementById('loading-container').style.display = 'block';
-            getJwtToken();
-        }
+        // Run authentication on page load
+        window.onload = getJwtToken;
     </script>
     <style>
         .main-container {
@@ -264,44 +254,8 @@ if (empty($token) || empty($email)) {
 </head>
 <body>
     <div class="main-container">
-        <!-- Manual Verification State -->
-        <div id="manual-verify-container">
-            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
-                <div class="success-icon">
-                    <i class="fas fa-bug text-white text-2xl"></i>
-                </div>
-                
-                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
-                    Debug Verification
-                </h2>
-                
-                <div class="alert alert-info mb-6">
-                    <i class="fas fa-info-circle"></i>
-                    <div>
-                        <div class="font-bold">Link Details:</div>
-                        <div class="text-sm">
-                            <div><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></div>
-                            <div><strong>Token:</strong> <?php echo htmlspecialchars(substr($token, 0, 16) . '...'); ?></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button onclick="manualVerify()" class="btn btn-modern btn-wide mb-4">
-                    <i class="fas fa-play mr-2"></i>
-                    Start Verification
-                </button>
-                
-                <div class="text-center">
-                    <a href="/app/login.php" class="btn btn-outline btn-sm">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Back to Login
-                    </a>
-                </div>
-            </div>
-        </div>
-        
         <!-- Loading State -->
-        <div id="loading-container" style="display: none;">
+        <div id="loading-container">
             <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
                 <div class="success-icon pulse-animation">
                     <i class="fas fa-shield-alt text-white text-2xl"></i>

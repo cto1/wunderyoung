@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body data-theme="light">
+<body data-theme="winter">
     <!-- Navigation -->
     <div class="navbar bg-base-100 shadow-lg">
         <div class="navbar-start">
