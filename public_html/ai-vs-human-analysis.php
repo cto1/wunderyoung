@@ -1,8 +1,5 @@
 <?php include 'website/include/header.html'; ?>
 
-<body>
-  
-  <?php include 'website/include/navbar.html'; ?>
   
   <main>
 

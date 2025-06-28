@@ -4,15 +4,7 @@ $page_description = 'Read our terms of service for using Yes Homework educationa
 $canonical_url = 'https://yeshomework.com/terms.php';
 include 'website/include/header.html'; 
 ?>
-    <!-- Navigation -->
-    <div class="navbar bg-base-100 shadow-lg">
-        <div class="navbar-start">
-            <a href="/" class="btn btn-ghost text-xl font-bold">Yes Homework</a>
-        </div>
-        <div class="navbar-end">
-            <a href="/" class="btn btn-primary">Back to Home</a>
-        </div>
-    </div>
+   
 
     <!-- Terms Content -->
     <div class="container mx-auto px-4 py-8 max-w-4xl">

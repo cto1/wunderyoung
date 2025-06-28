@@ -1,64 +1,237 @@
 <!-- Navigation -->
 <nav class="navbar bg-base-100 shadow-lg sticky top-0 z-50">
-    <div class="navbar-start">
-        <div class="dropdown">
-            <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-                </svg>
-            </div>
-            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#features">Features</a></li>
-                <li>
-                    <details>
-                        <summary>Resources</summary>
-                        <ul class="bg-base-100 rounded-t-none p-2">
-                            <li><a href="roi-calculator.php">ROI Calculator</a></li>
-                            <li><a href="ai-vs-human-analysis.php">AI vs Human Analysis</a></li>
-                            <li><a href="#worksheet-previews">Sample Worksheets</a></li>
-                            <li><a href="/app/login.php">Parent Dashboard</a></li>
-                            <li><a href="privacy.php">Privacy Policy</a></li>
-                            <li><a href="terms.php">Terms of Service</a></li>
-                        </ul>
-                    </details>
-                </li>
-                <li><a href="#pricing">Pricing</a></li>
-            </ul>
-        </div>
-        <a href="#" class="btn btn-ghost text-xl font-bold text-primary">
-            <i class="fas fa-home mr-2"></i>
-                          Yes! Homework
-        </a>
-    </div>
-    <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1">
-            <li><a href="#how-it-works" class="hover:text-primary transition-colors">How It Works</a></li>
-            <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
-            <li class="dropdown dropdown-hover">
-                <div tabindex="0" role="button" class="hover:text-primary transition-colors">
-                    Resources
-                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    <div class="container mx-auto max-w-7xl px-4">
+        
+        <!-- Mobile: Logo and Hamburger -->
+        <div class="navbar-start">
+            <!-- Hamburger Menu (Mobile Only) -->
+            <div class="dropdown lg:hidden">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-square">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </div>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="roi-calculator.php">ROI Calculator</a></li>
-                    <li><a href="ai-vs-human-analysis.php">AI vs Human Analysis</a></li>
-                    <li><a href="#worksheet-previews">Sample Worksheets</a></li>
-                    <li><a href="/app/login.php">Parent Dashboard</a></li>
-                    <li><a href="privacy.php">Privacy Policy</a></li>
-                    <li><a href="terms.php">Terms of Service</a></li>
+                <!-- Mobile Dropdown Menu -->
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow-lg bg-base-100 rounded-box w-72 border border-base-300">
+                    <!-- Main Navigation Items -->
+                    <li class="mb-2">
+                        <a href="/#how-it-works" class="flex items-center py-3 text-base font-medium">
+                            <i class="fas fa-play-circle mr-3 text-primary"></i>
+                            How It Works
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="/#features" class="flex items-center py-3 text-base font-medium">
+                            <i class="fas fa-star mr-3 text-primary"></i>
+                            Features
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="/pricing.php" class="flex items-center py-3 text-base font-medium">
+                            <i class="fas fa-tag mr-3 text-primary"></i>
+                            Pricing
+                        </a>
+                    </li>
+                    
+                    <!-- Resources Submenu -->
+                    <li class="mb-4">
+                        <details>
+                            <summary class="flex items-center py-3 text-base font-medium">
+                                <i class="fas fa-folder mr-3 text-primary"></i>
+                                Resources
+                            </summary>
+                            <ul class="bg-base-100 rounded-t-none p-2 ml-6 mt-2 space-y-1">
+                                <li>
+                                    <a href="/roi-calculator.php" class="flex items-center py-2 text-sm">
+                                        <i class="fas fa-calculator mr-3 text-secondary text-xs"></i>
+                                        ROI Calculator
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/ai-vs-human-analysis.php" class="flex items-center py-2 text-sm">
+                                        <i class="fas fa-chart-line mr-3 text-secondary text-xs"></i>
+                                        AI vs Human Analysis
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/#worksheet-previews" class="flex items-center py-2 text-sm">
+                                        <i class="fas fa-file-alt mr-3 text-secondary text-xs"></i>
+                                        Sample Worksheets
+                                    </a>
+                                </li>
+                                <li class="divider my-2"></li>
+                                <li>
+                                    <a href="/privacy.php" class="flex items-center py-2 text-xs text-gray-500">
+                                        <i class="fas fa-shield-alt mr-3 text-gray-400"></i>
+                                        Privacy Policy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/terms.php" class="flex items-center py-2 text-xs text-gray-500">
+                                        <i class="fas fa-file-contract mr-3 text-gray-400"></i>
+                                        Terms of Service
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                    
+                    <!-- Divider -->
+                    <li class="divider"></li>
+                    
+                    <!-- Action Items -->
+                    <li class="mb-2">
+                        <a href="/app/login.php" class="flex items-center py-3 text-base font-medium text-info">
+                            <i class="fas fa-sign-in-alt mr-3"></i>
+                            Sign In
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/app/signup.php" class="btn btn-primary w-full">
+                            <i class="fas fa-rocket mr-2"></i>
+                            Get Started Free
+                        </a>
+                    </li>
                 </ul>
-            </li>
-            <li><a href="#pricing" class="hover:text-primary transition-colors">Pricing</a></li>
-        </ul>
+            </div>
+            
+            <!-- Logo -->
+            <a href="/" class="btn btn-ghost text-lg sm:text-xl font-bold text-primary ml-2 lg:ml-0">
+                <i class="fas fa-home mr-2"></i>
+                <span class="hidden xs:inline">Yes! Homework</span>
+                <span class="xs:hidden">Yes!</span>
+            </a>
+        </div>
+        
+        <!-- Desktop Navigation (Hidden on Mobile) -->
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1 gap-1">
+                <li>
+                    <a href="/#how-it-works" class="hover:text-primary transition-colors font-medium px-4">
+                        How It Works
+                    </a>
+                </li>
+                <li>
+                    <a href="/#features" class="hover:text-primary transition-colors font-medium px-4">
+                        Features
+                    </a>
+                </li>
+                <li class="dropdown dropdown-hover">
+                    <div tabindex="0" role="button" class="hover:text-primary transition-colors font-medium flex items-center px-4">
+                        Resources
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <ul tabindex="0" class="dropdown-content z-[1] menu p-3 shadow-lg bg-base-100 rounded-box w-64 border border-base-300">
+                        <li>
+                            <a href="/roi-calculator.php" class="flex items-center py-2">
+                                <i class="fas fa-calculator mr-3 text-secondary"></i>
+                                ROI Calculator
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/ai-vs-human-analysis.php" class="flex items-center py-2">
+                                <i class="fas fa-chart-line mr-3 text-secondary"></i>
+                                AI vs Human Analysis
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/#worksheet-previews" class="flex items-center py-2">
+                                <i class="fas fa-file-alt mr-3 text-secondary"></i>
+                                Sample Worksheets
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="/privacy.php" class="flex items-center py-1 text-sm text-gray-500">
+                                <i class="fas fa-shield-alt mr-3 text-gray-400"></i>
+                                Privacy Policy
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/terms.php" class="flex items-center py-1 text-sm text-gray-500">
+                                <i class="fas fa-file-contract mr-3 text-gray-400"></i>
+                                Terms of Service
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/pricing.php" class="hover:text-primary transition-colors font-medium px-4">
+                        Pricing
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Right Side Actions -->
+        <div class="navbar-end">
+            <!-- Desktop Actions -->
+            <div class="hidden lg:flex items-center gap-3">
+                <a href="/app/login.php" class="btn btn-ghost hover:text-primary transition-colors">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Sign In
+                </a>
+                <a href="/app/signup.php" class="btn btn-primary">
+                    <i class="fas fa-rocket mr-2"></i>
+                    Get Started Free
+                </a>
+            </div>
+            
+            <!-- Mobile Actions (Compact) -->
+            <div class="flex lg:hidden items-center gap-2">
+                <a href="/app/login.php" class="btn btn-ghost btn-sm text-xs">
+                    <i class="fas fa-sign-in-alt sm:mr-1"></i>
+                    <span class="hidden sm:inline">Sign In</span>
+                </a>
+                <a href="/app/signup.php" class="btn btn-primary btn-sm text-xs">
+                    <i class="fas fa-rocket sm:mr-1"></i>
+                    <span class="hidden sm:inline">Get Started</span>
+                    <span class="sm:hidden">Start</span>
+                </a>
+            </div>
+        </div>
+        
     </div>
-    <div class="navbar-end">
-        <a href="/app/login.php" class="btn btn-ghost mr-2 hover:text-primary transition-colors">
-            <i class="fas fa-sign-in-alt mr-2"></i>
-            Sign In
-        </a>
-        <a href="#get-started" class="btn btn-primary">Get Started Free</a>
-    </div>
-</nav> 
+</nav>
+
+<!-- Custom CSS for extra responsiveness -->
+<style>
+@media (max-width: 475px) {
+    .xs\:hidden {
+        display: none !important;
+    }
+    .xs\:inline {
+        display: inline !important;
+    }
+}
+
+/* Ensure dropdown stays on screen on mobile */
+@media (max-width: 1024px) {
+    .dropdown-content {
+        position: fixed !important;
+        left: 1rem !important;
+        right: 1rem !important;
+        width: auto !important;
+        max-width: calc(100vw - 2rem) !important;
+    }
+}
+
+/* Better mobile menu animation */
+.dropdown-content {
+    transform-origin: top;
+    animation: dropdown-open 0.2s ease-out;
+}
+
+@keyframes dropdown-open {
+    from {
+        opacity: 0;
+        transform: scaleY(0.8) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+    }
+}
+</style> 

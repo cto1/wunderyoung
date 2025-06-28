@@ -1,9 +1,4 @@
 <?php include 'website/include/header.html'; ?>
-
-<body>
-  
-  <!-- Navbar -->
-  <?php include 'website/include/navbar.html'; ?>
   
 
   <main>

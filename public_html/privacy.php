@@ -4,15 +4,6 @@ $page_description = 'Learn how Yes Homework protects your privacy and handles yo
 $canonical_url = 'https://yeshomework.com/privacy.php';
 include 'website/include/header.html'; 
 ?>
-    <!-- Navigation -->
-    <div class="navbar bg-base-100 shadow-lg">
-        <div class="navbar-start">
-            <a href="/" class="btn btn-ghost text-xl font-bold">Yes Homework</a>
-        </div>
-        <div class="navbar-end">
-            <a href="/" class="btn btn-primary">Back to Home</a>
-        </div>
-    </div>
 
     <!-- Privacy Policy Content -->
     <div class="container mx-auto px-4 py-8 max-w-4xl">
