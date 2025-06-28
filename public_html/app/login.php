@@ -1,322 +1,154 @@
 <?php 
-$page_title = 'Sign In - Yes Homework';
+$page_title = "Login - Yes Homework";
+$page_description = "Login to your Yes Homework account";
 include 'include/header.html'; 
 ?>
 
-<main class="min-h-screen flex items-center justify-center py-12 px-4">
-    <div class="max-w-md w-full space-y-8">
-        
-        <!-- Success message from signup -->
-        <?php if (isset($_GET['signup']) && $_GET['signup'] == 'success'): ?>
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i>
-            <span>Account created! Check your email for a login link, or sign in with your password below.</span>
-        </div>
-        <?php endif; ?>
-        
-        <!-- Header -->
-        <div class="text-center">
-            <div class="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center mb-6">
-                <i class="fas fa-home text-2xl text-white"></i>
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="card w-full max-w-md card-sophisticated shadow-2xl">
+        <div class="card-body">
+            <h2 class="card-title text-2xl font-bold text-center mb-6">Welcome Back</h2>
+            
+            <!-- Success Message -->
+            <div id="success-message" class="alert alert-success hidden mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="success-text"></span>
             </div>
-            <h2 class="text-3xl font-bold mb-2">Welcome back</h2>
-            <p class="text-gray-600">Sign in to access your child's worksheets</p>
-        </div>
 
-        <!-- Login Method Selection -->
-        <div class="card card-sophisticated shadow-2xl">
-            <div class="card-body p-8">
-                
-                <!-- Login Method Tabs -->
-                <div class="tabs tabs-boxed mb-6">
-                    <a class="tab tab-active" onclick="switchLoginMethod('passwordless')" id="passwordlessTab">
-                        <i class="fas fa-envelope mr-2"></i>
-                        Email Link
-                    </a>
-                    <a class="tab" onclick="switchLoginMethod('password')" id="passwordTab">
-                        <i class="fas fa-key mr-2"></i>
-                        Password
-                    </a>
+            <!-- Error Message -->
+            <div id="error-message" class="alert alert-error hidden mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="error-text"></span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Email</span>
+                    </label>
+                    <input type="email" id="email" class="input input-bordered" required>
                 </div>
 
-                <!-- Email Field (Always visible) -->
-                <form id="loginForm" class="space-y-6">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Email Address</span>
-                        </label>
-                        <input type="email" name="email" placeholder="parent@example.com" class="input input-bordered w-full" required>
-                    </div>
+                <div class="form-control mt-4">
+                    <label class="label">
+                        <span class="label-text">Password (optional)</span>
+                    </label>
+                    <input type="password" id="password" class="input input-bordered" placeholder="Leave empty for magic link">
+                    <label class="label">
+                        <span class="label-text-alt">Don't have a password? Leave blank for magic link login</span>
+                    </label>
+                </div>
 
-                    <!-- Password Field (Hidden by default) -->
-                    <div class="form-control" id="passwordField" style="display: none;">
-                        <label class="label">
-                            <span class="label-text font-semibold">Password</span>
-                        </label>
-                        <input type="password" name="password" placeholder="Enter your password" class="input input-bordered w-full">
-                        <label class="label">
-                            <span class="label-text-alt">
-                                <a href="#" onclick="switchLoginMethod('passwordless')" class="link link-primary">
-                                    Forgot password? Use email link instead
-                                </a>
-                            </span>
-                        </label>
-                    </div>
-
-                    <!-- Login Method Explanation -->
-                    <div id="loginExplanation" class="bg-info/10 border border-info/20 rounded-lg p-4">
-                        <h4 class="font-semibold text-info mb-2">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            How email link login works
-                        </h4>
-                        <ol class="text-sm space-y-1 text-gray-700">
-                            <li>1. Enter your email address</li>
-                            <li>2. Click "Send Email Link"</li>
-                            <li>3. Check your email for a login link</li>
-                            <li>4. Click the link to sign in instantly</li>
-                        </ol>
-                        <p class="text-xs text-gray-600 mt-3">
-                            <i class="fas fa-shield-alt mr-1"></i>
-                            More secure than passwords - links expire after 1 hour.
-                        </p>
-                    </div>
-
-                    <button type="submit" class="btn btn-sophisticated w-full btn-lg">
-                        <i id="loginButtonIcon" class="fas fa-paper-plane mr-2"></i>
-                        <span id="loginButtonText">Send Email Link</span>
+                <div class="form-control mt-6">
+                    <button type="submit" class="btn btn-sophisticated" id="login-btn">
+                        <span class="loading loading-spinner loading-sm hidden" id="login-spinner"></span>
+                        <span id="login-btn-text">Login</span>
                     </button>
-                    
-                    <!-- Alternative method link -->
-                    <div class="text-center">
-                        <a href="#" onclick="switchLoginMethod('password')" class="link link-primary text-sm" id="altMethodLink">
-                            <i class="fas fa-key mr-1"></i>
-                            Use password instead
-                        </a>
-                    </div>
-                </form>
+                </div>
+            </form>
+
+            <div class="divider">OR</div>
+
+            <div class="text-center">
+                <p class="text-sm mb-4">Don't have an account?</p>
+                <a href="signup.php" class="btn btn-outline btn-sm">Create Account</a>
             </div>
         </div>
-
-        <!-- Sign Up Link -->
-        <div class="text-center">
-            <p class="text-gray-600">Don't have an account?</p>
-            <a href="signup.php" class="btn btn-outline btn-primary mt-2">
-                <i class="fas fa-user-plus mr-2"></i>
-                Create Free Account
-            </a>
-        </div>
-
     </div>
-</main>
+</div>
 
 <script>
-let currentLoginMethod = 'passwordless';
-
-function switchLoginMethod(method) {
-    currentLoginMethod = method;
-    
-    // Update tab appearance
-    document.getElementById('passwordlessTab').classList.remove('tab-active');
-    document.getElementById('passwordTab').classList.remove('tab-active');
-    
-    if (method === 'passwordless') {
-        document.getElementById('passwordlessTab').classList.add('tab-active');
-    } else {
-        document.getElementById('passwordTab').classList.add('tab-active');
-    }
-    
-    // Show/hide password field
-    const passwordField = document.getElementById('passwordField');
-    const explanation = document.getElementById('loginExplanation');
-    const buttonText = document.getElementById('loginButtonText');
-    const buttonIcon = document.getElementById('loginButtonIcon');
-    const altMethodLink = document.getElementById('altMethodLink');
-    
-    if (method === 'passwordless') {
-        passwordField.style.display = 'none';
-        passwordField.querySelector('input').required = false;
-        
-        explanation.innerHTML = `
-            <h4 class="font-semibold text-info mb-2">
-                <i class="fas fa-info-circle mr-2"></i>
-                How email link login works
-            </h4>
-            <ol class="text-sm space-y-1 text-gray-700">
-                <li>1. Enter your email address</li>
-                <li>2. Click "Send Email Link"</li>
-                <li>3. Check your email for a login link</li>
-                <li>4. Click the link to sign in instantly</li>
-            </ol>
-            <p class="text-xs text-gray-600 mt-3">
-                <i class="fas fa-shield-alt mr-1"></i>
-                More secure than passwords - links expire after 1 hour.
-            </p>
-        `;
-        
-        buttonText.innerHTML = 'Send Email Link';
-        buttonIcon.className = 'fas fa-paper-plane mr-2';
-        altMethodLink.innerHTML = 'Use password instead';
-        altMethodLink.onclick = () => switchLoginMethod('password');
-        
-    } else {
-        passwordField.style.display = 'block';
-        passwordField.querySelector('input').required = true;
-        
-        explanation.innerHTML = `
-            <h4 class="font-semibold text-warning mb-2">
-                <i class="fas fa-info-circle mr-2"></i>
-                Password login
-            </h4>
-            <p class="text-sm text-gray-700">
-                Enter your email and password to sign in. If you forgot your password or don't have one, 
-                you can always use the magic link option instead.
-            </p>
-            <p class="text-xs text-gray-600 mt-3">
-                <i class="fas fa-lightbulb mr-1"></i>
-                Tip: Email link login is more secure and convenient.
-            </p>
-        `;
-        
-        buttonText.innerHTML = 'Sign In';
-        buttonIcon.className = 'fas fa-sign-in-alt mr-2';
-        altMethodLink.innerHTML = 'Use email link instead';
-        altMethodLink.onclick = () => switchLoginMethod('passwordless');
-    }
-}
-
-// Form submission handling
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
+document.getElementById('login-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const formData = new FormData(this);
-    const email = formData.get('email');
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const loginBtn = document.getElementById('login-btn');
+    const loginSpinner = document.getElementById('login-spinner');
+    const loginBtnText = document.getElementById('login-btn-text');
     
     // Show loading state
-    submitBtn.disabled = true;
-    const originalContent = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<span class="loading loading-spinner loading-sm mr-2"></span>Signing in...';
+    loginBtn.disabled = true;
+    loginSpinner.classList.remove('hidden');
+    loginBtnText.textContent = 'Logging in...';
+    
+    // Hide previous messages
+    document.getElementById('success-message').classList.add('hidden');
+    document.getElementById('error-message').classList.add('hidden');
     
     try {
-        let response, data;
+        let response;
         
-        if (currentLoginMethod === 'passwordless') {
-            // Magic link login
-            response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: email })
-            });
-            
-            data = await response.json();
-            
-            if (data.status === 'success') {
-                // Show success message
-                const successDiv = document.createElement('div');
-                successDiv.className = 'alert alert-success mb-4';
-                successDiv.innerHTML = `
-                    <i class="fas fa-check-circle"></i>
-                    <span>Login link sent! Check your email and click the link to sign in.</span>
-                `;
-                
-                const form = document.getElementById('loginForm');
-                form.parentNode.insertBefore(successDiv, form);
-                
-                // Scroll to show success message
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                
-            } else {
-                throw new Error(data.message || 'Failed to send login link');
-            }
-            
-        } else {
+        if (password.trim()) {
             // Password login
-            const password = formData.get('password');
-            if (!password) {
-                throw new Error('Please enter your password');
-            }
-            
-            response = await fetch('/api/auth/password-login', {
+            response = await fetch('../api/auth/password-login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: email, password: password })
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
             });
-            
-            data = await response.json();
-            
-            if (data.status === 'success') {
-                // Generate JWT token
-                const tokenResponse = await fetch('/api/auth/token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        id: data.id,
-                        email: data.email 
-                    }),
-                });
-                
-                const tokenData = await tokenResponse.json();
-                
-                if (tokenData.status === 'success') {
-                    // Store JWT and user data
-                    localStorage.setItem('jwt_token', tokenData.token);
-                    localStorage.setItem('user_id', tokenData.user.id);
-                    localStorage.setItem('user_email', tokenData.user.email);
-                    localStorage.setItem('user_plan', tokenData.user.plan);
-                    
-                    // Redirect to child setup or worksheets
-                    window.location.href = 'child-setup.php';
-                } else {
-                    throw new Error(tokenData.message || 'Failed to generate access token');
-                }
+        } else {
+            // Magic link login
+            response = await fetch('../api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email
+                })
+            });
+        }
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            if (password.trim()) {
+                // Direct password login - store token and redirect
+                localStorage.setItem('authToken', 'authenticated');
+                localStorage.setItem('user', JSON.stringify({
+                    id: result.id,
+                    email: result.email,
+                    plan: result.plan
+                }));
+                window.location.href = 'worksheets.php';
             } else {
-                throw new Error(data.message || 'Login failed');
+                // Magic link sent
+                showSuccess('✉️ Check your email! A login link has been sent to ' + email);
             }
+        } else {
+            showError(result.message || 'Login failed');
         }
         
     } catch (error) {
         console.error('Login error:', error);
-        
-        // Show error message
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'alert alert-error mb-4';
-        errorDiv.innerHTML = `
-            <i class="fas fa-exclamation-circle"></i>
-            <span>${error.message}</span>
-        `;
-        
-        const form = document.getElementById('loginForm');
-        form.parentNode.insertBefore(errorDiv, form);
-        
-        // Remove error after 5 seconds
-        setTimeout(() => {
-            errorDiv.remove();
-        }, 5000);
-        
+        showError('Network error. Please try again.');
     } finally {
         // Reset button state
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalContent;
+        loginBtn.disabled = false;
+        loginSpinner.classList.add('hidden');
+        loginBtnText.textContent = 'Login';
     }
 });
 
-// Pre-fill email from URL parameter
-const urlParams = new URLSearchParams(window.location.search);
-const email = urlParams.get('email');
-if (email) {
-    document.querySelector('input[name="email"]').value = email;
+function showSuccess(message) {
+    document.getElementById('success-text').textContent = message;
+    document.getElementById('success-message').classList.remove('hidden');
 }
 
-// Initialize with passwordless method
-document.addEventListener('DOMContentLoaded', function() {
-    switchLoginMethod('passwordless');
-});
+function showError(message) {
+    document.getElementById('error-text').textContent = message;
+    document.getElementById('error-message').classList.remove('hidden');
+}
 </script>
 
 </body>

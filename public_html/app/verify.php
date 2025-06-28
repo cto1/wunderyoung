@@ -12,208 +12,99 @@ if (empty($token) || empty($email)) {
 }
 
 $page_title = 'Verifying Login - Yes Homework';
+$page_description = 'Verifying your login link';
 include 'include/header.html';
 ?>
 
-    <script>
-        // Function to get JWT token using email verification token
-        async function getJwtToken() {
-            const email = "<?php echo htmlspecialchars($email); ?>";
-            const token = "<?php echo htmlspecialchars($token); ?>";
-            
-            console.log("Email:", email);
-            console.log("Token:", token);
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="card w-full max-w-md card-sophisticated shadow-2xl">
+        <div class="card-body text-center">
+            <div id="loading-state">
+                <span class="loading loading-spinner loading-lg text-primary mb-4"></span>
+                <h2 class="card-title text-xl font-bold mb-2">Verifying Login...</h2>
+                <p class="text-gray-600">Please wait while we verify your login link.</p>
+            </div>
 
-            try {
-                // Step 1: Verify the email token
-                console.log("Verifying email token...");
-                const verifyResponse = await fetch(`/api/auth/verify?email=${encodeURIComponent(email)}&token=${token}`);
-                const verifyData = await verifyResponse.json();
-                console.log("Verification response:", verifyData);
-                
-                if (verifyData.status !== 'success') {
-                    throw new Error(verifyData.message || 'Verification failed');
-                }
-                
-                // Step 2: Get a JWT token using the verified user data
-                console.log("Getting JWT token...");
-                const tokenResponse = await fetch('/api/auth/token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        id: verifyData.id,
-                        email: verifyData.email 
-                    }),
-                });
-                
-                const tokenData = await tokenResponse.json();
-                console.log("Token response:", tokenData);
-                
-                if (tokenData.status !== 'success' || !tokenData.token) {
-                    throw new Error(tokenData.message || 'Failed to get token');
-                }
-                
-                // Save JWT token and user info to localStorage
-                localStorage.setItem('jwt_token', tokenData.token);
-                localStorage.setItem('user_id', verifyData.id);
-                localStorage.setItem('user_email', verifyData.email);
-                localStorage.setItem('user_plan', verifyData.plan);
-                
-                console.log("Authentication successful!");
-                
-                // Show success message instead of auto-redirect
-                document.getElementById('loading-container').style.display = 'none';
-                document.getElementById('success-container').style.display = 'block';
-                
-            } catch (error) {
-                console.error('Authentication error:', error);
-                const errorMessage = error.message;
-                const errorContainer = document.getElementById('error-container');
-                const loadingContainer = document.getElementById('loading-container');
-                
-                // Show appropriate error message and actions
-                document.getElementById('error-message').textContent = errorMessage;
-                
-                // Show different actions based on error type
-                const errorActions = document.getElementById('error-actions');
-                if (errorMessage.includes('already been used') || errorMessage.includes('expired')) {
-                    errorActions.innerHTML = `
-                        <div class="text-center space-y-3">
-                            <a href="/app/login.php" class="btn btn-modern btn-wide">
-                                <i class="fas fa-magic mr-2"></i>
-                                Request New Login Link
-                            </a>
-                            <p class="text-sm text-gray-500">Or try logging in with your password if you have one</p>
-                            <a href="/app/login.php?tab=password" class="btn btn-outline btn-sm">
-                                <i class="fas fa-key mr-2"></i>
-                                Use Password Instead
-                            </a>
-                        </div>
-                    `;
-                } else {
-                    errorActions.innerHTML = `
-                        <div class="text-center space-y-3">
-                            <a href="/app/login.php" class="btn btn-modern btn-wide">
-                                <i class="fas fa-arrow-left mr-2"></i>
-                                Try Logging In Again
-                            </a>
-                        </div>
-                    `;
-                }
-                
-                errorContainer.style.display = 'block';
-                loadingContainer.style.display = 'none';
-            }
-        }
-        
-        // Run authentication on page load
-        window.onload = getJwtToken;
-    </script>
-    <style>
-        .main-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 1rem;
-        }
-        
-        #loading-container {
-            text-align: center;
-        }
-        
-        #error-container {
-            display: none;
-        }
-        
-        .loader {
-            width: 85px;
-            height: 50px;
-            background-repeat: no-repeat;
-            background-image: linear-gradient(#463AA2 50px, transparent 0),
-                              linear-gradient(#463AA2 50px, transparent 0),
-                              linear-gradient(#463AA2 50px, transparent 0),
-                              linear-gradient(#463AA2 50px, transparent 0),
-                              linear-gradient(#463AA2 50px, transparent 0),
-                              linear-gradient(#463AA2 50px, transparent 0);
-            background-position: 0px center, 15px center, 30px center, 45px center, 60px center, 75px center;
-            animation: rikSpikeRoll 0.65s linear infinite alternate;
-            margin: 0 auto 2rem auto;
-        }
-        
-        @keyframes rikSpikeRoll {
-            0% { background-size: 10px 3px; }
-            16% { background-size: 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px, 10px 3px; }
-            33% { background-size: 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px; }
-            50% { background-size: 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px, 10px 3px; }
-            66% { background-size: 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px, 10px 3px; }
-            83% { background-size: 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px; }
-            100% { background-size: 10px 3px, 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px; }
-        }
-        
-        .verification-card {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .error-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem auto;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
-        }
-        
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #51cf66, #40c057);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem auto;
-            box-shadow: 0 10px 30px rgba(81, 207, 102, 0.3);
-        }
-        
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .btn-modern {
-            background: linear-gradient(135deg, #463AA2, #5b4fc7);
-            border: none;
-            color: white;
-            font-weight: 600;
-            text-transform: none;
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(70, 58, 162, 0.3);
-        }
-        
-        .btn-modern:hover {
-            background: linear-gradient(135deg, #5b4fc7, #463AA2);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(70, 58, 162, 0.4);
-            color: white;
-        }
-    </style>
+            <!-- Success State -->
+            <div id="success-state" class="hidden">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="card-title text-xl font-bold text-success mb-2">Login Successful!</h2>
+                <p class="text-gray-600 mb-4">Redirecting you to your worksheets...</p>
+                <div class="loading loading-spinner loading-md text-success"></div>
+            </div>
 
-    
+            <!-- Error State -->
+            <div id="error-state" class="hidden">
+                <div class="text-6xl mb-4">❌</div>
+                <h2 class="card-title text-xl font-bold text-error mb-2">Verification Failed</h2>
+                <p id="error-message" class="text-gray-600 mb-6"></p>
+                
+                <div class="space-y-2">
+                    <a href="login.php" class="btn btn-primary btn-block">Request New Login Link</a>
+                    <a href="signup.php" class="btn btn-outline btn-block">Create New Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    // Get email and token from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    const token = urlParams.get('token');
+
+    if (!email || !token) {
+        showError('Invalid verification link. Email and token are required.');
+        return;
+    }
+
+    try {
+        // Verify the login token
+        const response = await fetch(`../api/auth/verify?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`);
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            // Store user data and redirect
+            localStorage.setItem('authToken', 'authenticated');
+            localStorage.setItem('user', JSON.stringify({
+                id: result.id,
+                email: result.email,
+                plan: result.plan
+            }));
+
+            showSuccess();
+
+            // Redirect after a short delay to show success state
+            setTimeout(() => {
+                window.location.href = 'worksheets.php';
+            }, 2000);
+
+        } else {
+            showError(result.message || 'Verification failed');
+        }
+
+    } catch (error) {
+        console.error('Verification error:', error);
+        showError('Network error. Please try again or request a new login link.');
+    }
+});
+
+function showSuccess() {
+    document.getElementById('loading-state').classList.add('hidden');
+    document.getElementById('error-state').classList.add('hidden');
+    document.getElementById('success-state').classList.remove('hidden');
+}
+
+function showError(message) {
+    document.getElementById('loading-state').classList.add('hidden');
+    document.getElementById('success-state').classList.add('hidden');
+    document.getElementById('error-message').textContent = message;
+    document.getElementById('error-state').classList.remove('hidden');
+}
+</script>
+
     <!-- DaisyUI & TailwindCSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -233,99 +124,5 @@ include 'include/header.html';
     
 </head>
 <body>
-    <div class="main-container">
-        <!-- Loading State -->
-        <div id="loading-container">
-            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
-                <div class="success-icon pulse-animation">
-                    <i class="fas fa-shield-alt text-white text-2xl"></i>
-                </div>
-                
-                <div class="loader mb-6"></div>
-                
-                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
-                    Verifying Your Login
-                </h2>
-                
-                <p class="text-center text-gray-600 text-lg mb-6">
-                    Please wait while we securely verify your login link...
-                </p>
-                
-                <div class="flex justify-center">
-                    <div class="flex space-x-1">
-                        <div class="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                        <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Success State -->
-        <div id="success-container" style="display: none;">
-            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle text-white text-2xl"></i>
-                </div>
-                
-                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
-                    Verification Successful!
-                </h2>
-                
-                <div class="alert alert-success mb-6">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Your account has been verified and you're now logged in.</span>
-                </div>
-                
-                <div class="text-center space-y-3">
-                    <a href="/app/worksheets.php" class="btn btn-modern btn-wide">
-                        <i class="fas fa-file-alt mr-2"></i>
-                        Go to Worksheets
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Error State -->  
-        <div id="error-container">
-            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
-                <div class="error-icon">
-                    <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
-                </div>
-                
-                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
-                    Verification Failed
-                </h2>
-                
-                <div class="alert alert-error mb-6">
-                    <i class="fas fa-times-circle"></i>
-                    <span id="error-message">An error occurred during verification.</span>
-                </div>
-                
-                <div id="error-actions" class="text-center space-y-3">
-                    <a href="/app/login.php" class="btn btn-modern btn-wide">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Try Logging In Again
-                    </a>
-                </div>
-                
-                <div class="divider mt-6"></div>
-                
-                <div class="text-center">
-                    <p class="text-sm text-gray-500 mb-3">Need help?</p>
-                    <div class="flex justify-center space-x-4 text-sm">
-                        <a href="/website/" class="link link-primary">
-                            <i class="fas fa-home mr-1"></i>
-                            Home
-                        </a>
-                        <a href="mailto:support@yeshomework.com" class="link link-primary">
-                            <i class="fas fa-envelope mr-1"></i>
-                            Support
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
