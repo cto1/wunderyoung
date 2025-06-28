@@ -71,7 +71,17 @@ class UserAuthAPI {
             }
             
         } catch (\Exception $e) {
-            error_log("Mailgun SDK error: " . $e->getMessage());
+            $errorMessage = $e->getMessage();
+            error_log("Mailgun SDK error: " . $errorMessage);
+            
+            // Check for bounce-related errors
+            if (strpos($errorMessage, 'bounce') !== false || 
+                strpos($errorMessage, 'suppress') !== false ||
+                strpos($errorMessage, '605') !== false) {
+                error_log("BOUNCE DETECTED: Email $to is on bounce suppression list");
+                $this->handleBouncedEmail($to, $errorMessage);
+            }
+            
             return false;
         }
     }
@@ -118,8 +128,30 @@ class UserAuthAPI {
             return true;
         } else {
             error_log("cURL: Failed to send email. HTTP Code: $httpCode, Response: $response");
+            
+            // Check for bounce-related errors in response
+            if (strpos($response, 'bounce') !== false || 
+                strpos($response, 'suppress') !== false ||
+                $httpCode == 400) {
+                $this->handleBouncedEmail($to, "HTTP $httpCode: $response");
+            }
+            
             return false;
         }
+    }
+    
+    private function handleBouncedEmail($email, $reason) {
+        // Log the bounce
+        error_log("BOUNCE HANDLER: Email $email bounced - $reason");
+        
+        // TODO: You could implement these features:
+        // 1. Mark user as having bounced email in database
+        // 2. Send notification to admin about bounced emails
+        // 3. Implement email verification flow
+        // 4. Add to internal bounce suppression list
+        
+        // For now, just log it for manual review
+        error_log("ACTION NEEDED: Review bounced email address: $email");
     }
 
     private function sendLoginEmail($email, $token) {
@@ -195,14 +227,27 @@ class UserAuthAPI {
             $this->pdo->commit();
 
             // Send welcome email with login link
-            if (!$this->sendWelcomeEmail($data['email'], $token)) {
+            $emailSent = $this->sendWelcomeEmail($data['email'], $token);
+            if (!$emailSent) {
                 error_log("Failed to send welcome email to: " . $data['email']);
                 // Don't fail signup if email fails - user can still request login later
             }
 
-            $message = $passwordHash 
-                ? 'Account created successfully! You can login with your password or check your email for a magic link.'
-                : 'Account created successfully! Check your email for getting started instructions.';
+            // Customize message based on email delivery and auth method
+            $message = '';
+            if ($passwordHash) {
+                if ($emailSent) {
+                    $message = 'Account created successfully! You can login with your password or check your email for a magic link.';
+                } else {
+                    $message = 'Account created successfully! Please login with your password below. (Email delivery failed - you can request a new login link later.)';
+                }
+            } else {
+                if ($emailSent) {
+                    $message = 'Account created successfully! Check your email for getting started instructions.';
+                } else {
+                    $message = 'Account created, but email delivery failed. Please contact support or try signing up with a different email address.';
+                }
+            }
 
             return [
                 'status' => 'success', 
