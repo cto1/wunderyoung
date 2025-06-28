@@ -1,6 +1,6 @@
 <?php 
 $page_title = 'Get Started - Daily Homework';
-include 'include/app-header.html'; 
+include 'include/auth-header.html'; 
 ?>
 
 <main class="min-h-screen py-12 px-4">

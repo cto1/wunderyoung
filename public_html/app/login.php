@@ -1,6 +1,6 @@
 <?php 
 $page_title = 'Sign In - Daily Homework';
-include 'include/app-header.html'; 
+include 'include/auth-header.html'; 
 ?>
 
 <main class="min-h-screen flex items-center justify-center py-12 px-4">
