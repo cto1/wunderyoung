@@ -86,7 +86,7 @@ class UserAuthAPI {
         return $this->sendEmail($email, $template['subject'], $template['text'], $template['html']);
     }
 
-    // 1. Sign up with email
+    // 1. Sign up with email (and optionally password)
     public function signup($data) {
         try {
             if (!isset($data['email'])) {
@@ -95,6 +95,15 @@ class UserAuthAPI {
 
             if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
                 throw new Exception('Invalid email format');
+            }
+
+            // Validate password if provided (for traditional signup)
+            $passwordHash = null;
+            if (isset($data['password']) && !empty($data['password'])) {
+                if (strlen($data['password']) < 8) {
+                    throw new Exception('Password must be at least 8 characters long');
+                }
+                $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
             }
 
             $this->pdo->beginTransaction();
@@ -109,11 +118,11 @@ class UserAuthAPI {
             // Generate user ID and create user
             $userId = Database::generateUserId();
             $stmt = $this->pdo->prepare("
-                INSERT INTO users (id, email, plan, is_verified) 
-                VALUES (?, ?, 'free', 0)
+                INSERT INTO users (id, email, password_hash, plan, is_verified) 
+                VALUES (?, ?, ?, 'free', 0)
             ");
             
-            $stmt->execute([$userId, $data['email']]);
+            $stmt->execute([$userId, $data['email'], $passwordHash]);
 
             // Generate welcome token for immediate access
             $token = bin2hex(random_bytes(32));
@@ -134,10 +143,14 @@ class UserAuthAPI {
                 // Don't fail signup if email fails - user can still request login later
             }
 
+            $message = $passwordHash 
+                ? 'Account created successfully! You can login with your password or check your email for a magic link.'
+                : 'Account created successfully! Check your email for getting started instructions.';
+
             return [
                 'status' => 'success', 
                 'user_id' => $userId,
-                'message' => 'Account created successfully! Check your email for getting started instructions.'
+                'message' => $message
             ];
 
         } catch (Exception $e) {
@@ -241,7 +254,57 @@ class UserAuthAPI {
         }
     }
 
-    // 4. Get user profile
+    // 4. Password login
+    public function passwordLogin($email, $password) {
+        try {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw new Exception('Invalid email format');
+            }
+
+            if (empty($password)) {
+                throw new Exception('Password is required');
+            }
+
+            // Find user and verify password
+            $stmt = $this->pdo->prepare("SELECT id, email, password_hash, plan, is_verified FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$user) {
+                throw new Exception('Invalid email or password');
+            }
+
+            // Check if user has a password set
+            if (empty($user['password_hash'])) {
+                throw new Exception('This account uses passwordless login. Please request a magic link instead.');
+            }
+
+            // Verify password
+            if (!password_verify($password, $user['password_hash'])) {
+                throw new Exception('Invalid email or password');
+            }
+
+            // Mark user as verified (since they successfully logged in with password)
+            if (!$user['is_verified']) {
+                $stmt = $this->pdo->prepare("UPDATE users SET is_verified = 1 WHERE id = ?");
+                $stmt->execute([$user['id']]);
+                $user['is_verified'] = 1;
+            }
+
+            return [
+                'status' => 'success',
+                'id' => $user['id'],
+                'email' => $user['email'],
+                'plan' => $user['plan'],
+                'is_verified' => $user['is_verified']
+            ];
+
+        } catch (Exception $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+
+    // 5. Get user profile
     public function getProfile($userId) {
         try {
             $stmt = $this->pdo->prepare("

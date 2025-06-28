@@ -1,227 +1,434 @@
 <?php 
-// Enable error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-
-include 'include/translations.php'; 
-
-// Get email from URL parameter if provided
-$prefilled_email = isset($_GET['email']) ? htmlspecialchars($_GET['email']) : '';
+$page_title = 'Get Started - Daily Homework';
+include 'include/app-header.html'; 
 ?>
 
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-    
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Started - Daily Homework</title>
-    <meta name="description" content="Start your child's personalized learning journey with Daily Homework. Free worksheets delivered daily to your inbox.">
-
-    <?php
-    // Add Hotjar tracking code only for production environment (exactsum.com)
-    $domain = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
-    if (strpos($domain, 'exactsum.com') !== false && strpos($domain, 'demo.') !== 0) :
-    ?>
-    <!-- Hotjar Tracking Code for https://exactsum.com/app/ -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:6426506,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ERN0YG8LEM"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-ERN0YG8LEM');
-    </script>
-    <?php endif; ?>
-
-    <!--  Favicons -->
-    <link rel="icon" type="image/png" href="assets/favicons/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicons/favicon-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="assets/favicons/favicon.ico">
-
-    <!-- Font-Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- DaisyUI & TailwindCSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Include SheetJS CDN / xlsx library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-</head>
-
-<body class="bg-gradient-to-br from-blue-50 to-purple-50">
-
-    <!-- Navigation -->
-    <nav class="navbar bg-white shadow-lg">
-        <div class="navbar-start">
-            <a href="/website/" class="btn btn-ghost text-xl font-bold text-primary">
-                <i class="fas fa-home mr-2"></i>
-                DailyHome.Work
-            </a>
+<main class="min-h-screen py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+        
+        <!-- Progress Steps -->
+        <div class="steps steps-horizontal w-full mb-8">
+            <div class="step step-primary">Sign Up</div>
+            <div class="step">Add Child</div>
+            <div class="step">Start Learning</div>
         </div>
-        <div class="navbar-end">
-            <a href="login.php" class="btn btn-ghost mr-2">Sign In</a>
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-rocket text-2xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold mb-4">Start your free trial</h1>
+            <p class="text-lg text-gray-600">
+                Join hundreds of families enjoying screen-free homework
+            </p>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <section class="min-h-screen flex justify-center items-center p-5">
-        <div class="w-full max-w-md">
-            
-            <!-- Signup Card -->
-            <div class="card bg-white shadow-2xl">
-                <div class="card-body p-8">
-                    
-                    <!-- Header -->
-                    <div class="text-center mb-8">
-                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-rocket text-white text-2xl"></i>
-                        </div>
-                        <h1 class="text-3xl font-bold text-gray-800">Get Started Free!</h1>
-                        <p class="text-gray-600 mt-2">Create your account and get your first worksheet in 2 minutes</p>
-                    </div>
-
-                    <!-- Progress Steps -->
-                    <div class="mb-8">
-                        <ul class="steps steps-vertical lg:steps-horizontal w-full">
-                            <li class="step step-primary">Email</li>
-                            <li class="step">Child Info</li>
-                            <li class="step">First Worksheet</li>
-                        </ul>
-                    </div>
-
-                    <!-- Signup Form -->
-                    <div class="space-y-6">
-                        
-                        <!-- Email Input -->
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text font-medium">Your Email Address</span>
-                            </label>
-                            <div class="relative">
-                                <input type="email" id="signupEmailInput"
-                                    class="input input-bordered w-full pr-12" 
-                                    placeholder="parent@email.com" 
-                                    value="<?php echo $prefilled_email; ?>"
-                                    autocomplete="email">
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                    <i class="fas fa-envelope text-gray-400"></i>
-                                </div>
-                            </div>
-                            <label class="label">
-                                <span class="label-text-alt text-gray-500">We'll send your worksheets here</span>
-                            </label>
-                        </div>
-
-                        <!-- Message Container -->
-                        <div id="messageContainer" class="hidden">
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i>
-                                <span id="messageText"></span>
-                            </div>
-                        </div>
-
-                        <!-- Signup Button -->
-                        <button id="signupButton" class="btn btn-primary w-full btn-lg">
-                            <i class="fas fa-paper-plane mr-2"></i>
-                            Continue - It's Free!
-                        </button>
-
-                        <!-- Benefits List -->
-                        <div class="bg-green-50 rounded-lg p-4 mt-6">
-                            <h3 class="font-semibold text-green-800 mb-3">What you'll get:</h3>
-                            <ul class="space-y-2">
-                                <li class="flex items-center text-sm text-green-700">
-                                    <i class="fas fa-check text-green-500 mr-2"></i>
-                                    Daily personalized worksheets
-                                </li>
-                                <li class="flex items-center text-sm text-green-700">
-                                    <i class="fas fa-check text-green-500 mr-2"></i>
-                                    No apps or screen time required
-                                </li>
-                                <li class="flex items-center text-sm text-green-700">
-                                    <i class="fas fa-check text-green-500 mr-2"></i>
-                                    Curriculum-aligned activities
-                                </li>
-                                <li class="flex items-center text-sm text-green-700">
-                                    <i class="fas fa-check text-green-500 mr-2"></i>
-                                    Just 15 minutes per day
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Login Link -->
+        <!-- Signup Form -->
+        <div class="card card-sophisticated shadow-2xl">
+            <div class="card-body p-8">
+                
+                <!-- Benefits Preview -->
+                <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-6 mb-8">
+                    <h3 class="font-bold text-lg mb-4 text-center">
+                        <i class="fas fa-gift text-primary mr-2"></i>
+                        What you'll get free forever
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="text-center">
-                            <p class="text-sm text-gray-600">
-                                Already have an account?
-                                <a href="login.php" class="font-medium text-primary underline hover:text-primary/80">
-                                    Sign in here
-                                </a>
+                            <i class="fas fa-calendar-check text-primary text-2xl mb-2"></i>
+                            <h4 class="font-semibold">Daily Worksheets</h4>
+                            <p class="text-sm text-gray-600">Fresh content every morning</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-child text-secondary text-2xl mb-2"></i>
+                            <h4 class="font-semibold">1 Child</h4>
+                            <p class="text-sm text-gray-600">Perfect for getting started</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-book text-accent text-2xl mb-2"></i>
+                            <h4 class="font-semibold">Rotating Subjects</h4>
+                            <p class="text-sm text-gray-600">Maths & English weekly</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Method Selection -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-lg mb-4 text-center">
+                        <i class="fas fa-shield-alt text-success mr-2"></i>
+                        Choose your security method
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <!-- Passwordless Option -->
+                        <div class="card bg-gradient-to-br from-success/10 to-primary/10 border-2 border-success/20 hover:border-success/40 transition-all cursor-pointer" onclick="selectAuthMethod('passwordless')">
+                            <div class="card-body p-6 text-center">
+                                <div class="badge badge-success mb-3">RECOMMENDED</div>
+                                <i class="fas fa-magic text-success text-3xl mb-3"></i>
+                                <h4 class="font-bold text-lg">Passwordless</h4>
+                                <p class="text-sm text-gray-600 mb-4">More secure, no passwords to remember</p>
+                                <ul class="text-xs text-left space-y-1">
+                                    <li>✅ Login via email links</li>
+                                    <li>✅ No password to forget</li>
+                                    <li>✅ Enhanced security</li>
+                                    <li>✅ Quick access</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Traditional Option -->
+                        <div class="card bg-base-200 border-2 border-base-300 hover:border-base-400 transition-all cursor-pointer" onclick="selectAuthMethod('traditional')">
+                            <div class="card-body p-6 text-center">
+                                <div class="badge badge-outline mb-3">FAMILIAR</div>
+                                <i class="fas fa-key text-primary text-3xl mb-3"></i>
+                                <h4 class="font-bold text-lg">Traditional</h4>
+                                <p class="text-sm text-gray-600 mb-4">Classic email + password setup</p>
+                                <ul class="text-xs text-left space-y-1">
+                                    <li>✅ Familiar process</li>
+                                    <li>✅ Set your own password</li>
+                                    <li>⚠️ Need to remember password</li>
+                                    <li>⚠️ Can be less secure</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form starts here -->
+                <form id="signupForm" class="space-y-6">
+                    <input type="hidden" name="auth_method" id="authMethod" value="passwordless">
+                    
+                    <!-- Email Field -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Email Address</span>
+                            <span class="label-text-alt text-red-500">*</span>
+                        </label>
+                        <input type="email" 
+                               name="email" 
+                               placeholder="parent@example.com" 
+                               class="input input-bordered w-full" 
+                               required>
+                        <label class="label">
+                            <span class="label-text-alt text-gray-500">We'll send your worksheets here</span>
+                        </label>
+                    </div>
+
+                    <!-- How it works explanation -->
+                    <div id="howItWorksExplanation" class="bg-info/10 border border-info/20 rounded-lg p-4">
+                        <h4 class="font-semibold text-info mb-2">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            How passwordless signup works
+                        </h4>
+                        <ol class="text-sm space-y-1 text-gray-700">
+                            <li>1. Enter your email and click "Create Account"</li>
+                            <li>2. Check your email for a welcome message with a login link</li>
+                            <li>3. Click the link to access your account instantly</li>
+                            <li>4. For future logins, just request a new link - no password needed!</li>
+                        </ol>
+                        <p class="text-xs text-gray-600 mt-3">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            More secure than passwords because login links expire after 1 hour and are single-use.
+                        </p>
+                    </div>
+
+                    <!-- Password Field (hidden by default) -->
+                    <div class="form-control" id="passwordField" style="display: none;">
+                        <label class="label">
+                            <span class="label-text font-semibold">Create Password</span>
+                            <span class="label-text-alt text-red-500">*</span>
+                        </label>
+                        <input type="password" 
+                               name="password" 
+                               placeholder="Choose a secure password" 
+                               class="input input-bordered w-full">
+                        <label class="label">
+                            <span class="label-text-alt text-gray-500">At least 8 characters</span>
+                        </label>
+                    </div>
+
+                    <!-- Terms Checkbox -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-start">
+                            <input type="checkbox" name="terms" class="checkbox checkbox-primary mr-3" required>
+                            <span class="label-text">
+                                I agree to the 
+                                <a href="/terms.php" target="_blank" class="link link-primary">Terms of Service</a> 
+                                and 
+                                <a href="/privacy.php" target="_blank" class="link link-primary">Privacy Policy</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Marketing Opt-in -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer justify-start">
+                            <input type="checkbox" name="marketing" class="checkbox checkbox-secondary mr-3" checked>
+                            <span class="label-text">
+                                Send me tips and updates about Daily Homework (optional)
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Sign Up Button -->
+                    <button type="submit" class="btn btn-sophisticated w-full btn-lg">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        <span id="signupButtonText">Create Account - No Password Needed</span>
+                    </button>
+
+                </form>
+
+                <!-- Divider -->
+                <div class="divider my-6">Already have an account?</div>
+
+                <!-- Sign In Link -->
+                <div class="text-center">
+                    <a href="login.php" class="btn btn-outline btn-primary">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In Instead
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Trust Signals -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div class="flex items-center justify-center space-x-2 text-gray-600">
+                <i class="fas fa-shield-alt text-success"></i>
+                <span class="text-sm">100% Secure</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2 text-gray-600">
+                <i class="fas fa-credit-card text-info"></i>
+                <span class="text-sm">No Credit Card</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2 text-gray-600">
+                <i class="fas fa-times-circle text-warning"></i>
+                <span class="text-sm">Cancel Anytime</span>
+            </div>
+        </div>
+
+        <!-- Upgrade Preview -->
+        <div class="mt-12">
+            <div class="card bg-gradient-to-r from-warning/10 to-orange-100 border border-warning/20">
+                <div class="card-body p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg">
+                                <i class="fas fa-star text-warning mr-2"></i>
+                                Want more? Upgrade to Premium
+                            </h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                3 children • All subjects • Full personalization • €9/month
                             </p>
                         </div>
-
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Trust Signals -->
-            <div class="mt-8 text-center">
-                <div class="bg-white/80 backdrop-blur-sm rounded-lg p-6">
-                    <div class="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                            <div class="text-2xl font-bold text-primary">10,000+</div>
-                            <div class="text-xs text-gray-600">Worksheets Delivered</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-secondary">1,500+</div>
-                            <div class="text-xs text-gray-600">Happy Children</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-accent">100%</div>
-                            <div class="text-xs text-gray-600">Screen-Free</div>
+                        <div class="badge badge-warning">
+                            Most Popular
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer footer-center p-4 bg-white/80 backdrop-blur-sm text-base-content">
-        <nav class="grid grid-flow-col gap-4">
-            <a href="/privacy.php" class="link link-hover">Privacy Policy</a>
-            <a href="/terms.php" class="link link-hover">Terms of Service</a>
-            <a href="mailto:support@dailyhome.work" class="link link-hover">Contact</a>
-        </nav>
-    </footer>
+    </div>
+</main>
 
-    <!-- Authentication Scripts -->
-    <script src="js/authentication-scripts/signup.js"></script>
+<script>
+let selectedAuthMethod = 'passwordless';
+
+// Function to select authentication method
+function selectAuthMethod(method) {
+    selectedAuthMethod = method;
+    
+    // Update hidden field
+    document.getElementById('authMethod').value = method;
+    
+    // Update visual selection
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        if (card.onclick) {
+            card.classList.remove('border-success', 'border-primary');
+            card.classList.add('border-base-300');
+        }
+    });
+    
+    // Highlight selected card
+    const selectedCard = event.currentTarget;
+    selectedCard.classList.remove('border-base-300');
+    selectedCard.classList.add(method === 'passwordless' ? 'border-success' : 'border-primary');
+    
+    // Show/hide password field and update explanation
+    const passwordField = document.getElementById('passwordField');
+    const explanation = document.getElementById('howItWorksExplanation');
+    const buttonText = document.getElementById('signupButtonText');
+    
+    if (method === 'passwordless') {
+        passwordField.style.display = 'none';
+        passwordField.querySelector('input').required = false;
+        explanation.innerHTML = `
+            <h4 class="font-semibold text-info mb-2">
+                <i class="fas fa-info-circle mr-2"></i>
+                How passwordless signup works
+            </h4>
+            <ol class="text-sm space-y-1 text-gray-700">
+                <li>1. Enter your email and click "Create Account"</li>
+                <li>2. Check your email for a welcome message with a login link</li>
+                <li>3. Click the link to access your account instantly</li>
+                <li>4. For future logins, just request a new link - no password needed!</li>
+            </ol>
+            <p class="text-xs text-gray-600 mt-3">
+                <i class="fas fa-shield-alt mr-1"></i>
+                More secure than passwords because login links expire after 1 hour and are single-use.
+            </p>
+        `;
+        buttonText.textContent = 'Create Account - No Password Needed';
+    } else {
+        passwordField.style.display = 'block';
+        passwordField.querySelector('input').required = true;
+        explanation.innerHTML = `
+            <h4 class="font-semibold text-warning mb-2">
+                <i class="fas fa-info-circle mr-2"></i>
+                How traditional signup works
+            </h4>
+            <ol class="text-sm space-y-1 text-gray-700">
+                <li>1. Enter your email and create a password</li>
+                <li>2. Click "Create Account" to sign up</li>
+                <li>3. Check your email for a welcome message with a login link</li>
+                <li>4. For future logins, you can use either your password or request a magic link</li>
+            </ol>
+            <p class="text-xs text-gray-600 mt-3">
+                <i class="fas fa-key mr-1"></i>
+                You'll have both password and passwordless login options available.
+            </p>
+        `;
+        buttonText.textContent = 'Create Account';
+    }
+}
+
+// Form handling
+document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const formData = new FormData(this);
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading loading-spinner loading-sm mr-2"></span>Creating Account...';
+    
+    try {
+        // Prepare data for API
+        const requestData = {
+            email: formData.get('email'),
+            terms: formData.get('terms') ? true : false,
+            marketing: formData.get('marketing') ? true : false,
+            auth_method: selectedAuthMethod
+        };
+        
+        // Add password only if traditional method and password was provided
+        if (selectedAuthMethod === 'traditional' && formData.get('password')) {
+            requestData.password = formData.get('password');
+        }
+        
+        // Call the correct API endpoint
+        const response = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            // Show success message
+            const successMessage = selectedAuthMethod === 'passwordless' 
+                ? 'Account created! Check your email for a login link to get started.'
+                : 'Account created! Check your email for a welcome message with your login link.';
+            
+            // Create success alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success mb-4';
+            alertDiv.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${successMessage}</span>
+            `;
+            
+            // Insert alert at top of form
+            const form = document.getElementById('signupForm');
+            form.parentNode.insertBefore(alertDiv, form);
+            
+            // Scroll to top to show success message
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Reset form
+            form.reset();
+            
+            // Redirect after delay
+            setTimeout(() => {
+                window.location.href = 'login.php?signup=success&email=' + encodeURIComponent(requestData.email);
+            }, 3000);
+            
+        } else {
+            // Show error
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-error mb-4';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${data.message || 'Signup failed. Please try again.'}</span>
+            `;
+            
+            const form = document.getElementById('signupForm');
+            form.parentNode.insertBefore(errorDiv, form);
+            
+            // Remove error after 5 seconds
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+        
+    } catch (error) {
+        console.error('Signup error:', error);
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-error mb-4';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Something went wrong. Please try again.</span>
+        `;
+        
+        const form = document.getElementById('signupForm');
+        form.parentNode.insertBefore(errorDiv, form);
+        
+        setTimeout(() => {
+            errorDiv.remove();
+        }, 5000);
+    } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<i class="fas fa-user-plus mr-2"></i><span id="signupButtonText">${selectedAuthMethod === 'passwordless' ? 'Create Account - No Password Needed' : 'Create Account'}</span>`;
+    }
+});
+
+// Pre-fill email from URL parameter
+const urlParams = new URLSearchParams(window.location.search);
+const email = urlParams.get('email');
+if (email) {
+    document.querySelector('input[name="email"]').value = email;
+}
+
+// Initialize with passwordless selected
+document.addEventListener('DOMContentLoaded', function() {
+    // Find and click the passwordless card to set initial state
+    const passwordlessCard = document.querySelector('.card');
+    if (passwordlessCard && passwordlessCard.onclick) {
+        passwordlessCard.classList.add('border-success');
+        passwordlessCard.classList.remove('border-base-300');
+    }
+});
+</script>
 
 </body>
-
-</html>
+</html> 

@@ -1,6 +1,6 @@
 <?php
 
-$translations = include 'languages/en_US.php';
+$translations = include __DIR__ . '/../../website/languages/en_US.php';
 
 function __($key)
 {

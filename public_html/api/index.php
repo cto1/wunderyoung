@@ -65,6 +65,14 @@ $router->addRoute('POST', '/auth/login', function($params, $data, $context) use 
     return $userAuthAPI->requestLogin($data['email']);
 });
 
+// Password login
+$router->addRoute('POST', '/auth/password-login', function($params, $data, $context) use ($userAuthAPI) {
+    if (!isset($data['email']) || !isset($data['password'])) {
+        return ['status' => 'error', 'message' => 'Email and password are required'];
+    }
+    return $userAuthAPI->passwordLogin($data['email'], $data['password']);
+});
+
 // Verify login token
 $router->addRoute('GET', '/auth/verify', function($params, $data, $context) use ($userAuthAPI) {
     $email = $_GET['email'] ?? null;

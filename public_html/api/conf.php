@@ -37,6 +37,7 @@ class Database {
         $sql = "CREATE TABLE IF NOT EXISTS users (
             id TEXT PRIMARY KEY,
             email TEXT UNIQUE NOT NULL,
+            password_hash TEXT,
             plan TEXT NOT NULL DEFAULT 'free',
             is_verified INTEGER NOT NULL DEFAULT 0,
             stripe_customer_id TEXT,
