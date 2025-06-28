@@ -82,7 +82,7 @@ include 'include/header.html';
                     </div>
 
                     <button type="submit" class="btn btn-sophisticated w-full btn-lg">
-                        <i class="fas fa-paper-plane mr-2"></i>
+                        <i id="loginButtonIcon" class="fas fa-paper-plane mr-2"></i>
                         <span id="loginButtonText">Send Magic Link</span>
                     </button>
                     
@@ -129,6 +129,7 @@ function switchLoginMethod(method) {
     const passwordField = document.getElementById('passwordField');
     const explanation = document.getElementById('loginExplanation');
     const buttonText = document.getElementById('loginButtonText');
+    const buttonIcon = document.getElementById('loginButtonIcon');
     const altMethodLink = document.getElementById('altMethodLink');
     
     if (method === 'passwordless') {
@@ -152,8 +153,9 @@ function switchLoginMethod(method) {
             </p>
         `;
         
-        buttonText.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Send Magic Link';
-        altMethodLink.innerHTML = '<i class="fas fa-key mr-1"></i>Use password instead';
+        buttonText.innerHTML = 'Send Magic Link';
+        buttonIcon.className = 'fas fa-paper-plane mr-2';
+        altMethodLink.innerHTML = 'Use password instead';
         altMethodLink.onclick = () => switchLoginMethod('password');
         
     } else {
@@ -175,8 +177,9 @@ function switchLoginMethod(method) {
             </p>
         `;
         
-        buttonText.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Sign In';
-        altMethodLink.innerHTML = '<i class="fas fa-magic mr-1"></i>Use magic link instead';
+        buttonText.innerHTML = 'Sign In';
+        buttonIcon.className = 'fas fa-sign-in-alt mr-2';
+        altMethodLink.innerHTML = 'Use magic link instead';
         altMethodLink.onclick = () => switchLoginMethod('passwordless');
     }
 }
