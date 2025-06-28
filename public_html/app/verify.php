@@ -10,40 +10,10 @@ if (empty($token) || empty($email)) {
     echo "Invalid verification link. Missing parameters.";
     exit;
 }
+
+$page_title = 'Verifying Login - Yes Homework';
+include 'include/header.html';
 ?>
-
-<!DOCTYPE html>
-<html data-theme="winter">
-<head>
-    <title>Verifying Login - Yes Homework</title>
-    
-    <?php
-    // Add Hotjar tracking code only for production environment (exactsum.com)
-    $domain = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
-    if (strpos($domain, 'exactsum.com') !== false && strpos($domain, 'demo.') !== 0) :
-    ?>
-    <!-- Hotjar Tracking Code for https://exactsum.com/app/ -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:6426506,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ERN0YG8LEM"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-ERN0YG8LEM');
-    </script>
-    <?php endif; ?>
 
     <script>
         // Function to get JWT token using email verification token
@@ -250,6 +220,16 @@ if (empty($token) || empty($email)) {
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TCCYXNZR2B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-TCCYXNZR2B');
+    </script>
     
 </head>
 <body>

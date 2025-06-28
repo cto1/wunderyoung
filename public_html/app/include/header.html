@@ -1,17 +1,33 @@
 <?php 
-// Enable error reporting
+// Enable error reporting for development
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-include 'translations.php'; 
+// Load translations if available
+if (file_exists(__DIR__ . '/translations.php')) {
+    include 'translations.php'; 
+}
 
+// Determine page context
+$current_page = basename($_SERVER['PHP_SELF']);
+$is_auth_page = in_array($current_page, ['login.php', 'signup.php', 'verify.php', 'expired-link.php']);
+$is_app_page = in_array($current_page, ['worksheets.php', 'settings.php', 'child-setup.php']);
+
+// Set theme based on page type
+$theme = $is_auth_page ? 'lofi' : 'winter';
+
+// Set page-specific styles
+$show_navigation = !$is_auth_page;
+$show_auth_styling = $is_auth_page;
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="<?php echo $theme; ?>">
 
+<?php if (!$is_auth_page): ?>
 <script>
+    // Dynamic theme support for app pages
     (function () {
         try {
             const theme = localStorage.getItem('theme') || 'winter';
@@ -21,67 +37,216 @@ include 'translations.php';
         }
     })();
 </script>
+<?php endif; ?>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <?=__("website_title"); ?>
-    </title>
+    <title><?php echo $page_title ?? (function_exists('__') ? __("website_title") : 'Yes Homework'); ?></title>
 
-    <?php
-    // Add Hotjar tracking code only for production environment (exactsum.com)
-    $domain = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
-    if (strpos($domain, 'exactsum.com') !== false && strpos($domain, 'demo.') !== 0) :
-    ?>
-    <!-- Hotjar Tracking Code for https://exactsum.com/app/ -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:6426506,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ERN0YG8LEM"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-ERN0YG8LEM');
-    </script>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<?php echo $page_description ?? 'Yes Homework - AI-powered personalized worksheets for children. Screen-free learning made simple.'; ?>">
+    <?php if ($is_auth_page || $is_app_page): ?>
+    <meta name="robots" content="noindex, nofollow">
     <?php endif; ?>
 
-    <!--  Favicons -->
-    <link rel="icon" type="image/png" href="assets/favicons/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicons/favicon-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="assets/favicons/favicon.ico">
+    <!-- DaisyUI & TailwindCSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Font-Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- DaisyUI & TailwindCSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TCCYXNZR2B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    <!-- Include SheetJS CDN / xlsx library -->
+      gtag('config', 'G-TCCYXNZR2B');
+    </script>
+
+    <!--  Favicons -->
+    <link rel="icon" type="image/png" href="<?php echo $is_auth_page ? '../' : ''; ?>assets/favicons/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $is_auth_page ? '../' : ''; ?>assets/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $is_auth_page ? '../' : ''; ?>assets/favicons/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $is_auth_page ? '../' : ''; ?>assets/favicons/apple-touch-icon.png">
+    <link rel="shortcut icon" href="<?php echo $is_auth_page ? '../' : ''; ?>assets/favicons/favicon.ico">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <?php if ($is_app_page): ?>
+    <!-- App-specific libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-
-    <!-- jQuery & DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-
-    <!-- Custom CSS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
+    <?php endif; ?>
+
+    <!-- Custom Styles -->
+    <style>
+        <?php if ($show_auth_styling): ?>
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-sophisticated {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-sophisticated {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-sophisticated:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .logo-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+        
+        .logo-link a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        
+        .logo-link a:hover {
+            opacity: 1;
+        }
+        <?php else: ?>
+        .app-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .card-sophisticated {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-sophisticated {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-sophisticated:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        <?php endif; ?>
+    </style>
 
 </head>
+
+<body class="<?php echo $show_auth_styling ? 'auth-container' : 'app-container'; ?>">
+
+    <?php if ($show_auth_styling): ?>
+    <!-- Simple Logo Link for Auth Pages -->
+    <div class="logo-link">
+        <a href="/">
+            <i class="fas fa-home mr-2"></i>
+            Yes! Homework
+        </a>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($show_navigation): ?>
+    <!-- App Navigation -->
+    <nav class="navbar bg-base-100 shadow-lg sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="worksheets.php"><i class="fas fa-file-alt mr-2"></i>Worksheets</a></li>
+                    <li><a href="settings.php"><i class="fas fa-cog mr-2"></i>Settings</a></li>
+                </ul>
+            </div>
+            <a href="worksheets.php" class="btn btn-ghost text-xl font-bold text-primary">
+                <i class="fas fa-home mr-2"></i>
+                Yes! Homework
+            </a>
+        </div>
+        
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="worksheets.php" class="<?php echo $current_page === 'worksheets.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-file-alt mr-2"></i>Worksheets
+                </a></li>
+                <li><a href="settings.php" class="<?php echo $current_page === 'settings.php' ? 'active' : ''; ?>">
+                    <i class="fas fa-cog mr-2"></i>Settings
+                </a></li>
+            </ul>
+        </div>
+        
+        <div class="navbar-end">
+            <!-- User Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full bg-primary text-white flex items-center justify-center">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li class="menu-title">
+                        <span id="user-email">Loading...</span>
+                    </li>
+                    <li><a href="settings.php"><i class="fas fa-cog mr-2"></i>Settings</a></li>
+                    <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <?php endif; ?>
+
+    <script>
+        // Authentication utilities
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = 'login.php';
+        }
+
+        // Load user info for navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const userEmailElement = document.getElementById('user-email');
+            if (userEmailElement) {
+                try {
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    if (user.email) {
+                        userEmailElement.textContent = user.email;
+                    }
+                } catch (e) {
+                    console.log('Could not load user info');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

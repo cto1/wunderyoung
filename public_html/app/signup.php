@@ -1,6 +1,6 @@
 <?php 
 $page_title = 'Get Started - Yes Homework';
-include 'include/auth-header.html'; 
+include 'include/header.html'; 
 ?>
 
 <main class="min-h-screen py-12 px-4">

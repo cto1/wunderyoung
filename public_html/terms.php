@@ -1,19 +1,9 @@
-<?php
-// Terms of Service - Yes Homework
+<?php 
+$page_title = 'Terms of Service - Yes Homework';
+$page_description = 'Read our terms of service for using Yes Homework educational services.';
+$canonical_url = 'https://yeshomework.com/terms.php';
+include 'website/include/header.html'; 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - Yes Homework</title>
-    <meta name="description" content="Terms of Service for Yes Homework">
-    
-    <!-- Tailwind CSS + DaisyUI -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body data-theme="winter">
     <!-- Navigation -->
     <div class="navbar bg-base-100 shadow-lg">
         <div class="navbar-start">

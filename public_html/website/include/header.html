@@ -16,20 +16,20 @@ function __($key) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yes Homework - Screen-free learning delivered to your inbox</title>
+    <title><?php echo $page_title ?? 'Yes Homework - Screen-free learning delivered to your inbox'; ?></title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Daily printable worksheets personalised to your child. No apps, no screens. Just 15 minutes a day of screen-free learning delivered to your inbox.">
+    <meta name="description" content="<?php echo $page_description ?? 'Daily printable worksheets personalised to your child. No apps, no screens. Just 15 minutes a day of screen-free learning delivered to your inbox.'; ?>">
     <meta property="og:image" content="/website/assets/images/og-image.jpg">
     <meta property="og:site_name" content="yeshomework.com">
-    <meta property="og:title" content="Yes Homework - Screen-free learning delivered to your inbox">
+    <meta property="og:title" content="<?php echo $page_title ?? 'Yes Homework - Screen-free learning delivered to your inbox'; ?>">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Yes Homework">
-    <meta name="twitter:description" content="Daily printable worksheets personalised to your child. No apps, no screens.">
+    <meta name="twitter:description" content="<?php echo $page_description ?? 'Daily printable worksheets personalised to your child. No apps, no screens.'; ?>">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://yeshomework.com">
+    <link rel="canonical" href="<?php echo $canonical_url ?? 'https://yeshomework.com'; ?>">
 
     <!-- DaisyUI & TailwindCSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -59,14 +59,19 @@ function __($key) {
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TCCYXNZR2B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-TCCYXNZR2B');
+    </script>
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="website/style.css">
 
 </head>
 
-<html>
-
-<head>
-
-</head>
-</rewritten_file> 
+<body> 
