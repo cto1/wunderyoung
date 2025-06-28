@@ -91,9 +91,11 @@ if (empty($token) || empty($email)) {
                 localStorage.setItem('user_email', verifyData.email);
                 localStorage.setItem('user_plan', verifyData.plan);
                 
-                console.log("Authentication successful, redirecting to dashboard");
-                // Redirect to dashboard
-                window.location.href = '/app/';
+                console.log("Authentication successful!");
+                
+                // Show success message instead of auto-redirect
+                document.getElementById('loading-container').style.display = 'none';
+                document.getElementById('success-container').style.display = 'block';
                 
             } catch (error) {
                 console.error('Authentication error:', error);
@@ -136,8 +138,18 @@ if (empty($token) || empty($email)) {
             }
         }
         
-        // Run authentication on page load
-        window.onload = getJwtToken;
+        // Manual verification for debugging
+        window.onload = function() {
+            // Show manual verification option
+            document.getElementById('loading-container').style.display = 'none';
+            document.getElementById('manual-verify-container').style.display = 'block';
+        };
+        
+        function manualVerify() {
+            document.getElementById('manual-verify-container').style.display = 'none';
+            document.getElementById('loading-container').style.display = 'block';
+            getJwtToken();
+        }
     </script>
     <style>
         .main-container {
@@ -252,8 +264,44 @@ if (empty($token) || empty($email)) {
 </head>
 <body>
     <div class="main-container">
+        <!-- Manual Verification State -->
+        <div id="manual-verify-container">
+            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
+                <div class="success-icon">
+                    <i class="fas fa-bug text-white text-2xl"></i>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
+                    Debug Verification
+                </h2>
+                
+                <div class="alert alert-info mb-6">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <div class="font-bold">Link Details:</div>
+                        <div class="text-sm">
+                            <div><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></div>
+                            <div><strong>Token:</strong> <?php echo htmlspecialchars(substr($token, 0, 16) . '...'); ?></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="manualVerify()" class="btn btn-modern btn-wide mb-4">
+                    <i class="fas fa-play mr-2"></i>
+                    Start Verification
+                </button>
+                
+                <div class="text-center">
+                    <a href="/app/login.php" class="btn btn-outline btn-sm">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+        
         <!-- Loading State -->
-        <div id="loading-container">
+        <div id="loading-container" style="display: none;">
             <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
                 <div class="success-icon pulse-animation">
                     <i class="fas fa-shield-alt text-white text-2xl"></i>
@@ -275,6 +323,31 @@ if (empty($token) || empty($email)) {
                         <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
                         <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Success State -->
+        <div id="success-container" style="display: none;">
+            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle text-white text-2xl"></i>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
+                    Verification Successful!
+                </h2>
+                
+                <div class="alert alert-success mb-6">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Your account has been verified and you're now logged in.</span>
+                </div>
+                
+                <div class="text-center space-y-3">
+                    <a href="/app/" class="btn btn-modern btn-wide">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Go to Dashboard
+                    </a>
                 </div>
             </div>
         </div>
