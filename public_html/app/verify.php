@@ -108,15 +108,25 @@ if (empty($token) || empty($email)) {
                 const errorActions = document.getElementById('error-actions');
                 if (errorMessage.includes('already been used') || errorMessage.includes('expired')) {
                     errorActions.innerHTML = `
-                        <div class="mt-4 space-y-2">
-                            <a href="/app/login.php" class="back-button">Request New Login Link</a>
-                            <p class="text-sm text-gray-600">Or try logging in with your password if you have one</p>
+                        <div class="text-center space-y-3">
+                            <a href="/app/login.php" class="btn btn-modern btn-wide">
+                                <i class="fas fa-magic mr-2"></i>
+                                Request New Login Link
+                            </a>
+                            <p class="text-sm text-gray-500">Or try logging in with your password if you have one</p>
+                            <a href="/app/login.php?tab=password" class="btn btn-outline btn-sm">
+                                <i class="fas fa-key mr-2"></i>
+                                Use Password Instead
+                            </a>
                         </div>
                     `;
                 } else {
                     errorActions.innerHTML = `
-                        <div class="mt-4">
-                            <a href="/app/login.php" class="back-button">Try Logging In Again</a>
+                        <div class="text-center space-y-3">
+                            <a href="/app/login.php" class="btn btn-modern btn-wide">
+                                <i class="fas fa-arrow-left mr-2"></i>
+                                Try Logging In Again
+                            </a>
                         </div>
                     `;
                 }
@@ -130,26 +140,23 @@ if (empty($token) || empty($email)) {
         window.onload = getJwtToken;
     </script>
     <style>
-        body, h2, p {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .main-cont {
+        .main-container {
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
-            text-align: center;
-            font-family: Arial, sans-serif;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem;
         }
+        
+        #loading-container {
+            text-align: center;
+        }
+        
         #error-container {
             display: none;
-            color: red;
         }
-        .loader-container {
-            display: flex;
-            justify-content: center;
-        }
+        
         .loader {
             width: 85px;
             height: 50px;
@@ -162,7 +169,9 @@ if (empty($token) || empty($email)) {
                               linear-gradient(#463AA2 50px, transparent 0);
             background-position: 0px center, 15px center, 30px center, 45px center, 60px center, 75px center;
             animation: rikSpikeRoll 0.65s linear infinite alternate;
+            margin: 0 auto 2rem auto;
         }
+        
         @keyframes rikSpikeRoll {
             0% { background-size: 10px 3px; }
             16% { background-size: 10px 50px, 10px 3px, 10px 3px, 10px 3px, 10px 3px, 10px 3px; }
@@ -172,59 +181,63 @@ if (empty($token) || empty($email)) {
             83% { background-size: 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px, 10px 3px; }
             100% { background-size: 10px 3px, 10px 3px, 10px 3px, 10px 10px, 10px 30px, 10px 50px; }
         }
-        .var-head-content {
-            font-size: 2rem;
-            margin-bottom: 1rem !important;
-        }
-        .var-text-content {
-            font-size: 1.2rem;
-            margin-bottom: 2.5rem !important;
-        }
-        .err-head-content {
-            font-size: 2rem;
-            margin-bottom: 1rem !important;
-        }
-        .err-text-content {
-            font-size: 1.2rem;
-            color: #FF4C4C;
-            text-decoration: underline;
-            margin-bottom: 1.8rem !important;
-        }
-        /* Back button */
-        .back-button {
-          --b: 3px;   
-          --s: .45em; 
-          --color: #463AA2 ;
         
-          padding: calc(.5em + var(--s)) calc(.9em + var(--s));
-          color: var(--color);
-          --_p: var(--s);
-          background:
-            conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
-            var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
-          transition: .3s linear, color 0s, background-color 0s;
-          outline: var(--b) solid #0000;
-          outline-offset: .6em;
-          font-size: 20px;
-          font-weight: 600;
-          border: 0;
+        .verification-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
         
-          user-select: none;
-          -webkit-user-select: none;
-          touch-action: manipulation;
-          cursor: pointer;
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
         }
-
-        .back-button:hover,
-        .back-button:focus-visible{
-          --_p: 0px;
-          outline-color: var(--color);
-          outline-offset: .05em;
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #51cf66, #40c057);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: 0 10px 30px rgba(81, 207, 102, 0.3);
         }
-
-        .back-button:active {
-          background: var(--color);
-          color: #fff;
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .btn-modern {
+            background: linear-gradient(135deg, #463AA2, #5b4fc7);
+            border: none;
+            color: white;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(70, 58, 162, 0.3);
+        }
+        
+        .btn-modern:hover {
+            background: linear-gradient(135deg, #5b4fc7, #463AA2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(70, 58, 162, 0.4);
+            color: white;
         }
     </style>
 
@@ -233,25 +246,76 @@ if (empty($token) || empty($email)) {
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    
 </head>
 <body>
-    <div class="main-cont">
-        <div>
-            <div id="loading-container">
-                <div>
-                    <div class="loader-container">
-                        <div class="loader"></div>
+    <div class="main-container">
+        <!-- Loading State -->
+        <div id="loading-container">
+            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
+                <div class="success-icon pulse-animation">
+                    <i class="fas fa-shield-alt text-white text-2xl"></i>
+                </div>
+                
+                <div class="loader mb-6"></div>
+                
+                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
+                    Verifying Your Login
+                </h2>
+                
+                <p class="text-center text-gray-600 text-lg mb-6">
+                    Please wait while we securely verify your login link...
+                </p>
+                
+                <div class="flex justify-center">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-2 bg-primary rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
                     </div>
-                    <h2 class="var-head-content">Verifying Your Login</h2>
-                    <p class="var-text-content">Please wait while we verify your login link...</p>
                 </div>
             </div>
-            
-            <div id="error-container">
-                <h2 class="err-head-content">Verification Failed</h2>
-                <p class="err-text-content" id="error-message">An error occurred during verification.</p>
-                <div id="error-actions">
-                    <a href="/app/login.php" style="color: #463AA2; text-decoration: underline;">Try logging in again</a>
+        </div>
+        
+        <!-- Error State -->  
+        <div id="error-container">
+            <div class="card verification-card shadow-2xl p-8 w-full max-w-md">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">
+                    Verification Failed
+                </h2>
+                
+                <div class="alert alert-error mb-6">
+                    <i class="fas fa-times-circle"></i>
+                    <span id="error-message">An error occurred during verification.</span>
+                </div>
+                
+                <div id="error-actions" class="text-center space-y-3">
+                    <a href="/app/login.php" class="btn btn-modern btn-wide">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Try Logging In Again
+                    </a>
+                </div>
+                
+                <div class="divider mt-6"></div>
+                
+                <div class="text-center">
+                    <p class="text-sm text-gray-500 mb-3">Need help?</p>
+                    <div class="flex justify-center space-x-4 text-sm">
+                        <a href="/website/" class="link link-primary">
+                            <i class="fas fa-home mr-1"></i>
+                            Home
+                        </a>
+                        <a href="mailto:support@yeshomework.com" class="link link-primary">
+                            <i class="fas fa-envelope mr-1"></i>
+                            Support
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
