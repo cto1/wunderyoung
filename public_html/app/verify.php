@@ -344,9 +344,9 @@ if (empty($token) || empty($email)) {
                 </div>
                 
                 <div class="text-center space-y-3">
-                    <a href="/app/" class="btn btn-modern btn-wide">
-                        <i class="fas fa-arrow-right mr-2"></i>
-                        Go to Dashboard
+                    <a href="/app/worksheets.php" class="btn btn-modern btn-wide">
+                        <i class="fas fa-file-alt mr-2"></i>
+                        Go to Worksheets
                     </a>
                 </div>
             </div>

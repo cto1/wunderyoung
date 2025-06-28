@@ -34,6 +34,10 @@ include 'include/translations.php';
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- API Utils & Authentication -->
+    <script src="js/api-utils.js"></script>
+    <script src="js/localstorage-data.js"></script>
 
 </head>
 
@@ -353,9 +357,17 @@ include 'include/translations.php';
                 if (result.status === 'success') {
                     userData = result.user;
                     updateAccountInfo();
+                } else if (response.status === 401) {
+                    // Unauthorized - redirect to login
+                    console.warn('Authentication failed, redirecting to login');
+                    window.location.href = './login.php';
+                    return;
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
+                if (error.message.includes('401') || error.message.includes('unauthorized')) {
+                    window.location.href = './login.php';
+                }
             }
         }
         
@@ -373,10 +385,18 @@ include 'include/translations.php';
                     children = result.children || [];
                     renderChildren();
                     updateChildrenDropdowns();
+                } else if (response.status === 401) {
+                    console.warn('Authentication failed, redirecting to login');
+                    window.location.href = './login.php';
+                    return;
                 }
             } catch (error) {
                 console.error('Error loading children:', error);
-                document.getElementById('childrenContainer').innerHTML = '<p class="text-red-500">Error loading children</p>';
+                if (error.message.includes('401') || error.message.includes('unauthorized')) {
+                    window.location.href = './login.php';
+                } else {
+                    document.getElementById('childrenContainer').innerHTML = '<p class="text-red-500">Error loading children</p>';
+                }
             }
         }
         
@@ -394,10 +414,18 @@ include 'include/translations.php';
                     worksheets = result.worksheets || [];
                     renderWorksheets();
                     updateStats();
+                } else if (response.status === 401) {
+                    console.warn('Authentication failed, redirecting to login');
+                    window.location.href = './login.php';
+                    return;
                 }
             } catch (error) {
                 console.error('Error loading worksheets:', error);
-                document.getElementById('worksheetsContainer').innerHTML = '<p class="text-red-500">Error loading worksheets</p>';
+                if (error.message.includes('401') || error.message.includes('unauthorized')) {
+                    window.location.href = './login.php';
+                } else {
+                    document.getElementById('worksheetsContainer').innerHTML = '<p class="text-red-500">Error loading worksheets</p>';
+                }
             }
         }
         
