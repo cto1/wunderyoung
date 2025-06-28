@@ -13,7 +13,7 @@ include 'include/translations.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Worksheets - Daily Homework</title>
+    <title>My Worksheets - Yes Homework</title>
     <meta name="description" content="Manage your child's daily worksheets and track their learning progress.">
 
     <!--  Favicons -->
@@ -173,7 +173,7 @@ include 'include/translations.php';
                         Unlock Premium Features
                     </h2>
                     <p class="text-lg mb-6 opacity-90">
-                        Get the most out of Daily Homework with personalized content, multiple children, and all subjects.
+                        Get the most out of Yes Homework with personalized content, multiple children, and all subjects.
                     </p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">

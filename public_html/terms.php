@@ -1,12 +1,12 @@
 <?php
-// Terms of Service - Daily Homework
+// Terms of Service - Yes Homework
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - Daily Homework</title>
+    <title>Terms of Service - Yes Homework</title>
     <meta name="description" content="Terms of Service for Yes Homework">
     
     <!-- Tailwind CSS + DaisyUI -->
@@ -17,7 +17,7 @@
     <!-- Navigation -->
     <div class="navbar bg-base-100 shadow-lg">
         <div class="navbar-start">
-            <a href="/" class="btn btn-ghost text-xl font-bold">Daily Homework</a>
+            <a href="/" class="btn btn-ghost text-xl font-bold">Yes Homework</a>
         </div>
         <div class="navbar-end">
             <a href="/" class="btn btn-primary">Back to Home</a>
@@ -37,7 +37,7 @@
 
             <div class="bg-base-100 p-6 rounded-lg mb-8">
                 <h2 class="text-2xl font-semibold mb-4">2. Service Description</h2>
-                <p>Daily Homework provides printable educational worksheets delivered via email for children aged 3-11 years. Our service includes:</p>
+                <p>Yes Homework provides printable educational worksheets delivered via email for children aged 3-11 years. Our service includes:</p>
                 <ul class="list-disc list-inside mt-4 space-y-2">
                     <li>Daily worksheet generation and delivery</li>
                     <li>Age-appropriate content for UK curriculum</li>
@@ -84,7 +84,7 @@
 
             <div class="bg-base-200 p-6 rounded-lg mb-8">
                 <h2 class="text-2xl font-semibold mb-4">5. Intellectual Property</h2>
-                <p>All content, worksheets, and materials provided by Daily Homework are protected by copyright and other intellectual property laws. You may:</p>
+                <p>All content, worksheets, and materials provided by Yes Homework are protected by copyright and other intellectual property laws. You may:</p>
                 <ul class="list-disc list-inside mt-4 space-y-2">
                     <li>Print worksheets for personal, non-commercial use</li>
                     <li>Use worksheets for your registered children only</li>
@@ -165,9 +165,9 @@
                 <h2 class="text-2xl font-semibold mb-4">13. Contact Information</h2>
                 <p>If you have any questions about these Terms of Service, please contact us at:</p>
                 <div class="mt-4">
-                    <p><strong>Email:</strong> legal@dailyhome.work</p>
-                    <p><strong>Website:</strong> dailyhome.work</p>
-                    <p><strong>Address:</strong> Daily Homework Ltd, United Kingdom</p>
+                    <p><strong>Email:</strong> legal@yeshomework.com</p>
+                    <p><strong>Website:</strong> yeshomework.com</p>
+                    <p><strong>Address:</strong> Yes Homework Ltd, United Kingdom</p>
                 </div>
             </div>
 

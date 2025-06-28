@@ -52,7 +52,7 @@ class EmailTemplates {
         // Fallback subjects
         $subjects = [
             'welcome-email' => 'Welcome to Yes Homework - Your AI-Powered Learning Companion!',
-            'login-email' => 'Your Daily Homework Login Link'
+            'login-email' => 'Your Yes Homework Login Link'
         ];
         
         return $subjects[$templateName] ?? 'Yes Homework Notification';

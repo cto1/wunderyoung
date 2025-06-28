@@ -1,5 +1,5 @@
 <?php 
-$page_title = 'Get Started - Daily Homework';
+$page_title = 'Get Started - Yes Homework';
 include 'include/auth-header.html'; 
 ?>
 
@@ -37,7 +37,7 @@ include 'include/auth-header.html';
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="text-center">
                             <i class="fas fa-calendar-check text-primary text-2xl mb-2"></i>
-                            <h4 class="font-semibold">Daily Worksheets</h4>
+                            <h4 class="font-semibold">Yes Worksheets</h4>
                             <p class="text-sm text-gray-600">Fresh content every morning</p>
                         </div>
                         <div class="text-center">
@@ -166,7 +166,7 @@ include 'include/auth-header.html';
                         <label class="label cursor-pointer justify-start">
                             <input type="checkbox" name="marketing" class="checkbox checkbox-secondary mr-3" checked>
                             <span class="label-text">
-                                Send me tips and updates about Daily Homework (optional)
+                                Send me tips and updates about Yes Homework (optional)
                             </span>
                         </label>
                     </div>

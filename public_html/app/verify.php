@@ -15,7 +15,7 @@ if (empty($token) || empty($email)) {
 <!DOCTYPE html>
 <html data-theme="winter">
 <head>
-    <title>Verifying Login - Daily Homework</title>
+    <title>Verifying Login - Yes Homework</title>
     
     <?php
     // Add Hotjar tracking code only for production environment (exactsum.com)
@@ -73,7 +73,7 @@ if (empty($token) || empty($email)) {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ 
-                        user_id: verifyData.id,
+                        id: verifyData.id,
                         email: verifyData.email 
                     }),
                 });

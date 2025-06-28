@@ -1,12 +1,12 @@
 <?php
-// Privacy Policy - Daily Homework
+// Privacy Policy - Yes Homework
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Daily Homework</title>
+    <title>Privacy Policy - Yes Homework</title>
     <meta name="description" content="Privacy Policy for Yes Homework">
     
     <!-- Tailwind CSS + DaisyUI -->
@@ -17,7 +17,7 @@
     <!-- Navigation -->
     <div class="navbar bg-base-100 shadow-lg">
         <div class="navbar-start">
-            <a href="/" class="btn btn-ghost text-xl font-bold">Daily Homework</a>
+            <a href="/" class="btn btn-ghost text-xl font-bold">Yes Homework</a>
         </div>
         <div class="navbar-end">
             <a href="/" class="btn btn-primary">Back to Home</a>
@@ -32,7 +32,7 @@
 
             <div class="bg-base-200 p-6 rounded-lg mb-8">
                 <p class="text-lg leading-relaxed">
-                    Your privacy is important to us. It is Daily Homework's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.
+                    Your privacy is important to us. It is Yes Homework's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.
                 </p>
             </div>
 
@@ -99,7 +99,7 @@
 
             <div class="bg-base-200 p-6 rounded-lg mb-8">
                 <h2 class="text-2xl font-semibold mb-4">GDPR Compliance</h2>
-                <p>We act in the capacity of a data controller and a data processor with regard to the personal data processed through Daily Homework and our services in terms of the applicable data protection laws, including the EU General Data Protection Regulation (GDPR).</p>
+                <p>We act in the capacity of a data controller and a data processor with regard to the personal data processed through Yes Homework and our services in terms of the applicable data protection laws, including the EU General Data Protection Regulation (GDPR).</p>
                 
                 <h3 class="text-xl font-semibold mb-2 mt-4">Your Rights Under GDPR</h3>
                 <ul class="list-disc list-inside space-y-2">
@@ -178,10 +178,10 @@
                 <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
                 <p>If you have any questions about how we handle user data and personal information, feel free to contact us:</p>
                 <div class="mt-4">
-                    <p><strong>Email:</strong> privacy@dailyhome.work</p>
-                    <p><strong>Data Protection Officer:</strong> dpo@dailyhome.work</p>
-                    <p><strong>Website:</strong> dailyhome.work</p>
-                    <p><strong>Address:</strong> Daily Homework Ltd, United Kingdom</p>
+                    <p><strong>Email:</strong> privacy@Yeshome.work</p>
+                    <p><strong>Data Protection Officer:</strong> legal@yeshomework.com</p>
+                    <p><strong>Website:</strong> yeshomework.com</p>
+                    <p><strong>Address:</strong> Yes Homework Ltd, United Kingdom</p>
                 </div>
             </div>
 

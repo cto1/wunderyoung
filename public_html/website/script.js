@@ -1,4 +1,4 @@
-// Daily Homework Website JavaScript
+// Yes Homework Website JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
     // Add smooth scrolling for navigation links
@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Console log for debugging
-    console.log('Daily Homework website loaded successfully!');
-    console.log('Domain: dailyhome.work');
+    console.log('Yes Homework website loaded successfully!');
+    console.log('Domain: yeshomework.com');
     
     // Check if API is available
     fetch('/api/')

@@ -1,4 +1,4 @@
-name: Deploy Daily Homework App and API
+name: Deploy Yes Homework App and API
 on:
   push:
     branches: [ main ]

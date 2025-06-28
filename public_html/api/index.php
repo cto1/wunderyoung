@@ -1,5 +1,5 @@
 <?php
-// Daily Homework API - Main entry point
+// Yes Homework API - Main entry point
 require_once 'env.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 loadEnv();
@@ -45,7 +45,7 @@ $jwtAuth = new JWTAuth();
 $router->addRoute('GET', '/health', function($params, $data, $context) {
     return [
         'status' => 'success',
-        'message' => 'Daily Homework API is running',
+        'message' => 'Yes Homework API is running',
         'timestamp' => date('Y-m-d H:i:s'),
         'version' => '1.0.0'
     ];
@@ -351,7 +351,7 @@ $router->addRoute('GET', '/test-openai', function($params, $data, $context) {
         
         $openai = new OpenaiProvider($apiKey, 'gpt-4');
         $result = $openai->callApiWithoutEcho(
-            "Say 'Hello from Daily Homework API!' and confirm you can help create educational worksheets.",
+            "Say 'Hello from Yes Homework API!' and confirm you can help create educational worksheets.",
             "You are a helpful AI assistant for educational content creation."
         );
         

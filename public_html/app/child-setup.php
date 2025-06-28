@@ -1,5 +1,5 @@
 <?php 
-$page_title = 'Add Your Child - Daily Homework';
+$page_title = 'Add Your Child - Yes Homework';
 include 'include/app-header.html'; 
 ?>
 

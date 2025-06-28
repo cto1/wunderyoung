@@ -1,4 +1,4 @@
-# Daily Homework API
+# Yes Homework API
 
 A complete RESTful API for managing daily homework assignments for children, built with PHP and SQLite.
 

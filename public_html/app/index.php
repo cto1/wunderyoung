@@ -1,5 +1,5 @@
 <?php
-// Daily Homework App - Main Entry Point
+// Yes Homework App - Main Entry Point
 session_start();
 
 // Redirect logic

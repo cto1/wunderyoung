@@ -1,5 +1,5 @@
 <?php 
-$page_title = 'Sign In - Daily Homework';
+$page_title = 'Sign In - Yes Homework';
 include 'include/auth-header.html'; 
 ?>
 
