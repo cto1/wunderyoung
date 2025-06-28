@@ -332,7 +332,18 @@ class UserAuthAPI {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
             if (!$user) {
-                throw new Exception('Invalid or expired token');
+                // Check if user exists but token is invalid/expired
+                $userCheck = $this->pdo->prepare("SELECT email, is_verified FROM users WHERE email = ?");
+                $userCheck->execute([$email]);
+                $existingUser = $userCheck->fetch(PDO::FETCH_ASSOC);
+                
+                if ($existingUser && $existingUser['is_verified']) {
+                    throw new Exception('This login link has already been used. Please request a new login link.');
+                } else if ($existingUser) {
+                    throw new Exception('Login link has expired. Please request a new login link.');
+                } else {
+                    throw new Exception('Invalid login link. Please check your email or request a new login link.');
+                }
             }
 
             // Mark user as verified and clear the token

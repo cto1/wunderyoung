@@ -97,9 +97,32 @@ if (empty($token) || empty($email)) {
                 
             } catch (error) {
                 console.error('Authentication error:', error);
-                document.getElementById('error-message').textContent = error.message;
-                document.getElementById('error-container').style.display = 'block';
-                document.getElementById('loading-container').style.display = 'none';
+                const errorMessage = error.message;
+                const errorContainer = document.getElementById('error-container');
+                const loadingContainer = document.getElementById('loading-container');
+                
+                // Show appropriate error message and actions
+                document.getElementById('error-message').textContent = errorMessage;
+                
+                // Show different actions based on error type
+                const errorActions = document.getElementById('error-actions');
+                if (errorMessage.includes('already been used') || errorMessage.includes('expired')) {
+                    errorActions.innerHTML = `
+                        <div class="mt-4 space-y-2">
+                            <a href="/app/login.php" class="back-button">Request New Login Link</a>
+                            <p class="text-sm text-gray-600">Or try logging in with your password if you have one</p>
+                        </div>
+                    `;
+                } else {
+                    errorActions.innerHTML = `
+                        <div class="mt-4">
+                            <a href="/app/login.php" class="back-button">Try Logging In Again</a>
+                        </div>
+                    `;
+                }
+                
+                errorContainer.style.display = 'block';
+                loadingContainer.style.display = 'none';
             }
         }
         
@@ -227,7 +250,9 @@ if (empty($token) || empty($email)) {
             <div id="error-container">
                 <h2 class="err-head-content">Verification Failed</h2>
                 <p class="err-text-content" id="error-message">An error occurred during verification.</p>
-                <a href="/app/login.php" style="color: #463AA2; text-decoration: underline;">Try logging in again</a>
+                <div id="error-actions">
+                    <a href="/app/login.php" style="color: #463AA2; text-decoration: underline;">Try logging in again</a>
+                </div>
             </div>
         </div>
     </div>
