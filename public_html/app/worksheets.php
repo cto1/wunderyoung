@@ -1,86 +1,12 @@
 <?php 
-// Enable error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-
-include 'include/translations.php'; 
+$page_title = 'My Worksheets - Yes Homework';
+$page_description = 'Manage your child\'s daily worksheets and track their learning progress.';
+include 'include/header.html';
 ?>
 
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-    
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Worksheets - Yes Homework</title>
-    <meta name="description" content="Manage your child's daily worksheets and track their learning progress.">
-
-    <!--  Favicons -->
-    <link rel="icon" type="image/png" href="assets/favicons/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicons/favicon-192x192.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicons/apple-touch-icon.png">
-    <link rel="shortcut icon" href="assets/favicons/favicon.ico">
-
-    <!-- Font-Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <!-- DaisyUI & TailwindCSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TCCYXNZR2B"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-TCCYXNZR2B');
-    </script>
-    
-    <!-- API Utils & Authentication -->
-    <script src="js/api-utils.js"></script>
-    <script src="js/localstorage-data.js"></script>
-
-</head>
-
-<body class="bg-gradient-to-br from-blue-50 to-purple-50">
-
-    <!-- Navigation -->
-    <nav class="navbar bg-white shadow-lg sticky top-0 z-50">
-        <div class="navbar-start">
-            <a href="/website/" class="btn btn-ghost text-xl font-bold text-primary">
-                <i class="fas fa-home mr-2"></i>
-                Yes! Homework
-            </a>
-        </div>
-        <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1">
-                <li><a href="worksheets.php" class="active">Worksheets</a></li>
-                <li><a href="settings.php">Settings</a></li>
-            </ul>
-        </div>
-        <div class="navbar-end">
-            <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                    <div class="w-10 rounded-full bg-primary text-white flex items-center justify-center">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="settings.php"><i class="fas fa-cog mr-2"></i>Settings</a></li>
-                    <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<!-- API Utils & Authentication -->
+<script src="js/api-utils.js"></script>
+<script src="js/localstorage-data.js"></script>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8 max-w-6xl">
