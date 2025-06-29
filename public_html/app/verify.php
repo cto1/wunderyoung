@@ -27,17 +27,21 @@ include 'include/header.html';
 
             <!-- Success State -->
             <div id="success-state" class="hidden">
-                <div class="text-6xl mb-4">🎉</div>
-                <h2 class="card-title text-xl font-bold text-success mb-2">Login Successful!</h2>
+                <div class="w-16 h-16 mx-auto mb-4 bg-success rounded-full flex items-center justify-center">
+                    <i class="fas fa-check text-white text-2xl"></i>
+                </div>
+                <h2 class="card-title text-xl font-bold text-success mb-2 justify-center">Login Successful!</h2>
                 <p class="text-gray-600 mb-4">Redirecting you to your worksheets...</p>
                 <div class="loading loading-spinner loading-md text-success"></div>
             </div>
 
             <!-- Error State -->
             <div id="error-state" class="hidden">
-                <div class="text-6xl mb-4">❌</div>
-                <h2 class="card-title text-xl font-bold text-error mb-2">Verification Failed</h2>
-                <p id="error-message" class="text-gray-600 mb-6"></p>
+                <div class="w-16 h-16 mx-auto mb-4 bg-error rounded-full flex items-center justify-center">
+                    <i class="fas fa-times text-white text-2xl"></i>
+                </div>
+                <h2 class="card-title text-xl font-bold text-error mb-2 justify-center">Verification Failed</h2>
+                <p id="error-message" class="text-gray-600 mb-6 text-center"></p>
                 
                 <div class="space-y-2">
                     <a href="login.php" class="btn btn-primary btn-block">Request New Login Link</a>
