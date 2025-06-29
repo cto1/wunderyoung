@@ -152,15 +152,38 @@ class WorksheetGeneratorAPI {
         return $htmlContent;
     }
 
+    // Clean HTML content for PDF generation
+    private function cleanHtmlForPDF($htmlContent) {
+        // Remove any potentially problematic characters
+        $htmlContent = mb_convert_encoding($htmlContent, 'UTF-8', 'auto');
+        
+        // Remove any script tags (shouldn't be any, but safety first)
+        $htmlContent = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $htmlContent);
+        
+        // Remove any style attributes that might cause issues (but preserve inline styles for spacing)
+        // $htmlContent = preg_replace('/style\s*=\s*["\'][^"\']*["\']/i', '', $htmlContent);
+        
+        // Remove any null bytes or control characters
+        $htmlContent = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $htmlContent);
+        
+        // Trim whitespace
+        $htmlContent = trim($htmlContent);
+        
+        return $htmlContent;
+    }
+
     // Stream PDF using TCPDF
     private function streamPDFWithTCPDF($htmlContent, $childName, $date) {
+        error_log("TCPDF: Creating new TCPDF instance");
         $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
         
+        error_log("TCPDF: Setting document information");
         // Set document information
         $pdf->SetCreator('Yes Homework');
         $pdf->SetAuthor('Yes Homework');
         $pdf->SetTitle($childName . "'s Worksheet - " . date('F j, Y', strtotime($date)));
 
+        error_log("TCPDF: Configuring headers/footers and margins");
         // Remove default header/footer
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
@@ -169,6 +192,7 @@ class WorksheetGeneratorAPI {
         $pdf->SetMargins(15, 15, 15);
         $pdf->SetAutoPageBreak(TRUE, 15);
 
+        error_log("TCPDF: Adding page and title");
         // Add a page
         $pdf->AddPage();
 
@@ -178,17 +202,22 @@ class WorksheetGeneratorAPI {
         $pdf->Cell(0, 10, date('F j, Y', strtotime($date)), 0, 1, 'C');
         $pdf->Ln(10);
 
+        error_log("TCPDF: Starting HTML conversion (content length: " . strlen($htmlContent) . ")");
         // Convert HTML to PDF
         $pdf->SetFont('helvetica', '', 12);
         $pdf->writeHTML($htmlContent, true, false, true, false, '');
 
+        error_log("TCPDF: HTML conversion completed, outputting PDF");
         // Output PDF to browser
         $filename = $childName . '_Worksheet_' . $date . '.pdf';
         $pdf->Output($filename, 'D'); // 'D' = force download
+        
+        error_log("TCPDF: PDF output completed");
     }
 
     // Stream PDF using DOMPDF
     private function streamPDFWithDOMPDF($htmlContent, $childName, $date) {
+        error_log("DOMPDF: Building full HTML document");
         $fullHtml = "<!DOCTYPE html>
 <html>
 <head>
@@ -207,14 +236,24 @@ class WorksheetGeneratorAPI {
 </body>
 </html>";
 
+        error_log("DOMPDF: Creating DOMPDF instance");
         $dompdf = new \Dompdf\Dompdf();
+        
+        error_log("DOMPDF: Loading HTML (length: " . strlen($fullHtml) . ")");
         $dompdf->loadHtml($fullHtml);
+        
+        error_log("DOMPDF: Setting paper size");
         $dompdf->setPaper('A4', 'portrait');
+        
+        error_log("DOMPDF: Starting render process");
         $dompdf->render();
         
+        error_log("DOMPDF: Render completed, streaming to browser");
         // Stream to browser
         $filename = $childName . '_Worksheet_' . $date . '.pdf';
         $dompdf->stream($filename, ['Attachment' => true]);
+        
+        error_log("DOMPDF: Stream completed");
     }
 
     // Generate worksheet content using AI
@@ -375,10 +414,21 @@ The HTML should be ready for PDF conversion.";
     
     // Stream PDF directly from content (without storing)
     public function streamPDFToBrowserFromContent($htmlContent, $childName, $date) {
+        error_log("PDF Generation: Starting PDF generation process");
+        
+        // Increase time limit and memory for PDF generation
+        set_time_limit(120); // 2 minutes
+        ini_set('memory_limit', '512M');
+        
         error_log("PDF Generation: Adding answer spacing to content");
         
         // Add answer spacing to the content
         $pdfContent = $this->addAnswerSpacing($htmlContent);
+        
+        // Clean the HTML content to prevent PDF generation issues
+        $pdfContent = $this->cleanHtmlForPDF($pdfContent);
+        
+        error_log("PDF Generation: HTML content cleaned and ready (length: " . strlen($pdfContent) . ")");
         
         error_log("PDF Generation: Checking for PDF libraries");
         
