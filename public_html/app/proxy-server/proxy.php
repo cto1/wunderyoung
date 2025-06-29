@@ -62,52 +62,52 @@ $apiEndpoints = [
    
     
     // ----- [Yes Homework - Authentication Routes] -----
-    "auth_signup" => "/api/auth/signup",
-    "auth_login" => "/api/auth/login", 
-    "auth_verify" => "/api/auth/verify?email={email}&token={token}",
-    "auth_token" => "/api/auth/token",
-    "auth_password_login" => "/api/auth/password-login",
-    "auth_refresh_token" => "/api/auth/refresh-token",
+    "auth_signup" => "$base_url/auth/signup",
+    "auth_login" => "$base_url/auth/login", 
+    "auth_verify" => "$base_url/auth/verify?email={email}&token={token}",
+    "auth_token" => "$base_url/auth/token",
+    "auth_password_login" => "$base_url/auth/password-login",
+    "auth_refresh_token" => "$base_url/auth/refresh-token",
     
     // ----- [Yes Homework - User Profile Routes] -----
-    "get_user_profile" => "/api/users/profile",
-    "update_user_profile" => "/api/users/profile",
+    "get_user_profile" => "$base_url/users/profile",
+    "update_user_profile" => "$base_url/users/profile",
     
     // ----- [Yes Homework - Children Routes] -----
-    "get_children" => "/api/children",
-    "add_child" => "/api/children", 
-    "update_child" => "/api/children/{child_id}",
-    "delete_child" => "/api/children/{child_id}",
-    "get_child_worksheets" => "/api/children/{child_id}/worksheets",
-    "get_child_feedback_summary" => "/api/children/{child_id}/feedback-summary",
-    "get_child_completion_streak" => "/api/children/{child_id}/completion-streak",
-    "preview_child_worksheet" => "/api/children/{child_id}/preview-worksheet",
+    "get_children" => "$base_url/children",
+    "add_child" => "$base_url/children", 
+    "update_child" => "$base_url/children/{child_id}",
+    "delete_child" => "$base_url/children/{child_id}",
+    "get_child_worksheets" => "$base_url/children/{child_id}/worksheets",
+    "get_child_feedback_summary" => "$base_url/children/{child_id}/feedback-summary",
+    "get_child_completion_streak" => "$base_url/children/{child_id}/completion-streak",
+    "preview_child_worksheet" => "$base_url/children/{child_id}/preview-worksheet",
     
     // ----- [Yes Homework - Worksheet Routes] -----
-    "get_user_worksheets" => "/api/worksheets",
-    "create_worksheet" => "/api/worksheets",
-    "get_worksheet" => "/api/worksheets/{worksheet_id}",
-    "update_worksheet" => "/api/worksheets/{worksheet_id}",
-    "delete_worksheet" => "/api/worksheets/{worksheet_id}",
-    "download_worksheet" => "/api/worksheets/{worksheet_id}/download",
-    "get_worksheet_stats" => "/api/worksheets/stats",
-    "generate_child_worksheet" => "/api/children/{child_id}/generate-worksheet",
-    "generate_worksheets_bulk" => "/api/generate-worksheets-bulk",
-    "send_welcome_email" => "/api/send-welcome-email",
+    "get_user_worksheets" => "$base_url/worksheets",
+    "create_worksheet" => "$base_url/worksheets",
+    "get_worksheet" => "$base_url/worksheets/{worksheet_id}",
+    "update_worksheet" => "$base_url/worksheets/{worksheet_id}",
+    "delete_worksheet" => "$base_url/worksheets/{worksheet_id}",
+    "download_worksheet" => "$base_url/worksheets/{worksheet_id}/download",
+    "get_worksheet_stats" => "$base_url/worksheets/stats",
+    "generate_child_worksheet" => "$base_url/children/{child_id}/generate-worksheet",
+    "generate_worksheets_bulk" => "$base_url/generate-worksheets-bulk",
+    "send_welcome_email" => "$base_url/send-welcome-email",
     
     // ----- [Yes Homework - Download Token Routes] -----
-    "get_download_token" => "/api/download-tokens/{token}",
-    "get_token_previous_worksheet" => "/api/download-tokens/{token}/previous-worksheet",
-    "generate_from_token" => "/api/download-tokens/{token}/generate",
+    "get_download_token" => "$base_url/download-tokens/{token}",
+    "get_token_previous_worksheet" => "$base_url/download-tokens/{token}/previous-worksheet",
+    "generate_from_token" => "$base_url/download-tokens/{token}/generate",
     
     // ----- [Yes Homework - Feedback Routes] -----
-    "submit_feedback_v2" => "/api/feedback",
-    "get_feedback" => "/api/feedback/{worksheet_id}",
+    "submit_feedback_v2" => "$base_url/feedback",
+    "get_feedback" => "$base_url/feedback/{worksheet_id}",
     
     // ----- [Yes Homework - Testing/Debug Routes] -----
-    "test_openai" => "/api/test-openai",
-    "debug_env" => "/api/debug/env",
-    "health_check" => "/api/health",
+    "test_openai" => "$base_url/test-openai",
+    "debug_env" => "$base_url/debug/env",
+    "health_check" => "$base_url/health",
     
     // ----- [Yes Homework - Download System] -----
     "get_token_info" => "/api/DownloadTokenAPI.php?action=get_info&token={token}",
