@@ -4,6 +4,11 @@ ini_set('display_errors', 0);
 // But still log errors to the error log
 error_reporting(E_ALL);
 
+// Clear any OpCache if present
+if (function_exists('opcache_reset')) {
+    opcache_reset();
+}
+
 // Wrap the entire script in a try-catch to ensure proper JSON responses
 try {
 
@@ -108,6 +113,7 @@ $apiEndpoints = [
     "test_openai" => "$base_url/test-openai",
     "debug_env" => "$base_url/debug/env",
     "health_check" => "$base_url/health",
+    "test_proxy_fix" => "$base_url/health", // Test endpoint to verify fix is active
     
     // ----- [Yes Homework - Download System] -----
     "get_token_info" => "$base_url/DownloadTokenAPI.php?action=get_info&token={token}",
@@ -193,7 +199,7 @@ $routesWithoutChildId = [
     'get_user_profile', 'update_user_profile', 'get_children', 'add_child',
     'get_user_worksheets', 'create_worksheet', 'get_worksheet_stats',
     'generate_worksheets_bulk', 'send_welcome_email',
-    'submit_feedback_v2', 'test_openai', 'debug_env', 'health_check',
+    'submit_feedback_v2', 'test_openai', 'debug_env', 'health_check', 'test_proxy_fix',
     'get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf'
 ];
 
