@@ -108,35 +108,19 @@ if (!$apiKey || !isset($apiEndpoints[$apiKey])) {
 }
 
 // --- Parameter Validation ---
-// Routes that DON'T need child_id parameter (mainly auth and general routes)
-$routesWithoutChildId = [
+// Skip ALL validation for authentication routes
+$authRoutes = [
     'auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token',
-    'request_login', 'verify_login', 'JWT_token', 'signup',
-    'get_user_profile', 'update_user_profile', 'get_children', 'add_child',
-    'get_user_worksheets', 'create_worksheet', 'get_worksheet_stats',
-    'generate_worksheets_bulk', 'send_welcome_email',
-    'submit_feedback_v2', 'test_openai', 'debug_env', 'health_check',
-    'get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf',
-    'get_download_token', 'get_token_previous_worksheet', 'generate_from_token'
+    'request_login', 'verify_login', 'JWT_token', 'signup'
 ];
 
-// Only validate child_id for routes that actually need it
-$hasChildIdPlaceholder = strpos($apiEndpoints[$apiKey], '{child_id}') !== false;
-$isExcludedRoute = in_array($apiKey, $routesWithoutChildId);
-
-// Debug for auth_login specifically
-if ($apiKey === 'auth_login') {
-    error_log("DEBUG auth_login: endpoint = " . $apiEndpoints[$apiKey]);
-    error_log("DEBUG auth_login: hasChildIdPlaceholder = " . ($hasChildIdPlaceholder ? 'true' : 'false'));
-    error_log("DEBUG auth_login: isExcludedRoute = " . ($isExcludedRoute ? 'true' : 'false'));
-    error_log("DEBUG auth_login: childId = " . ($childId ?: 'NULL'));
-}
-
-if ($hasChildIdPlaceholder && !$childId && !$isExcludedRoute) {
-    error_log("DEBUG: BLOCKING route $apiKey - missing child_id");
-    http_response_code(400);
-    echo json_encode(["status" => "error", "message" => "Missing child_id parameter."]);
-    exit();
+if (!in_array($apiKey, $authRoutes)) {
+    // Only validate parameters for non-auth routes
+    if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId) {
+        http_response_code(400);
+        echo json_encode(["status" => "error", "message" => "Missing child_id parameter."]);
+        exit();
+    }
 }
 
 // Validate other required parameters
