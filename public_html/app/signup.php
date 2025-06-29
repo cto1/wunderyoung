@@ -31,17 +31,7 @@ include 'include/header.html';
                     <label class="label">
                         <span class="label-text">Email</span>
                     </label>
-                    <input type="email" id="email" class="input input-bordered" required>
-                </div>
-
-                <div class="form-control mt-4">
-                    <label class="label">
-                        <span class="label-text">Password (optional)</span>
-                    </label>
-                    <input type="password" id="password" class="input input-bordered" placeholder="Leave empty for passwordless signup" minlength="8">
-                    <label class="label">
-                        <span class="label-text-alt">Leave empty for passwordless account, or set a password (8+ characters)</span>
-                    </label>
+                    <input type="email" id="email" class="input input-bordered" required placeholder="Enter your email address">
                 </div>
 
                 <div class="form-control mt-6">
@@ -51,6 +41,13 @@ include 'include/header.html';
                     </button>
                 </div>
             </form>
+
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-600">
+                    <i class="fas fa-envelope mr-1"></i>
+                    We'll send you a welcome email with a login link
+                </p>
+            </div>
 
             <div class="divider">OR</div>
 
@@ -76,7 +73,6 @@ document.getElementById('signup-form').addEventListener('submit', async function
     e.preventDefault();
     
     const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
     const signupBtn = document.getElementById('signup-btn');
     const signupSpinner = document.getElementById('signup-spinner');
     const signupBtnText = document.getElementById('signup-btn-text');
@@ -91,17 +87,12 @@ document.getElementById('signup-form').addEventListener('submit', async function
     document.getElementById('error-message').classList.add('hidden');
     
     try {
-        const requestData = { email: email };
-        if (password.trim()) {
-            requestData.password = password;
-        }
-        
         const response = await fetch('../api/auth/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(requestData)
+            body: JSON.stringify({ email: email })
         });
         
         const result = await response.json();

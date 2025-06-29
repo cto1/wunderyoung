@@ -31,26 +31,23 @@ include 'include/header.html';
                     <label class="label">
                         <span class="label-text">Email</span>
                     </label>
-                    <input type="email" id="email" class="input input-bordered" required>
-                </div>
-
-                <div class="form-control mt-4">
-                    <label class="label">
-                        <span class="label-text">Password (optional)</span>
-                    </label>
-                    <input type="password" id="password" class="input input-bordered" placeholder="Leave empty for magic link">
-                    <label class="label">
-                        <span class="label-text-alt">Don't have a password? Leave blank for magic link login</span>
-                    </label>
+                    <input type="email" id="email" class="input input-bordered" required placeholder="Enter your email address">
                 </div>
 
                 <div class="form-control mt-6">
                     <button type="submit" class="btn btn-sophisticated" id="login-btn">
                         <span class="loading loading-spinner loading-sm hidden" id="login-spinner"></span>
-                        <span id="login-btn-text">Login</span>
+                        <span id="login-btn-text">Send Login Link</span>
                     </button>
                 </div>
             </form>
+
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-600">
+                    <i class="fas fa-magic mr-1"></i>
+                    We'll send you a secure login link via email
+                </p>
+            </div>
 
             <div class="divider">OR</div>
 
@@ -67,7 +64,6 @@ document.getElementById('login-form').addEventListener('submit', async function(
     e.preventDefault();
     
     const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
     const loginBtn = document.getElementById('login-btn');
     const loginSpinner = document.getElementById('login-spinner');
     const loginBtnText = document.getElementById('login-btn-text');
@@ -75,58 +71,30 @@ document.getElementById('login-form').addEventListener('submit', async function(
     // Show loading state
     loginBtn.disabled = true;
     loginSpinner.classList.remove('hidden');
-    loginBtnText.textContent = 'Logging in...';
+    loginBtnText.textContent = 'Sending...';
     
     // Hide previous messages
     document.getElementById('success-message').classList.add('hidden');
     document.getElementById('error-message').classList.add('hidden');
     
     try {
-        let response;
-        
-        if (password.trim()) {
-            // Password login
-            response = await fetch('../api/auth/password-login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-        } else {
-            // Magic link login
-            response = await fetch('../api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email
-                })
-            });
-        }
+        // Send magic link
+        const response = await fetch('../api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email
+            })
+        });
         
         const result = await response.json();
         
         if (result.status === 'success') {
-            if (password.trim()) {
-                // Direct password login - store token and redirect
-                localStorage.setItem('authToken', 'authenticated');
-                localStorage.setItem('user', JSON.stringify({
-                    id: result.id,
-                    email: result.email,
-                    plan: result.plan
-                }));
-                window.location.href = 'worksheets.php';
-            } else {
-                // Magic link sent
-                showSuccess('✉️ Check your email! A login link has been sent to ' + email);
-            }
+            showSuccess('✉️ Check your email! A login link has been sent to ' + email);
         } else {
-            showError(result.message || 'Login failed');
+            showError(result.message || 'Failed to send login link');
         }
         
     } catch (error) {
@@ -136,7 +104,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
         // Reset button state
         loginBtn.disabled = false;
         loginSpinner.classList.add('hidden');
-        loginBtnText.textContent = 'Login';
+        loginBtnText.textContent = 'Send Login Link';
     }
 });
 
