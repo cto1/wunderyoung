@@ -676,12 +676,23 @@ async function generateWorksheet(childId) {
         
     } catch (error) {
         console.error('Error generating worksheet:', error);
-        showError('Failed to generate worksheet. Please try again.');
         
-        // Reset button on error
-        const btn = event.target;
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-magic mr-1"></i>Generate Today\'s Worksheet';
+        // Handle specific error cases
+        if (error.message.includes('already exists')) {
+            showError('Today\'s worksheet has already been generated for this child. Check your email!');
+        } else if (error.message.includes('UNIQUE constraint')) {
+            showError('Today\'s worksheet has already been generated for this child. Check your email!');
+        } else {
+            showError('Failed to generate worksheet. Please try again.');
+        }
+        
+        // Reset button on error - get button reference safely
+        const btn = event?.target || document.querySelector(`button[onclick*="${childId}"]`);
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic mr-1"></i>Generate Today\'s Worksheet';
+            btn.className = 'btn btn-sophisticated btn-sm';
+        }
     }
 }
 
