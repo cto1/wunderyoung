@@ -138,6 +138,14 @@ if (!$apiKey || !isset($apiEndpoints[$apiKey])) {
     exit();
 }
 
+// DEBUG: For auth_signup, let's see what's happening
+if ($apiKey === 'auth_signup') {
+    error_log("DEBUG: auth_signup route detected");
+    error_log("DEBUG: host = " . $host);
+    error_log("DEBUG: base_url = " . $base_url);
+    error_log("DEBUG: apiEndpoints[auth_signup] = " . $apiEndpoints[$apiKey]);
+}
+
 // Validate Required Parameters
 if (strpos($apiEndpoints[$apiKey], '{org_id}') !== false && !$orgId) {
     http_response_code(400);
@@ -184,7 +192,9 @@ if (strpos($apiEndpoints[$apiKey], '{email}') !== false && !$email) {
     echo json_encode(["status" => "error", "message" => "Missing email parameter."]);
     exit();
 }
-if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId) {
+// Skip child_id validation for auth routes that don't need it
+$authRoutesWithoutChildId = ['auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token'];
+if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId && !in_array($apiKey, $authRoutesWithoutChildId)) {
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "Missing child_id parameter."]);
     exit();
