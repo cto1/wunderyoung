@@ -92,7 +92,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
         const result = await response.json();
         
         if (result.status === 'success') {
-            showSuccess('✉️ Check your email! A login link has been sent to ' + email);
+            showSuccess('Check your email! A login link has been sent to ' + email);
         } else {
             showError(result.message || 'Failed to send login link');
         }
