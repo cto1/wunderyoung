@@ -208,8 +208,8 @@ if (!empty($otherParams)) {
     $apiUrl .= (strpos($apiUrl, '?') === false ? '?' : '&') . http_build_query($otherParams);
 }
 
-// --- Handle Yes Homework Local API Calls ---
-$yesHomeworkMainApis = [
+// --- Handle Yes Homework API Calls ---
+$yesHomeworkApis = [
     // Authentication
     'auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token',
     // User Profile
@@ -222,81 +222,97 @@ $yesHomeworkMainApis = [
     'get_download_token', 'get_token_previous_worksheet', 'generate_from_token',
     // Feedback
     'submit_feedback_v2', 'get_feedback',
+    // Download System
+    'get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf',
     // Testing/Debug
     'test_openai', 'debug_env', 'health_check'
 ];
-$yesHomeworkDirectApis = ['get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf'];
 
-if (in_array($apiKey, $yesHomeworkMainApis)) {
-    // Handle routes that go through /api/index.php with proper routing
+// Check if this is a localhost environment for local API handling
+$isLocalhost = in_array($host, ['localhost', '127.0.0.1', 'localhost:8080', '127.0.0.1:8080']) || 
+               strpos($host, 'localhost:') === 0 || 
+               strpos($host, '127.0.0.1:') === 0;
+
+if (in_array($apiKey, $yesHomeworkApis) && $isLocalhost) {
+    // Handle localhost requests by including local API files directly
     $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
-    $localApiPath = $documentRoot . '/api/index.php';
     
-    if (file_exists($localApiPath)) {
-        // Use the constructed API URL from the route mapping
-        $routePath = $apiUrl; // This already has the full route like "/api/auth/login"
+    // Determine which API file to include
+    $yesHomeworkMainApis = [
+        'auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token',
+        'get_user_profile', 'update_user_profile',
+        'get_children', 'add_child', 'update_child', 'delete_child', 'get_child_worksheets', 'get_child_feedback_summary', 'get_child_completion_streak', 'preview_child_worksheet',
+        'get_user_worksheets', 'create_worksheet', 'get_worksheet', 'update_worksheet', 'delete_worksheet', 'download_worksheet', 'get_worksheet_stats', 'generate_child_worksheet', 'generate_worksheets_bulk', 'send_welcome_email',
+        'get_download_token', 'get_token_previous_worksheet', 'generate_from_token',
+        'submit_feedback_v2', 'get_feedback',
+        'test_openai', 'debug_env', 'health_check'
+    ];
+    
+    if (in_array($apiKey, $yesHomeworkMainApis)) {
+        // Routes that go through /api/index.php
+        $localApiPath = $documentRoot . '/api/index.php';
         
-        // Set up environment for the API router
-        $_SERVER['REQUEST_URI'] = $routePath;
-        $_SERVER['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
-        
-        // For GET requests with special parameters (like auth_verify)
-        if ($apiKey === 'auth_verify' && $email && $token) {
-            $_GET['email'] = $email;
-            $_GET['token'] = $token;
+        if (file_exists($localApiPath)) {
+            // Extract the route path from the full URL
+            $parsedUrl = parse_url($apiUrl);
+            $routePath = $parsedUrl['path'];
+            
+            // Set up environment for the API router
+            $_SERVER['REQUEST_URI'] = $routePath . (!empty($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '');
+            $_SERVER['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
+            
+            // For GET requests with special parameters (like auth_verify)
+            if ($apiKey === 'auth_verify' && $email && $token) {
+                $_GET['email'] = $email;
+                $_GET['token'] = $token;
+            }
+            
+            // Temporarily change working directory and include the API
+            $oldCwd = getcwd();
+            chdir(dirname($localApiPath));
+            
+            // Capture output
+            ob_start();
+            include $localApiPath;
+            $response = ob_get_contents();
+            ob_end_clean();
+            
+            // Restore working directory
+            chdir($oldCwd);
+            
+            // Output the response
+            header("Content-Type: application/json");
+            echo $response;
+            exit();
         }
-        
-        // Temporarily change working directory and include the API
-        $oldCwd = getcwd();
-        chdir(dirname($localApiPath));
-        
-        // Capture output
-        ob_start();
-        include $localApiPath;
-        $response = ob_get_contents();
-        ob_end_clean();
-        
-        // Restore working directory
-        chdir($oldCwd);
-        
-        // Output the response
-        header("Content-Type: application/json");
-        echo $response;
-        exit();
     } else {
-        http_response_code(404);
-        echo json_encode(["status" => "error", "message" => "API index file not found: $localApiPath"]);
-        exit();
-    }
-}
-
-// Handle direct API files (DownloadAPI, etc.)
-else if (in_array($apiKey, $yesHomeworkDirectApis)) {
-    $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
-    $localApiPath = $documentRoot . $apiUrl;
-    
-    if (file_exists($localApiPath)) {
-        // Temporarily change working directory and include the API
-        $oldCwd = getcwd();
-        chdir(dirname($localApiPath));
+        // Direct API files (DownloadAPI, etc.)
+        $parsedUrl = parse_url($apiUrl);
+        $localApiPath = $documentRoot . $parsedUrl['path'];
         
-        // Capture output
-        ob_start();
-        include $localApiPath;
-        $response = ob_get_contents();
-        ob_end_clean();
-        
-        // Restore working directory
-        chdir($oldCwd);
-        
-        // Output the response
-        header("Content-Type: application/json");
-        echo $response;
-        exit();
-    } else {
-        http_response_code(404);
-        echo json_encode(["status" => "error", "message" => "Local API file not found: $localApiPath"]);
-        exit();
+        if (file_exists($localApiPath)) {
+            // Temporarily change working directory and include the API
+            $oldCwd = getcwd();
+            chdir(dirname($localApiPath));
+            
+            // Capture output
+            ob_start();
+            include $localApiPath;
+            $response = ob_get_contents();
+            ob_end_clean();
+            
+            // Restore working directory
+            chdir($oldCwd);
+            
+            // Output the response
+            header("Content-Type: application/json");
+            echo $response;
+            exit();
+        } else {
+            http_response_code(404);
+            echo json_encode(["status" => "error", "message" => "Local API file not found: $localApiPath"]);
+            exit();
+        }
     }
 }
 
