@@ -121,7 +121,19 @@ $routesWithoutChildId = [
 ];
 
 // Only validate child_id for routes that actually need it
-if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId && !in_array($apiKey, $routesWithoutChildId)) {
+$hasChildIdPlaceholder = strpos($apiEndpoints[$apiKey], '{child_id}') !== false;
+$isExcludedRoute = in_array($apiKey, $routesWithoutChildId);
+
+// Debug for auth_login specifically
+if ($apiKey === 'auth_login') {
+    error_log("DEBUG auth_login: endpoint = " . $apiEndpoints[$apiKey]);
+    error_log("DEBUG auth_login: hasChildIdPlaceholder = " . ($hasChildIdPlaceholder ? 'true' : 'false'));
+    error_log("DEBUG auth_login: isExcludedRoute = " . ($isExcludedRoute ? 'true' : 'false'));
+    error_log("DEBUG auth_login: childId = " . ($childId ?: 'NULL'));
+}
+
+if ($hasChildIdPlaceholder && !$childId && !$isExcludedRoute) {
+    error_log("DEBUG: BLOCKING route $apiKey - missing child_id");
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "Missing child_id parameter."]);
     exit();
