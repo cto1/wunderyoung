@@ -22,7 +22,7 @@ class DownloadTokenAPI {
             }
 
             // Check if token already exists for this child and date
-            $stmt = $this->pdo->prepare("SELECT token FROM download_tokens WHERE child_id = ? AND date = ?");
+            $stmt = $this->pdo->prepare("SELECT token, expires_at FROM download_tokens WHERE child_id = ? AND date = ?");
             $stmt->execute([$childId, $date]);
             $existingToken = $stmt->fetch();
             
@@ -30,6 +30,7 @@ class DownloadTokenAPI {
                 return [
                     'status' => 'success',
                     'token' => $existingToken['token'],
+                    'expires_at' => $existingToken['expires_at'],
                     'message' => 'Download token already exists'
                 ];
             }
