@@ -107,6 +107,15 @@ if (!$apiKey || !isset($apiEndpoints[$apiKey])) {
     exit();
 }
 
+// EMERGENCY FIX: Bypass everything for auth_login
+if ($apiKey === 'auth_login') {
+    error_log("DEBUG: Emergency bypass for auth_login");
+    // Construct API URL for auth_login
+    $apiUrl = $apiEndpoints[$apiKey];
+    // Skip to the API handling section
+    goto handle_api_request;
+}
+
 // --- Parameter Validation ---
 // Skip ALL validation for authentication routes
 $authRoutes = [
@@ -114,7 +123,13 @@ $authRoutes = [
     'request_login', 'verify_login', 'JWT_token', 'signup'
 ];
 
+// Debug logging
+error_log("DEBUG: apiKey = $apiKey");
+error_log("DEBUG: authRoutes = " . json_encode($authRoutes));
+error_log("DEBUG: in_array result = " . (in_array($apiKey, $authRoutes) ? 'true' : 'false'));
+
 if (!in_array($apiKey, $authRoutes)) {
+    error_log("DEBUG: Entering parameter validation for $apiKey");
     // Only validate parameters for non-auth routes
     if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId) {
         http_response_code(400);
@@ -152,6 +167,7 @@ if (!empty($otherParams)) {
 }
 
 // --- Handle Yes Homework API Calls ---
+handle_api_request:
 $yesHomeworkApis = [
     'auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token',
     'request_login', 'verify_login', 'JWT_token', 'signup',
