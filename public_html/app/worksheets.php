@@ -391,7 +391,7 @@
                 const response = await fetch('/api/ChildAPI.php?action=add', {
                     method: 'POST',
                     headers: getHeaders(),
-                    body: JSON.stringify({ name, age, interest1, interest2 })
+                    body: JSON.stringify({ name, age_group: age, interest1, interest2 })
                 });
                 
                 const result = await response.json();

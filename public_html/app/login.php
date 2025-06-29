@@ -103,12 +103,8 @@ document.getElementById('login-form').addEventListener('submit', async function(
                 localStorage.setItem('userEmail', email);
             }
             
-            showSuccess('Sign in successful! Redirecting...');
-            
-            // Redirect to worksheets page
-            setTimeout(() => {
-                window.location.href = '/app/worksheets.php';
-            }, 1500);
+            // Redirect immediately to worksheets page
+            window.location.href = '/app/worksheets.php';
         } else {
             showError(result.message || 'Sign in failed');
         }
