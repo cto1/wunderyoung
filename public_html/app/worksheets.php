@@ -432,7 +432,7 @@
                 const card = document.createElement('div');
                 card.className = 'child-card';
                 card.innerHTML = `
-                    <strong>${child.name}</strong> (${child.age} years)<br>
+                    <strong>${child.name}</strong> (${child.age_group} years)<br>
                     Interests: ${child.interest1}, ${child.interest2}
                 `;
                 container.appendChild(card);
@@ -446,7 +446,7 @@
             children.forEach(child => {
                 const option = document.createElement('option');
                 option.value = child.id;
-                option.textContent = `${child.name} (${child.age} years)`;
+                option.textContent = `${child.name} (${child.age_group} years)`;
                 worksheetSelect.appendChild(option);
             });
         }
@@ -601,11 +601,22 @@
                 return;
             }
             
+            // Find the selected worksheet to get child_id
+            const selectedWorksheet = worksheets.find(w => w.id === worksheetId);
+            if (!selectedWorksheet) {
+                showResult('pdfResult', 'Selected worksheet not found');
+                return;
+            }
+            
             try {
                 const response = await fetch('/api/EmailAPI.php?action=send-worksheet', {
                     method: 'POST',
                     headers: getHeaders(),
-                    body: JSON.stringify({ worksheet_id: worksheetId, parent_email: parentEmail })
+                    body: JSON.stringify({ 
+                        child_id: selectedWorksheet.child_id, 
+                        worksheet_id: worksheetId, 
+                        parent_email: parentEmail 
+                    })
                 });
                 
                 const result = await response.json();
