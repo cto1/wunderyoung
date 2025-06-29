@@ -246,18 +246,24 @@ if (in_array($apiKey, $yesHomeworkApis) && $isLocalhost) {
             $oldCwd = getcwd();
             chdir(dirname($localApiPath));
             
-            // Capture output
-            ob_start();
-            include $localApiPath;
-            $response = ob_get_contents();
-            ob_end_clean();
+            // Special handling for PDF downloads - don't buffer output
+            if ($apiKey === 'download_pdf') {
+                // Stream PDF directly without buffering
+                include $localApiPath;
+            } else {
+                // Capture output for JSON APIs
+                ob_start();
+                include $localApiPath;
+                $response = ob_get_contents();
+                ob_end_clean();
+                
+                // Output the response
+                header("Content-Type: application/json");
+                echo $response;
+            }
             
             // Restore working directory
             chdir($oldCwd);
-            
-            // Output the response
-            header("Content-Type: application/json");
-            echo $response;
             exit();
         } else {
             http_response_code(404);

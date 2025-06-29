@@ -381,14 +381,29 @@ function downloadPDF() {
     const downloadUrl = `/app/proxy-server/proxy.php?api=download_pdf&token=${downloadToken}`;
     console.log('Generating and downloading PDF from:', downloadUrl);
     
-    // Create hidden link and trigger download
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = `${worksheetData.child_name}_Worksheet_${worksheetData.date}.pdf`;
-    link.target = '_blank'; // Open in new tab in case of errors
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Try window.open first (works better for file downloads)
+    const downloadWindow = window.open(downloadUrl, '_blank');
+    
+    // Fallback: create hidden link if window.open fails
+    if (!downloadWindow) {
+        console.log('Window.open blocked, trying link method...');
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `${worksheetData.child_name}_Worksheet_${worksheetData.date}.pdf`;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        // Close the window after a short delay (PDF will download, window can close)
+        setTimeout(() => {
+            try {
+                downloadWindow.close();
+            } catch (e) {
+                // Ignore if we can't close the window (cross-origin restrictions)
+            }
+        }, 1000);
+    }
 }
 
 function showError(message) {
