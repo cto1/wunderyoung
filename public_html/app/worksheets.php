@@ -583,7 +583,7 @@ function createChildCard(child) {
                 <div class="card-actions justify-end mt-4">
                     <button class="btn btn-sophisticated btn-sm" onclick="generateWorksheet('${child.id}')">
                         <i class="fas fa-magic mr-1"></i>
-                        Generate Today's Worksheet
+                        Create Download Link
                     </button>
                 </div>
             </div>
@@ -794,8 +794,11 @@ async function generateWorksheet(childId) {
         console.log('Worksheet generation response:', response);
         
         if (response.status === 'success') {
-            btn.innerHTML = '<i class="fas fa-check mr-1"></i>Sent to Email!';
+            btn.innerHTML = '<i class="fas fa-check mr-1"></i>Download Link Ready!';
             btn.className = 'btn btn-success btn-sm';
+            
+            // Show success message with download instructions 
+            showSuccessMessage('Download link created! Check your email for the download link.');
             
             // Reload stats to show updated counts
             await loadChildrenStats();
@@ -816,18 +819,18 @@ async function generateWorksheet(childId) {
         
         // Handle specific error cases
         if (error.message.includes('already exists')) {
-            showError('Today\'s worksheet has already been generated for this child. Check your email!');
+            showError('Today\'s download link has already been created for this child. Check your email!');
         } else if (error.message.includes('UNIQUE constraint')) {
-            showError('Today\'s worksheet has already been generated for this child. Check your email!');
+            showError('Today\'s download link has already been created for this child. Check your email!');
         } else {
-            showError('Failed to generate worksheet. Please try again.');
+            showError('Failed to create download link. Please try again.');
         }
         
         // Reset button on error - get button reference safely
         const btn = event?.target || document.querySelector(`button[onclick*="${childId}"]`);
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-magic mr-1"></i>Generate Today\'s Worksheet';
+            btn.innerHTML = '<i class="fas fa-magic mr-1"></i>Create Download Link';
             btn.className = 'btn btn-sophisticated btn-sm';
         }
     }
