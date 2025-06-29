@@ -110,10 +110,10 @@ $apiEndpoints = [
     "health_check" => "$base_url/health",
     
     // ----- [Yes Homework - Download System] -----
-    "get_token_info" => "/api/DownloadTokenAPI.php?action=get_info&token={token}",
-    "create_download_token" => "/api/DownloadTokenAPI.php",
-    "submit_feedback" => "/api/FeedbackAPI.php",
-    "download_pdf" => "/api/DownloadAPI.php?token={token}",
+    "get_token_info" => "$base_url/DownloadTokenAPI.php?action=get_info&token={token}",
+    "create_download_token" => "$base_url/DownloadTokenAPI.php",
+    "submit_feedback" => "$base_url/FeedbackAPI.php",
+    "download_pdf" => "$base_url/DownloadAPI.php?token={token}",
 ];
 
 
