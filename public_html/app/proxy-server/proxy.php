@@ -241,6 +241,14 @@ if (in_array($apiKey, $yesHomeworkApis) && $isLocalhost) {
         $parsedUrl = parse_url($apiUrl);
         $localApiPath = $documentRoot . $parsedUrl['path'];
         
+        // Debug logging for all direct API calls
+        error_log("Direct API Debug: API Key = $apiKey");
+        error_log("Direct API Debug: API URL = $apiUrl");
+        error_log("Direct API Debug: Parsed URL path = " . $parsedUrl['path']);
+        error_log("Direct API Debug: Document Root = $documentRoot");
+        error_log("Direct API Debug: Local API Path = $localApiPath");
+        error_log("Direct API Debug: File exists = " . (file_exists($localApiPath) ? 'yes' : 'no'));
+        
         if (file_exists($localApiPath)) {
             // Temporarily change working directory and include the API
             $oldCwd = getcwd();
@@ -248,6 +256,12 @@ if (in_array($apiKey, $yesHomeworkApis) && $isLocalhost) {
             
             // Special handling for PDF downloads - don't buffer output
             if ($apiKey === 'download_pdf') {
+                // Debug logging for PDF downloads
+                error_log("PDF Download Debug: API Key = $apiKey");
+                error_log("PDF Download Debug: Local API Path = $localApiPath");
+                error_log("PDF Download Debug: Token = $token");
+                error_log("PDF Download Debug: File exists = " . (file_exists($localApiPath) ? 'yes' : 'no'));
+                
                 // Stream PDF directly without buffering
                 include $localApiPath;
             } else {

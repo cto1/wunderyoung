@@ -381,28 +381,61 @@ function downloadPDF() {
     const downloadUrl = `/app/proxy-server/proxy.php?api=download_pdf&token=${downloadToken}`;
     console.log('Generating and downloading PDF from:', downloadUrl);
     
-    // Try window.open first (works better for file downloads)
-    const downloadWindow = window.open(downloadUrl, '_blank');
-    
-    // Fallback: create hidden link if window.open fails
-    if (!downloadWindow) {
-        console.log('Window.open blocked, trying link method...');
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = `${worksheetData.child_name}_Worksheet_${worksheetData.date}.pdf`;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        // Close the window after a short delay (PDF will download, window can close)
-        setTimeout(() => {
-            try {
-                downloadWindow.close();
-            } catch (e) {
-                // Ignore if we can't close the window (cross-origin restrictions)
+    // First, let's test the URL with fetch to see if there are any errors
+    console.log('Testing download URL...');
+    fetch(downloadUrl, { method: 'GET' })
+        .then(response => {
+            console.log('Download URL test response:', {
+                status: response.status,
+                statusText: response.statusText,
+                contentType: response.headers.get('content-type'),
+                contentLength: response.headers.get('content-length')
+            });
+            
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('Download URL returned error response:', text);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                });
             }
-        }, 1000);
+            
+            // Now proceed with actual download
+            tryDownload();
+        })
+        .catch(error => {
+            console.error('Download URL test failed:', error);
+            alert('Download failed: ' + error.message);
+            // Still try to download in case it was just a test issue
+            tryDownload();
+        });
+    
+    function tryDownload() {
+        // Try window.open first (works better for file downloads)
+        console.log('Attempting window.open download...');
+        const downloadWindow = window.open(downloadUrl, '_blank');
+        
+        // Fallback: create hidden link if window.open fails
+        if (!downloadWindow) {
+            console.log('Window.open blocked, trying link method...');
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `${worksheetData.child_name}_Worksheet_${worksheetData.date}.pdf`;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            console.log('Window.open succeeded, download should start...');
+            // Close the window after a short delay (PDF will download, window can close)
+            setTimeout(() => {
+                try {
+                    downloadWindow.close();
+                } catch (e) {
+                    // Ignore if we can't close the window (cross-origin restrictions)
+                    console.log('Could not close download window (normal)');
+                }
+            }, 2000);
+        }
     }
 }
 
