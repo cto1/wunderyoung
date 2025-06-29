@@ -434,6 +434,20 @@ $router->addRoute('GET', '/test-openai', function($params, $data, $context) {
     }
 });
 
+// Debug endpoint to check environment (unprotected for testing)
+$router->addRoute('GET', '/debug/env', function($params, $data, $context) {
+    return [
+        'status' => 'success',
+        'env' => [
+            'openai_key_exists' => isset($_ENV['OPENAI_API_KEY']),
+            'openai_key_length' => isset($_ENV['OPENAI_API_KEY']) ? strlen($_ENV['OPENAI_API_KEY']) : 0,
+            'openai_key_prefix' => isset($_ENV['OPENAI_API_KEY']) ? substr($_ENV['OPENAI_API_KEY'], 0, 10) . '...' : 'not set',
+            'debug_mode' => $_ENV['DEBUG'] ?? 'not set',
+            'php_version' => PHP_VERSION
+        ]
+    ];
+});
+
 // Handle the request
 try {
     $response = $router->handle($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

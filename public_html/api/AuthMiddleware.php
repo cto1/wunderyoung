@@ -20,6 +20,9 @@ class AuthMiddleware {
             
             // Public health check
             ['method' => 'GET', 'path' => '/api/health'],
+            
+            // Debug endpoints
+            ['method' => 'GET', 'path' => '/api/debug/env'],
         ];
     }
 

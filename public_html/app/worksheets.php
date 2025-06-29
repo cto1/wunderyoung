@@ -632,6 +632,11 @@ function showError(message) {
 // Generate worksheet for child
 async function generateWorksheet(childId) {
     try {
+        // Check authentication first
+        if (!api.isAuthenticated()) {
+            throw new Error('You are not logged in. Please refresh the page and try again.');
+        }
+        
         const today = new Date().toISOString().split('T')[0];
         
         // Show loading state on the button
@@ -641,9 +646,15 @@ async function generateWorksheet(childId) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Generating...';
         
         // Call the worksheet generation API
+        console.log('Making request to generate worksheet for child:', childId);
+        console.log('User authenticated:', api.isAuthenticated());
+        console.log('Current user:', api.getCurrentUser());
+        
         const response = await api.makeRequest(`/children/${childId}/generate-worksheet`, 'POST', {
             date: today
         });
+        
+        console.log('Worksheet generation response:', response);
         
         if (response.status === 'success') {
             btn.innerHTML = '<i class="fas fa-check mr-1"></i>Sent to Email!';
