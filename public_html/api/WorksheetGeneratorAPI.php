@@ -4,6 +4,7 @@ require_once 'conf.php';
 require_once 'OpenaiProvider.php';
 require_once 'WorksheetAPI.php';
 require_once 'FeedbackAPI.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 class WorksheetGeneratorAPI {
     private $db;
@@ -153,8 +154,6 @@ class WorksheetGeneratorAPI {
 
     // Stream PDF using TCPDF
     private function streamPDFWithTCPDF($htmlContent, $childName, $date) {
-        require_once(__DIR__ . '/../../vendor/autoload.php');
-        
         $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
         
         // Set document information
@@ -190,8 +189,6 @@ class WorksheetGeneratorAPI {
 
     // Stream PDF using DOMPDF
     private function streamPDFWithDOMPDF($htmlContent, $childName, $date) {
-        require_once(__DIR__ . '/../../vendor/autoload.php');
-        
         $fullHtml = "<!DOCTYPE html>
 <html>
 <head>
