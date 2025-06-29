@@ -434,9 +434,10 @@ async function loadChildrenStats() {
         const childrenStats = await Promise.all(statsPromises);
         
         // Update each child's display
-        childrenStats.forEach(stats => {
-            updateChildStats(stats.childId, stats.worksheets, stats.total);
-        });
+        const updatePromises = childrenStats.map(stats => 
+            updateChildStats(stats.childId, stats.worksheets, stats.total)
+        );
+        await Promise.all(updatePromises);
         
     } catch (error) {
         console.error('Error loading children stats:', error);
@@ -444,7 +445,7 @@ async function loadChildrenStats() {
 }
 
 // Update individual child stats display
-function updateChildStats(childId, worksheets, total) {
+async function updateChildStats(childId, worksheets, total) {
     const worksheetCountEl = document.getElementById(`child-worksheets-${childId}`);
     const streakEl = document.getElementById(`child-streak-${childId}`);
     
@@ -452,10 +453,23 @@ function updateChildStats(childId, worksheets, total) {
         worksheetCountEl.textContent = total;
     }
     
-    if (streakEl && worksheets.length > 0) {
-        // Calculate learning streak (consecutive days with worksheets)
-        const streak = calculateLearningStreak(worksheets);
-        streakEl.textContent = streak;
+    if (streakEl) {
+        try {
+            // Get accurate streak from feedback API
+            const response = await api.makeRequest(`/FeedbackAPI.php?child_id=${childId}&action=streak`, 'GET');
+            if (response.status === 'success') {
+                streakEl.textContent = response.streak;
+            } else {
+                // Fallback to basic calculation
+                const streak = worksheets.length > 0 ? calculateLearningStreak(worksheets) : 0;
+                streakEl.textContent = streak;
+            }
+        } catch (error) {
+            console.error('Error getting streak for child', childId, error);
+            // Fallback to basic calculation
+            const streak = worksheets.length > 0 ? calculateLearningStreak(worksheets) : 0;
+            streakEl.textContent = streak;
+        }
     }
 }
 
@@ -782,23 +796,33 @@ async function generateWorksheet(childId) {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Generating...';
         
-        // Call the worksheet generation API
-        console.log('Making request to generate worksheet for child:', childId);
+        // Create download token instead of generating worksheet immediately
+        console.log('Creating download token for child:', childId);
         console.log('User authenticated:', api.isAuthenticated());
         console.log('Current user:', api.getCurrentUser());
         
-        const response = await api.makeRequest(`/children/${childId}/generate-worksheet`, 'POST', {
-            date: today
+        const response = await fetch('/app/proxy-server/proxy.php?api=create_download_token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                child_id: childId,
+                date: today,
+                is_welcome: false
+            })
         });
         
-        console.log('Worksheet generation response:', response);
+        const result = await response.json();
+        console.log('Download token creation response:', result);
         
-        if (response.status === 'success') {
+        if (result.status === 'success') {
             btn.innerHTML = '<i class="fas fa-check mr-1"></i>Download Link Ready!';
             btn.className = 'btn btn-success btn-sm';
             
-            // Show success message with download instructions 
-            showSuccessMessage('Download link created! Check your email for the download link.');
+            // Show success message with download instructions and token for testing
+            const downloadUrl = `/download.php?token=${result.token}`;
+            showSuccessMessage(`Download link created! For testing: <a href="${downloadUrl}" target="_blank" class="underline">Click here to download</a><br>In production, this link would be emailed to parents.`);
             
             // Reload stats to show updated counts
             await loadChildrenStats();

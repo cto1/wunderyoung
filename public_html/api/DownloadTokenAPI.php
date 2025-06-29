@@ -157,4 +157,51 @@ class DownloadTokenAPI {
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-} 
+}
+
+// Handle API requests
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $api = new DownloadTokenAPI();
+    $action = $_GET['action'] ?? '';
+    
+    if ($action === 'get_info') {
+        $token = $_GET['token'] ?? '';
+        if (empty($token)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Missing token parameter']);
+            exit;
+        }
+        
+        $result = $api->getDownloadTokenInfo($token);
+        echo json_encode($result);
+    }
+    elseif ($action === 'cleanup') {
+        $result = $api->cleanupExpiredTokens();
+        echo json_encode($result);
+    }
+    else {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+    }
+}
+elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $api = new DownloadTokenAPI();
+    $input = json_decode(file_get_contents('php://input'), true);
+    
+    $childId = $input['child_id'] ?? '';
+    $date = $input['date'] ?? date('Y-m-d');
+    $isWelcome = $input['is_welcome'] ?? false;
+    
+    if (empty($childId)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Missing child_id parameter']);
+        exit;
+    }
+    
+    $result = $api->createDownloadToken($childId, $date, $isWelcome);
+    echo json_encode($result);
+}
+else {
+    http_response_code(405);
+    echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
+}

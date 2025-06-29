@@ -120,6 +120,12 @@ $apiEndpoints = [
     "POST_submitIdea" => "$base_url/ideas/organization/{org_id}",
     "GET_getIdeas" => "$base_url/ideas/organization/{org_id}", 
     "POST_voteIdea" => "$base_url/ideas/{idea_id}/vote",
+    
+    // ----- [Yes Homework - Download System] -----
+    "get_token_info" => "/api/DownloadTokenAPI.php?action=get_info&token={token}",
+    "create_download_token" => "/api/DownloadTokenAPI.php",
+    "submit_feedback" => "/api/FeedbackAPI.php",
+    "download_pdf" => "/api/DownloadAPI.php?token={token}",
 ];
 
 
@@ -194,6 +200,39 @@ $apiUrl = str_replace(
 $otherParams = array_diff_key($_GET, array_flip(['api', 'org_id', 'token', 'user_id', 'project_id', 'file_id', 'company_number', 'idea_id', 'filter']));
 if (!empty($otherParams)) {
     $apiUrl .= (strpos($apiUrl, '?') === false ? '?' : '&') . http_build_query($otherParams);
+}
+
+// --- Handle Yes Homework Local API Calls ---
+$yesHomeworkApis = ['get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf'];
+if (in_array($apiKey, $yesHomeworkApis)) {
+    // For local APIs, prepend the document root
+    $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+    $localApiPath = $documentRoot . $apiUrl;
+    
+    // Include and execute the local API
+    if (file_exists($localApiPath)) {
+        // Temporarily change working directory and include the API
+        $oldCwd = getcwd();
+        chdir(dirname($localApiPath));
+        
+        // Capture output
+        ob_start();
+        include $localApiPath;
+        $response = ob_get_contents();
+        ob_end_clean();
+        
+        // Restore working directory
+        chdir($oldCwd);
+        
+        // Output the response
+        header("Content-Type: application/json");
+        echo $response;
+        exit();
+    } else {
+        http_response_code(404);
+        echo json_encode(["status" => "error", "message" => "Local API file not found: $localApiPath"]);
+        exit();
+    }
 }
 
 // --- Handle Vault File Upload Request [POST_BS_FILES] ---

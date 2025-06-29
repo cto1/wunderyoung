@@ -3,17 +3,20 @@
 require_once 'conf.php';
 require_once 'OpenaiProvider.php';
 require_once 'WorksheetAPI.php';
+require_once 'FeedbackAPI.php';
 
 class WorksheetGeneratorAPI {
     private $db;
     private $pdo;
     private $openai;
     private $worksheetAPI;
+    private $feedbackAPI;
 
     public function __construct() {
         $this->db = Database::getInstance();
         $this->pdo = $this->db->getPDO();
         $this->worksheetAPI = new WorksheetAPI();
+        $this->feedbackAPI = new FeedbackAPI();
         
         // Initialize OpenAI
         $apiKey = $_ENV['OPENAI_API_KEY'] ?? null;
@@ -224,11 +227,14 @@ class WorksheetGeneratorAPI {
         $childName = $child['name'];
         $date = $date ?? date('Y-m-d');
 
-        // Build the prompt
-        $prompt = $this->buildWorksheetPrompt($childName, $ageGroup, $interests, $date);
+        // Get child's difficulty preferences from feedback
+        $difficultyPreferences = $this->feedbackAPI->getChildDifficultyPreferences($child['id']);
+
+        // Build the prompt with difficulty preferences
+        $prompt = $this->buildWorksheetPrompt($childName, $ageGroup, $interests, $date, $difficultyPreferences);
 
         // Generate content using OpenAI
-        $result = $this->openai->callApiWithoutEcho($prompt, $this->getSystemPrompt());
+        $result = $this->openai->callApiWithoutEcho($prompt, $this->getSystemPrompt($difficultyPreferences));
 
         if (!$result || !isset($result['content'])) {
             throw new Exception('Failed to generate worksheet content');
@@ -237,13 +243,26 @@ class WorksheetGeneratorAPI {
         return $result['content'];
     }
 
-    // Build the worksheet generation prompt
-    private function buildWorksheetPrompt($childName, $ageGroup, $interests, $date) {
+        // Build the worksheet generation prompt 
+    private function buildWorksheetPrompt($childName, $ageGroup, $interests, $date, $difficultyPreferences = null) {
         $interestsText = implode(' and ', $interests);
         $dateFormatted = date('F j, Y', strtotime($date));
 
         $prompt = "Create a personalized educational worksheet for {$childName}, who is in {$ageGroup} and loves {$interestsText}. ";
         $prompt .= "The worksheet is for {$dateFormatted}. ";
+
+        // Add difficulty adjustments based on feedback
+        if ($difficultyPreferences && $difficultyPreferences['feedback_count'] > 0) {
+            $mathAdjustment = $this->getDifficultyAdjustmentText($difficultyPreferences['math_preference'], 'math');
+            $otherAdjustment = $this->getDifficultyAdjustmentText($difficultyPreferences['other_preference'], 'other subjects');
+            
+            if ($mathAdjustment) {
+                $prompt .= "\nMATH DIFFICULTY: {$mathAdjustment}";
+            }
+            if ($otherAdjustment) {
+                $prompt .= "\nOTHER SUBJECTS DIFFICULTY: {$otherAdjustment}";
+            }
+        }
 
         $prompt .= "\nCreate a worksheet that includes:\n";
         $prompt .= "1. Mathematics problems appropriate for {$ageGroup}\n";
@@ -256,8 +275,8 @@ class WorksheetGeneratorAPI {
     }
 
     // Get the system prompt for worksheet generation
-    private function getSystemPrompt() {
-        return "You are an expert educational content creator specializing in creating engaging, age-appropriate worksheets for children. 
+    private function getSystemPrompt($difficultyPreferences = null) {
+        $basePrompt = "You are an expert educational content creator specializing in creating engaging, age-appropriate worksheets for children. 
 
 Create worksheets that:
 - Are perfectly tailored to the child's age/grade level
@@ -265,9 +284,26 @@ Create worksheets that:
 - Include a variety of subjects (math, English, science, creativity)
 - Are fun and engaging while educational
 - Have clear instructions and age-appropriate language
-- Include both learning and creative elements
+- Include both learning and creative elements";
 
-Format the worksheet as clean, well-structured HTML with:
+        // Add difficulty guidance if we have feedback data
+        if ($difficultyPreferences && $difficultyPreferences['feedback_count'] > 0) {
+            $basePrompt .= "\n\nIMPORTANT: Adjust difficulty based on previous feedback:";
+            
+            if ($difficultyPreferences['math_preference'] < -0.5) {
+                $basePrompt .= "\n- Make math problems MORE challenging than typical for this age group";
+            } elseif ($difficultyPreferences['math_preference'] > 0.5) {
+                $basePrompt .= "\n- Make math problems EASIER than typical for this age group";
+            }
+            
+            if ($difficultyPreferences['other_preference'] < -0.5) {
+                $basePrompt .= "\n- Make reading/science/other activities MORE challenging than typical";
+            } elseif ($difficultyPreferences['other_preference'] > 0.5) {
+                $basePrompt .= "\n- Make reading/science/other activities EASIER than typical";
+            }
+        }
+
+        $basePrompt .= "\n\nFormat the worksheet as clean, well-structured HTML with:
 - A clear title with the child's name
 - Distinct sections for different subjects
 - Proper HTML structure (h1, h2, p, div, etc.)
@@ -277,6 +313,68 @@ Format the worksheet as clean, well-structured HTML with:
 
 Make sure all content is safe, educational, and appropriate for children.
 The HTML should be ready for PDF conversion.";
+
+        return $basePrompt;
+    }
+    
+    // Convert difficulty preference to human-readable adjustment text
+    private function getDifficultyAdjustmentText($preference, $subject) {
+        if ($preference < -1) {
+            return "Make {$subject} significantly more challenging";
+        } elseif ($preference < -0.5) {
+            return "Make {$subject} moderately more challenging";
+        } elseif ($preference > 1) {
+            return "Make {$subject} significantly easier";
+        } elseif ($preference > 0.5) {
+            return "Make {$subject} moderately easier";
+        }
+        
+        return null; // No adjustment needed
+    }
+    
+    // Generate worksheet content for download (without storing in DB)
+    public function generateWorksheetContentForDownload($childData, $date = null) {
+        if (!$this->openai) {
+            throw new Exception('OpenAI API not configured');
+        }
+
+        $date = $date ?? date('Y-m-d');
+        
+        // Get child's difficulty preferences from feedback
+        $difficultyPreferences = $this->feedbackAPI->getChildDifficultyPreferences($childData['id']);
+
+        // Build the prompt with difficulty preferences
+        $prompt = $this->buildWorksheetPrompt(
+            $childData['name'], 
+            $childData['age_group'], 
+            [$childData['interest1'], $childData['interest2']], 
+            $date, 
+            $difficultyPreferences
+        );
+
+        // Generate content using OpenAI
+        $result = $this->openai->callApiWithoutEcho($prompt, $this->getSystemPrompt($difficultyPreferences));
+
+        if (!$result || !isset($result['content'])) {
+            throw new Exception('Failed to generate worksheet content');
+        }
+
+        return $result['content'];
+    }
+    
+    // Stream PDF directly from content (without storing)
+    public function streamPDFToBrowserFromContent($htmlContent, $childName, $date) {
+        // Add answer spacing to the content
+        $pdfContent = $this->addAnswerSpacing($htmlContent);
+        
+        // Try TCPDF first, fallback to DOMPDF
+        if (class_exists('TCPDF')) {
+            $this->streamPDFWithTCPDF($pdfContent, $childName, $date);
+        } elseif (class_exists('Dompdf\Dompdf')) {
+            $this->streamPDFWithDOMPDF($pdfContent, $childName, $date);
+        } else {
+            throw new Exception('No PDF library available');
+        }
     }
 
     // Preview worksheet content without saving

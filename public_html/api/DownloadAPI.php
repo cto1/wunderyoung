@@ -2,6 +2,7 @@
 
 require_once 'conf.php';
 require_once 'WorksheetGeneratorAPI.php';
+require_once 'DownloadTokenAPI.php';
 
 class DownloadAPI {
     private $generator;
@@ -28,17 +29,38 @@ class DownloadAPI {
         }
     }
     
-    // Handle download by token (when we implement magic links)
+    // Handle download by token - generates worksheet on-demand
     public function downloadByToken($token) {
         try {
-            // TODO: Implement token-based downloads
-            // 1. Validate token
-            // 2. Get worksheet ID from token
-            // 3. Call downloadPDF with worksheet ID
+            // 1. Validate token and get child information
+            $tokenAPI = new DownloadTokenAPI();
+            $tokenResult = $tokenAPI->getDownloadTokenInfo($token);
             
-            throw new Exception('Token-based downloads not yet implemented');
+            if ($tokenResult['status'] !== 'success') {
+                throw new Exception($tokenResult['message']);
+            }
+            
+            $tokenData = $tokenResult['token_data'];
+            
+            // 2. Generate worksheet content on-demand using AI
+            $childData = [
+                'id' => $tokenData['child_id'],
+                'name' => $tokenData['child_name'],
+                'age_group' => $tokenData['age_group'],
+                'interest1' => $tokenData['interest1'],
+                'interest2' => $tokenData['interest2']
+            ];
+            
+            $worksheetContent = $this->generator->generateWorksheetContentForDownload($childData, $tokenData['date']);
+            
+            // 3. Generate and stream PDF directly
+            $this->generator->streamPDFToBrowserFromContent($worksheetContent, $tokenData['child_name'], $tokenData['date']);
+            
+            // 4. Mark token as used
+            $tokenAPI->markTokenAsUsed($token);
             
         } catch (Exception $e) {
+            error_log("Download error: " . $e->getMessage());
             header('Content-Type: application/json');
             http_response_code(500);
             echo json_encode([

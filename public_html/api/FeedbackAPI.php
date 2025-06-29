@@ -1,6 +1,8 @@
 <?php
 
 require_once 'conf.php';
+require_once 'JWTAuth.php';
+require_once 'DownloadTokenAPI.php';
 
 class FeedbackAPI {
     private $db;
@@ -12,191 +14,376 @@ class FeedbackAPI {
     }
 
     // Submit feedback for a worksheet
-    public function submitFeedback($data) {
+    public function submitFeedback($token, $feedbackData) {
         try {
-            $required = ['worksheet_id', 'child_id', 'completed'];
-            foreach ($required as $field) {
-                if (!isset($data[$field])) {
-                    throw new Exception("Field '$field' is required");
+            // TODO: Validate token and get worksheet/child information
+            // For now, we'll create a basic feedback storage system
+            
+            // Validate required fields
+            $requiredFields = ['completion', 'math_difficulty', 'other_difficulty'];
+            foreach ($requiredFields as $field) {
+                if (!isset($feedbackData[$field]) || empty($feedbackData[$field])) {
+                    throw new Exception("Missing required field: $field");
                 }
             }
-
-            // Verify worksheet exists and belongs to the child
-            $stmt = $this->pdo->prepare("SELECT id FROM worksheets WHERE id = ? AND child_id = ?");
-            $stmt->execute([$data['worksheet_id'], $data['child_id']]);
-            if (!$stmt->fetch()) {
-                throw new Exception('Worksheet not found or does not belong to this child');
+            
+            // Get worksheet information from token (placeholder for now)
+            $worksheetInfo = $this->getWorksheetFromToken($token);
+            if (!$worksheetInfo) {
+                throw new Exception('Invalid or expired download token');
             }
-
-            // Check if feedback already exists for this worksheet
-            $stmt = $this->pdo->prepare("SELECT id FROM worksheet_feedback WHERE worksheet_id = ?");
-            $stmt->execute([$data['worksheet_id']]);
-            $existingFeedback = $stmt->fetch();
-
-            if ($existingFeedback) {
-                // Update existing feedback
-                $stmt = $this->pdo->prepare("
-                    UPDATE worksheet_feedback 
-                    SET completed = ?, 
-                        math_difficulty = ?, 
-                        english_difficulty = ?, 
-                        science_difficulty = ?, 
-                        other_difficulty = ?,
-                        feedback_notes = ?
-                    WHERE worksheet_id = ?
-                ");
-                
-                $stmt->execute([
-                    $data['completed'] ? 1 : 0,
-                    $data['math_difficulty'] ?? null,
-                    $data['english_difficulty'] ?? null,
-                    $data['science_difficulty'] ?? null,
-                    $data['other_difficulty'] ?? null,
-                    $data['feedback_notes'] ?? null,
-                    $data['worksheet_id']
-                ]);
-
-                return [
-                    'status' => 'success',
-                    'message' => 'Feedback updated successfully'
-                ];
-            } else {
-                // Insert new feedback
-                $stmt = $this->pdo->prepare("
-                    INSERT INTO worksheet_feedback 
-                    (worksheet_id, child_id, completed, math_difficulty, english_difficulty, 
-                     science_difficulty, other_difficulty, feedback_notes) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                ");
-                
-                $stmt->execute([
-                    $data['worksheet_id'],
-                    $data['child_id'],
-                    $data['completed'] ? 1 : 0,
-                    $data['math_difficulty'] ?? null,
-                    $data['english_difficulty'] ?? null,
-                    $data['science_difficulty'] ?? null,
-                    $data['other_difficulty'] ?? null,
-                    $data['feedback_notes'] ?? null
-                ]);
-
-                return [
-                    'status' => 'success',
-                    'message' => 'Feedback submitted successfully'
-                ];
-            }
-
-        } catch (Exception $e) {
-            return ['status' => 'error', 'message' => $e->getMessage()];
-        }
-    }
-
-    // Get feedback for a specific worksheet
-    public function getFeedback($worksheetId) {
-        try {
+            
+            // Store feedback in database (using existing table structure)
             $stmt = $this->pdo->prepare("
-                SELECT wf.*, w.date, c.name as child_name
-                FROM worksheet_feedback wf
-                JOIN worksheets w ON wf.worksheet_id = w.id
-                JOIN children c ON wf.child_id = c.id
-                WHERE wf.worksheet_id = ?
+                INSERT INTO worksheet_feedback (
+                    worksheet_id, child_id, completed,
+                    math_difficulty, english_difficulty, science_difficulty, other_difficulty,
+                    feedback_notes
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
-            $stmt->execute([$worksheetId]);
-            $feedback = $stmt->fetch(PDO::FETCH_ASSOC);
-
+            
+            // Convert completion to integer (1 = completed, 0 = not completed)
+            $completed = in_array($feedbackData['completion'], ['completed', 'mostly', 'first_time']) ? 1 : 0;
+            
+            $result = $stmt->execute([
+                $worksheetInfo['worksheet_id'],
+                $worksheetInfo['child_id'],
+                $completed,
+                $feedbackData['math_difficulty'],
+                $feedbackData['other_difficulty'], // Use as english_difficulty
+                '', // science_difficulty (not collected separately)
+                $feedbackData['other_difficulty'],
+                $feedbackData['comments'] ?? ''
+            ]);
+            
+            if (!$result) {
+                throw new Exception('Failed to save feedback');
+            }
+            
+            // Update child's learning progress based on feedback
+            $this->updateLearningProgress($worksheetInfo['child_id'], $feedbackData);
+            
             return [
                 'status' => 'success',
-                'feedback' => $feedback
+                'message' => 'Feedback submitted successfully',
+                'feedback_id' => $this->pdo->lastInsertId()
             ];
-
+            
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => $e->getMessage()];
-        }
-    }
-
-    // Get feedback summary for a child (for AI difficulty adjustment)
-    public function getChildFeedbackSummary($childId, $limit = 5) {
-        try {
-            $stmt = $this->pdo->prepare("
-                SELECT wf.*, w.date
-                FROM worksheet_feedback wf
-                JOIN worksheets w ON wf.worksheet_id = w.id
-                WHERE wf.child_id = ?
-                ORDER BY w.date DESC
-                LIMIT ?
-            ");
-            $stmt->execute([$childId, $limit]);
-            $feedback = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Calculate averages and patterns
-            $summary = [
-                'total_worksheets' => count($feedback),
-                'completion_rate' => 0,
-                'math_difficulty_trend' => 'just_right',
-                'english_difficulty_trend' => 'just_right',
-                'science_difficulty_trend' => 'just_right',
-                'other_difficulty_trend' => 'just_right'
-            ];
-
-            if (count($feedback) > 0) {
-                $completed = array_filter($feedback, function($f) { return $f['completed']; });
-                $summary['completion_rate'] = count($completed) / count($feedback);
-
-                // Calculate difficulty trends
-                foreach (['math', 'english', 'science', 'other'] as $subject) {
-                    $difficulties = array_filter(array_column($feedback, $subject . '_difficulty'));
-                    if (count($difficulties) > 0) {
-                        $difficulty_counts = array_count_values($difficulties);
-                        $summary[$subject . '_difficulty_trend'] = array_key_exists('hard', $difficulty_counts) && $difficulty_counts['hard'] > count($difficulties) / 2 ? 'hard' :
-                            (array_key_exists('easy', $difficulty_counts) && $difficulty_counts['easy'] > count($difficulties) / 2 ? 'easy' : 'just_right');
-                    }
-                }
-            }
-
             return [
-                'status' => 'success',
-                'feedback_summary' => $summary,
-                'recent_feedback' => $feedback
+                'status' => 'error',
+                'message' => $e->getMessage()
             ];
-
-        } catch (Exception $e) {
-            return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
-
-    // Get completion streak for a child
-    public function getCompletionStreak($childId) {
+    
+    // Get worksheet information from download token
+    private function getWorksheetFromToken($token) {
         try {
+            $tokenAPI = new DownloadTokenAPI();
+            $tokenResult = $tokenAPI->getDownloadTokenInfo($token);
+            
+            if ($tokenResult['status'] !== 'success') {
+                throw new Exception($tokenResult['message']);
+            }
+            
+            $tokenData = $tokenResult['token_data'];
+            
+            // Create worksheet ID from child_id and date (or generate new one)
+            $worksheetId = Database::generateWorksheetId();
+            
+            return [
+                'worksheet_id' => $worksheetId,
+                'child_id' => $tokenData['child_id'],
+                'child_name' => $tokenData['child_name'],
+                'date' => $tokenData['date'],
+                'token_data' => $tokenData
+            ];
+            
+        } catch (Exception $e) {
+            error_log("Error getting worksheet from token: " . $e->getMessage());
+            return null;
+        }
+    }
+    
+    // Update child's learning progress based on feedback
+    private function updateLearningProgress($childId, $feedbackData) {
+        try {
+            // Calculate completion score (for streak tracking)
+            $completionScore = $this->calculateCompletionScore($feedbackData['completion']);
+            
+            // Store learning analytics
             $stmt = $this->pdo->prepare("
-                SELECT w.date, COALESCE(wf.completed, 0) as completed
-                FROM worksheets w
-                LEFT JOIN worksheet_feedback wf ON w.id = wf.worksheet_id
-                WHERE w.child_id = ?
-                ORDER BY w.date DESC
+                INSERT INTO learning_analytics (
+                    child_id, date, completion_score,
+                    math_difficulty_rating, other_difficulty_rating,
+                    created_at
+                ) VALUES (?, ?, ?, ?, ?, NOW())
+                ON DUPLICATE KEY UPDATE 
+                    completion_score = VALUES(completion_score),
+                    math_difficulty_rating = VALUES(math_difficulty_rating),
+                    other_difficulty_rating = VALUES(other_difficulty_rating)
+            ");
+            
+            $stmt->execute([
+                $childId,
+                date('Y-m-d'),
+                $completionScore,
+                $feedbackData['math_difficulty'],
+                $feedbackData['other_difficulty']
+            ]);
+            
+            // Update child's difficulty preferences for AI prompts
+            $this->updateDifficultyPreferences($childId, $feedbackData);
+            
+        } catch (Exception $e) {
+            error_log("Error updating learning progress: " . $e->getMessage());
+        }
+    }
+    
+    // Calculate completion score for streak tracking
+    private function calculateCompletionScore($completion) {
+        switch ($completion) {
+            case 'completed': return 100;
+            case 'mostly': return 75;
+            case 'some': return 50;
+            case 'none': return 0;
+            case 'first_time': return 100; // Count first worksheet as completed
+            default: return 0;
+        }
+    }
+    
+    // Update difficulty preferences for future AI prompts
+    private function updateDifficultyPreferences($childId, $feedbackData) {
+        try {
+            // Get or create difficulty preferences for this child
+            $stmt = $this->pdo->prepare("
+                SELECT * FROM child_difficulty_preferences WHERE child_id = ?
             ");
             $stmt->execute([$childId]);
-            $worksheets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            $streak = 0;
-            $currentDate = date('Y-m-d');
+            $preferences = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            foreach ($worksheets as $worksheet) {
-                // Only count completed worksheets
-                if ($worksheet['completed']) {
-                    $streak++;
-                } else {
-                    // Break streak on first non-completed worksheet
+            if (!$preferences) {
+                // Create new preferences record
+                $stmt = $this->pdo->prepare("
+                    INSERT INTO child_difficulty_preferences (
+                        child_id, math_preference, other_preference, 
+                        feedback_count, created_at, updated_at
+                    ) VALUES (?, ?, ?, 1, NOW(), NOW())
+                ");
+                $stmt->execute([
+                    $childId,
+                    $feedbackData['math_difficulty'],
+                    $feedbackData['other_difficulty']
+                ]);
+            } else {
+                // Update existing preferences with weighted average
+                $feedbackCount = $preferences['feedback_count'] + 1;
+                $weight = 0.3; // How much the new feedback influences the preference
+                
+                $newMathPreference = $this->adjustDifficultyPreference(
+                    $preferences['math_preference'], 
+                    $feedbackData['math_difficulty'], 
+                    $weight
+                );
+                
+                $newOtherPreference = $this->adjustDifficultyPreference(
+                    $preferences['other_preference'], 
+                    $feedbackData['other_difficulty'], 
+                    $weight
+                );
+                
+                $stmt = $this->pdo->prepare("
+                    UPDATE child_difficulty_preferences 
+                    SET math_preference = ?, other_preference = ?, 
+                        feedback_count = ?, updated_at = NOW()
+                    WHERE child_id = ?
+                ");
+                $stmt->execute([
+                    $newMathPreference,
+                    $newOtherPreference,
+                    $feedbackCount,
+                    $childId
+                ]);
+            }
+            
+        } catch (Exception $e) {
+            error_log("Error updating difficulty preferences: " . $e->getMessage());
+        }
+    }
+    
+    // Adjust difficulty preference based on feedback
+    private function adjustDifficultyPreference($currentPreference, $newFeedback, $weight) {
+        // Convert feedback to numeric values
+        $feedbackValue = match($newFeedback) {
+            'easy' => -1,      // Make it harder
+            'just_right' => 0, // Keep same difficulty
+            'hard' => 1,       // Make it easier
+            default => 0
+        };
+        
+        // Adjust current preference
+        $adjustment = $feedbackValue * $weight;
+        $newPreference = $currentPreference + $adjustment;
+        
+        // Keep within reasonable bounds (-2 to +2)
+        return max(-2, min(2, $newPreference));
+    }
+    
+    // Get child's difficulty preferences for AI prompt adjustment
+    public function getChildDifficultyPreferences($childId) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT math_preference, other_preference, feedback_count
+                FROM child_difficulty_preferences 
+                WHERE child_id = ?
+            ");
+            $stmt->execute([$childId]);
+            $preferences = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$preferences) {
+                return [
+                    'math_preference' => 0,
+                    'other_preference' => 0,
+                    'feedback_count' => 0
+                ];
+            }
+            
+            return $preferences;
+            
+        } catch (Exception $e) {
+            return [
+                'math_preference' => 0,
+                'other_preference' => 0,
+                'feedback_count' => 0
+            ];
+        }
+    }
+    
+    // Get learning streak for a child
+    public function getLearningStreak($childId) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT date, completion_score 
+                FROM learning_analytics 
+                WHERE child_id = ? AND completion_score >= 50
+                ORDER BY date DESC
+            ");
+            $stmt->execute([$childId]);
+            $completedDays = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (empty($completedDays)) {
+                return 0;
+            }
+            
+            // Calculate consecutive days streak
+            $streak = 0;
+            $currentDate = new DateTime();
+            $currentDate->setTime(0, 0, 0);
+            
+            // Check if today or yesterday has completion
+            $today = $currentDate->format('Y-m-d');
+            $yesterday = (clone $currentDate)->modify('-1 day')->format('Y-m-d');
+            
+            $hasRecentCompletion = false;
+            foreach ($completedDays as $day) {
+                if ($day['date'] === $today || $day['date'] === $yesterday) {
+                    $hasRecentCompletion = true;
                     break;
                 }
             }
-
-            return [
-                'status' => 'success',
-                'completion_streak' => $streak
-            ];
-
+            
+            if (!$hasRecentCompletion) {
+                return 0; // Streak broken if no completion today or yesterday
+            }
+            
+            // Count consecutive days from most recent
+            $checkDate = new DateTime($completedDays[0]['date']);
+            
+            foreach ($completedDays as $day) {
+                $dayDate = new DateTime($day['date']);
+                
+                if ($dayDate->format('Y-m-d') === $checkDate->format('Y-m-d')) {
+                    $streak++;
+                    $checkDate->modify('-1 day');
+                } else {
+                    break; // Gap found, streak ends
+                }
+            }
+            
+            return $streak;
+            
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => $e->getMessage()];
+            return 0;
         }
     }
+}
+
+// Handle API requests
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $api = new FeedbackAPI();
+    
+    // Get JSON input
+    $input = json_decode(file_get_contents('php://input'), true);
+    
+    if (!$input) {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Invalid JSON input'
+        ]);
+        exit;
+    }
+    
+    $token = $input['token'] ?? '';
+    if (empty($token)) {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Missing download token'
+        ]);
+        exit;
+    }
+    
+    $result = $api->submitFeedback($token, $input);
+    
+    echo json_encode($result);
+}
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $api = new FeedbackAPI();
+    
+    // Handle streak calculation requests
+    if (isset($_GET['child_id']) && isset($_GET['action']) && $_GET['action'] === 'streak') {
+        $childId = intval($_GET['child_id']);
+        $streak = $api->getLearningStreak($childId);
+        
+        echo json_encode([
+            'status' => 'success',
+            'streak' => $streak
+        ]);
+    }
+    // Handle difficulty preferences requests
+    elseif (isset($_GET['child_id']) && isset($_GET['action']) && $_GET['action'] === 'preferences') {
+        $childId = intval($_GET['child_id']);
+        $preferences = $api->getChildDifficultyPreferences($childId);
+        
+        echo json_encode([
+            'status' => 'success',
+            'preferences' => $preferences
+        ]);
+    }
+    else {
+        http_response_code(400);
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Invalid request parameters'
+        ]);
+    }
+}
+else {
+    http_response_code(405);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Method not allowed'
+    ]);
 } 
