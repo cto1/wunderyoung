@@ -99,7 +99,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
         
         if (result.status === 'success') {
             // Show success message
-            showSuccess('🎉 Account created successfully! Check your email for getting started instructions.');
+            showSuccess('Account created successfully! Check your email for getting started instructions.');
             
             // Clear the form
             document.getElementById('signup-form').reset();
