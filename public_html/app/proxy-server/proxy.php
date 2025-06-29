@@ -138,12 +138,13 @@ if (!$apiKey || !isset($apiEndpoints[$apiKey])) {
     exit();
 }
 
-// DEBUG: For auth_signup, let's see what's happening
-if ($apiKey === 'auth_signup') {
-    error_log("DEBUG: auth_signup route detected");
+// DEBUG: For auth routes, let's see what's happening
+if (in_array($apiKey, ['auth_signup', 'auth_login', 'signup', 'request_login'])) {
+    error_log("DEBUG: Auth route detected: $apiKey");
     error_log("DEBUG: host = " . $host);
     error_log("DEBUG: base_url = " . $base_url);
-    error_log("DEBUG: apiEndpoints[auth_signup] = " . $apiEndpoints[$apiKey]);
+    error_log("DEBUG: apiEndpoints[$apiKey] = " . $apiEndpoints[$apiKey]);
+    error_log("DEBUG: Contains {child_id}? " . (strpos($apiEndpoints[$apiKey], '{child_id}') !== false ? 'YES' : 'NO'));
 }
 
 // Validate Required Parameters
@@ -193,10 +194,31 @@ if (strpos($apiEndpoints[$apiKey], '{email}') !== false && !$email) {
     exit();
 }
 // Skip child_id validation for auth routes that don't need it
-$authRoutesWithoutChildId = ['auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token'];
-if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId && !in_array($apiKey, $authRoutesWithoutChildId)) {
+$authRoutesWithoutChildId = ['auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token', 'signup', 'request_login', 'verify_login', 'JWT_token'];
+$hasChildIdPlaceholder = strpos($apiEndpoints[$apiKey], '{child_id}') !== false;
+$isAuthRoute = in_array($apiKey, $authRoutesWithoutChildId);
+
+// Debug logging for child_id validation
+if ($hasChildIdPlaceholder) {
+    error_log("DEBUG: Route $apiKey contains {child_id} placeholder");
+    error_log("DEBUG: Is auth route? " . ($isAuthRoute ? 'YES' : 'NO'));
+    error_log("DEBUG: child_id value: " . ($childId ?: 'NULL'));
+}
+
+if ($hasChildIdPlaceholder && !$childId && !$isAuthRoute) {
+    error_log("DEBUG: BLOCKING request for $apiKey - missing child_id parameter");
     http_response_code(400);
-    echo json_encode(["status" => "error", "message" => "Missing child_id parameter."]);
+    echo json_encode([
+        "status" => "error", 
+        "message" => "Missing child_id parameter.",
+        "debug" => [
+            "api_key" => $apiKey,
+            "has_child_id_placeholder" => $hasChildIdPlaceholder,
+            "is_auth_route" => $isAuthRoute,
+            "child_id" => $childId,
+            "url" => $apiEndpoints[$apiKey] ?? 'NOT_FOUND'
+        ]
+    ]);
     exit();
 }
 if (strpos($apiEndpoints[$apiKey], '{worksheet_id}') !== false && !$worksheetId) {
