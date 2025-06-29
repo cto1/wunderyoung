@@ -532,9 +532,62 @@ $router->addRoute('GET', '/debug/env', function($params, $data, $context) {
             'openai_key_length' => isset($_ENV['OPENAI_API_KEY']) ? strlen($_ENV['OPENAI_API_KEY']) : 0,
             'openai_key_prefix' => isset($_ENV['OPENAI_API_KEY']) ? substr($_ENV['OPENAI_API_KEY'], 0, 10) . '...' : 'not set',
             'debug_mode' => $_ENV['DEBUG'] ?? 'not set',
-            'php_version' => PHP_VERSION
+            'php_version' => PHP_VERSION,
+            'tcpdf_available' => class_exists('TCPDF'),
+            'dompdf_available' => class_exists('Dompdf\\Dompdf')
         ]
     ];
+});
+
+// Debug PDF generation endpoint
+$router->addRoute('GET', '/debug/pdf/{token}', function($params, $data, $context) use ($downloadTokenAPI, $worksheetGeneratorAPI) {
+    try {
+        $token = $params['token'];
+        
+        // 1. Validate token
+        $tokenResult = $downloadTokenAPI->getDownloadTokenInfo($token);
+        if ($tokenResult['status'] !== 'success') {
+            return ['status' => 'error', 'step' => 'token_validation', 'message' => $tokenResult['message']];
+        }
+        
+        $tokenData = $tokenResult['token_data'];
+        
+        // 2. Test worksheet generation
+        $childData = [
+            'id' => $tokenData['child_id'],
+            'name' => $tokenData['child_name'],
+            'age_group' => $tokenData['age_group'],
+            'interest1' => $tokenData['interest1'],
+            'interest2' => $tokenData['interest2']
+        ];
+        
+        $worksheetContent = $worksheetGeneratorAPI->generateWorksheetContentForDownload($childData, $tokenData['date']);
+        
+        return [
+            'status' => 'success',
+            'message' => 'PDF generation components working',
+            'debug_info' => [
+                'token_valid' => true,
+                'child_name' => $tokenData['child_name'],
+                'content_length' => strlen($worksheetContent),
+                'content_preview' => substr($worksheetContent, 0, 200) . '...',
+                'tcpdf_available' => class_exists('TCPDF'),
+                'dompdf_available' => class_exists('Dompdf\\Dompdf'),
+                'openai_configured' => isset($_ENV['OPENAI_API_KEY'])
+            ]
+        ];
+        
+    } catch (Exception $e) {
+        return [
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'debug_info' => [
+                'error_line' => $e->getLine(),
+                'error_file' => basename($e->getFile()),
+                'trace' => $e->getTraceAsString()
+            ]
+        ];
+    }
 });
 
 // ==================== DOWNLOAD TOKEN ROUTES ====================
@@ -592,7 +645,12 @@ $router->addRoute('POST', '/download-tokens/{token}/generate', function($params,
 
 // Submit worksheet feedback (unprotected - can be accessed via email links)
 $router->addRoute('POST', '/feedback', function($params, $data, $context) use ($feedbackAPI) {
-    return $feedbackAPI->submitFeedback($data);
+    $token = $data['token'] ?? '';
+    if (empty($token)) {
+        return ['status' => 'error', 'message' => 'Missing download token'];
+    }
+    
+    return $feedbackAPI->submitFeedback($token, $data);
 });
 
 // Get feedback for a worksheet (protected)
@@ -655,7 +713,10 @@ $router->addRoute('GET', '/children/{child_id}/completion-streak', function($par
         return ['status' => 'error', 'message' => 'Child not found or unauthorized'];
     }
     
-    return $feedbackAPI->getCompletionStreak($params['child_id']);
+    return [
+        'status' => 'success',
+        'streak' => $feedbackAPI->getLearningStreak($params['child_id'])
+    ];
 });
 
 // Handle the request

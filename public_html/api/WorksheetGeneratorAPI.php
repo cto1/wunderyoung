@@ -334,14 +334,19 @@ The HTML should be ready for PDF conversion.";
     
     // Generate worksheet content for download (without storing in DB)
     public function generateWorksheetContentForDownload($childData, $date = null) {
+        error_log("Worksheet Generation: Starting for child: " . $childData['name']);
+        
         if (!$this->openai) {
+            error_log("Worksheet Generation: OpenAI not configured - API key missing");
             throw new Exception('OpenAI API not configured');
         }
 
         $date = $date ?? date('Y-m-d');
+        error_log("Worksheet Generation: Date set to: $date");
         
         // Get child's difficulty preferences from feedback
         $difficultyPreferences = $this->feedbackAPI->getChildDifficultyPreferences($childData['id']);
+        error_log("Worksheet Generation: Got difficulty preferences, feedback count: " . $difficultyPreferences['feedback_count']);
 
         // Build the prompt with difficulty preferences
         $prompt = $this->buildWorksheetPrompt(
@@ -351,14 +356,23 @@ The HTML should be ready for PDF conversion.";
             $date, 
             $difficultyPreferences
         );
+        error_log("Worksheet Generation: Prompt built, length: " . strlen($prompt));
 
         // Generate content using OpenAI
+        error_log("Worksheet Generation: Calling OpenAI API");
         $result = $this->openai->callApiWithoutEcho($prompt, $this->getSystemPrompt($difficultyPreferences));
 
-        if (!$result || !isset($result['content'])) {
-            throw new Exception('Failed to generate worksheet content');
+        if (!$result) {
+            error_log("Worksheet Generation: OpenAI API returned null result");
+            throw new Exception('Failed to connect to OpenAI API');
+        }
+        
+        if (!isset($result['content'])) {
+            error_log("Worksheet Generation: OpenAI API result missing content field: " . json_encode($result));
+            throw new Exception('Failed to generate worksheet content - no content in response');
         }
 
+        error_log("Worksheet Generation: Successfully generated content, length: " . strlen($result['content']));
         return $result['content'];
     }
     

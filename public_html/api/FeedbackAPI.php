@@ -317,6 +317,113 @@ class FeedbackAPI {
             return 0;
         }
     }
+    
+    // Get feedback summary for a child
+    public function getChildFeedbackSummary($childId) {
+        try {
+            // Get overall feedback statistics
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    COUNT(*) as total_feedback,
+                    AVG(completed) as completion_rate,
+                    AVG(CASE WHEN math_difficulty = 'easy' THEN 1 
+                             WHEN math_difficulty = 'just_right' THEN 2 
+                             WHEN math_difficulty = 'hard' THEN 3 
+                             ELSE 2 END) as avg_math_difficulty,
+                    AVG(CASE WHEN other_difficulty = 'easy' THEN 1 
+                             WHEN other_difficulty = 'just_right' THEN 2 
+                             WHEN other_difficulty = 'hard' THEN 3 
+                             ELSE 2 END) as avg_other_difficulty
+                FROM worksheet_feedback 
+                WHERE child_id = ?
+            ");
+            $stmt->execute([$childId]);
+            $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Get recent feedback trends (last 7 days)
+            $stmt = $this->pdo->prepare("
+                SELECT date, completion_score, math_difficulty_rating, other_difficulty_rating
+                FROM learning_analytics 
+                WHERE child_id = ? 
+                ORDER BY date DESC 
+                LIMIT 7
+            ");
+            $stmt->execute([$childId]);
+            $recentTrends = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Get difficulty preferences
+            $preferences = $this->getChildDifficultyPreferences($childId);
+            
+            // Calculate learning streak
+            $streak = $this->getLearningStreak($childId);
+            
+            return [
+                'status' => 'success',
+                'summary' => [
+                    'total_feedback' => (int)($stats['total_feedback'] ?? 0),
+                    'completion_rate' => round(($stats['completion_rate'] ?? 0) * 100, 1),
+                    'current_streak' => $streak,
+                    'avg_math_difficulty' => round($stats['avg_math_difficulty'] ?? 2, 1),
+                    'avg_other_difficulty' => round($stats['avg_other_difficulty'] ?? 2, 1),
+                    'difficulty_preferences' => $preferences,
+                    'recent_trends' => $recentTrends
+                ]
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to get feedback summary: ' . $e->getMessage()
+            ];
+        }
+    }
+    
+    // Get feedback for a specific worksheet
+    public function getFeedback($worksheetId) {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    wf.*,
+                    c.name as child_name,
+                    c.age_group
+                FROM worksheet_feedback wf
+                LEFT JOIN children c ON wf.child_id = c.id
+                WHERE wf.worksheet_id = ?
+            ");
+            $stmt->execute([$worksheetId]);
+            $feedback = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$feedback) {
+                return [
+                    'status' => 'error',
+                    'message' => 'No feedback found for this worksheet'
+                ];
+            }
+            
+            return [
+                'status' => 'success',
+                'feedback' => [
+                    'worksheet_id' => $feedback['worksheet_id'],
+                    'child_id' => $feedback['child_id'],
+                    'child_name' => $feedback['child_name'],
+                    'child_age_group' => $feedback['age_group'],
+                    'completed' => (bool)$feedback['completed'],
+                    'math_difficulty' => $feedback['math_difficulty'],
+                    'english_difficulty' => $feedback['english_difficulty'],
+                    'science_difficulty' => $feedback['science_difficulty'],
+                    'other_difficulty' => $feedback['other_difficulty'],
+                    'feedback_notes' => $feedback['feedback_notes'],
+                    'submitted_at' => $feedback['created_at']
+                ]
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to get feedback: ' . $e->getMessage()
+            ];
+        }
+    }
 }
 
 // Handle API requests - only execute if this file is being accessed directly

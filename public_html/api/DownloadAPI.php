@@ -32,15 +32,19 @@ class DownloadAPI {
     // Handle download by token - generates worksheet on-demand
     public function downloadByToken($token) {
         try {
+            error_log("PDF Download: Starting download for token: $token");
+            
             // 1. Validate token and get child information
             $tokenAPI = new DownloadTokenAPI();
             $tokenResult = $tokenAPI->getDownloadTokenInfo($token);
             
             if ($tokenResult['status'] !== 'success') {
+                error_log("PDF Download: Token validation failed: " . $tokenResult['message']);
                 throw new Exception($tokenResult['message']);
             }
             
             $tokenData = $tokenResult['token_data'];
+            error_log("PDF Download: Token validated for child: " . $tokenData['child_name']);
             
             // 2. Generate worksheet content on-demand using AI
             $childData = [
@@ -51,21 +55,38 @@ class DownloadAPI {
                 'interest2' => $tokenData['interest2']
             ];
             
+            error_log("PDF Download: Generating worksheet content for: " . $childData['name']);
             $worksheetContent = $this->generator->generateWorksheetContentForDownload($childData, $tokenData['date']);
+            error_log("PDF Download: Worksheet content generated successfully, length: " . strlen($worksheetContent));
             
             // 3. Generate and stream PDF directly
+            error_log("PDF Download: Starting PDF generation");
             $this->generator->streamPDFToBrowserFromContent($worksheetContent, $tokenData['child_name'], $tokenData['date']);
+            error_log("PDF Download: PDF streamed successfully");
             
             // 4. Mark token as used
             $tokenAPI->markTokenAsUsed($token);
+            error_log("PDF Download: Token marked as used");
             
         } catch (Exception $e) {
-            error_log("Download error: " . $e->getMessage());
+            error_log("PDF Download Error: " . $e->getMessage());
+            error_log("PDF Download Error Trace: " . $e->getTraceAsString());
+            
+            // Clear any output buffers to prevent corruption
+            if (ob_get_level()) {
+                ob_clean();
+            }
+            
             header('Content-Type: application/json');
             http_response_code(500);
             echo json_encode([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'debug_info' => [
+                    'token' => $token,
+                    'error_line' => $e->getLine(),
+                    'error_file' => basename($e->getFile())
+                ]
             ]);
         }
     }
