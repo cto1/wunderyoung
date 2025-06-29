@@ -592,6 +592,59 @@ $router->addRoute('GET', '/debug/pdf/{token}', function($params, $data, $context
 
 // ==================== DOWNLOAD TOKEN ROUTES ====================
 
+// Create download token for testing (protected)
+$router->addRoute('POST', '/download-tokens/create', function($params, $data, $context) use ($downloadTokenAPI, $userAuthAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    $childId = $data['child_id'] ?? null;
+    $date = $data['date'] ?? date('Y-m-d');
+    
+    if (!$childId) {
+        return ['status' => 'error', 'message' => 'child_id is required'];
+    }
+    
+    // Verify child belongs to user
+    $childrenResult = $userAuthAPI->getChildren($context['userData']['id']);
+    if ($childrenResult['status'] !== 'success') {
+        return $childrenResult;
+    }
+    
+    $childExists = false;
+    foreach ($childrenResult['children'] as $child) {
+        if ($child['id'] == $childId) {
+            $childExists = true;
+            break;
+        }
+    }
+    
+    if (!$childExists) {
+        return ['status' => 'error', 'message' => 'Child not found or unauthorized'];
+    }
+    
+    // Create download token
+    $tokenResult = $downloadTokenAPI->createDownloadToken($childId, $date, false);
+    
+    if ($tokenResult['status'] === 'success') {
+        // Generate download URL
+        $downloadUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') .
+                       '://' . $_SERVER['HTTP_HOST'] . '/download.php?token=' . $tokenResult['token'];
+        
+        return [
+            'status' => 'success',
+            'token' => $tokenResult['token'],
+            'download_url' => $downloadUrl,
+            'child_id' => $childId,
+            'date' => $date,
+            'expires_at' => $tokenResult['expires_at'] ?? null,
+            'message' => 'Download token created successfully'
+        ];
+    }
+    
+    return $tokenResult;
+});
+
 // Get download token info (unprotected - public access via token)
 $router->addRoute('GET', '/download-tokens/{token}', function($params, $data, $context) use ($downloadTokenAPI) {
     return $downloadTokenAPI->getDownloadTokenInfo($params['token']);

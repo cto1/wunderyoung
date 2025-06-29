@@ -208,9 +208,16 @@ class WorksheetGeneratorAPI {
         $pdf->writeHTML($htmlContent, true, false, true, false, '');
 
         error_log("TCPDF: HTML conversion completed, outputting PDF");
+        
+        // Set proper headers for PDF download
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $childName . '_Worksheet_' . $date . '.pdf"');
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+        
         // Output PDF to browser
         $filename = $childName . '_Worksheet_' . $date . '.pdf';
-        $pdf->Output($filename, 'D'); // 'D' = force download
+        $pdf->Output($filename, 'I'); // 'I' = inline display, but with our headers it will download
         
         error_log("TCPDF: PDF output completed");
     }

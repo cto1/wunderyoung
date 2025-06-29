@@ -381,28 +381,67 @@ function downloadPDF() {
     const downloadUrl = `/app/proxy-server/proxy.php?api=download_pdf&token=${downloadToken}`;
     console.log('Generating and downloading PDF from:', downloadUrl);
     
-    // Try window.open first (works better for file downloads)
-    const downloadWindow = window.open(downloadUrl, '_blank');
-    
-    // Fallback: create hidden link if window.open fails
-    if (!downloadWindow) {
-        console.log('Window.open blocked, trying link method...');
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = `${worksheetData.child_name}_Worksheet_${worksheetData.date}.pdf`;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        // Close the window after a short delay (PDF will download, window can close)
-        setTimeout(() => {
-            try {
-                downloadWindow.close();
-            } catch (e) {
-                // Ignore if we can't close the window (cross-origin restrictions)
+    // First test the URL to see what we get back
+    console.log('Testing download URL response...');
+    fetch(downloadUrl)
+        .then(response => {
+            console.log('Download response status:', response.status);
+            console.log('Download response headers:', {
+                contentType: response.headers.get('content-type'),
+                contentLength: response.headers.get('content-length'),
+                contentDisposition: response.headers.get('content-disposition')
+            });
+            
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('Download URL error response:', text);
+                    throw new Error(`Server returned ${response.status}: ${text}`);
+                });
             }
-        }, 1000);
+            
+            // Check if we got a PDF or JSON error
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json().then(json => {
+                    console.error('Got JSON response instead of PDF:', json);
+                    throw new Error(json.message || 'Server returned JSON instead of PDF');
+                });
+            }
+            
+            // If we get here, the server is returning a PDF, so try direct download
+            console.log('Server returned PDF, attempting direct download...');
+            tryDirectDownload();
+        })
+        .catch(error => {
+            console.error('Download test failed:', error);
+            alert('Download failed: ' + error.message);
+        });
+    
+    function tryDirectDownload() {
+        // Try creating a blob and downloading it
+        fetch(downloadUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                console.log('Got PDF blob, size:', blob.size);
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${worksheetData.child_name}_Worksheet_${worksheetData.date}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+                console.log('Download triggered via blob method');
+            })
+            .catch(error => {
+                console.error('Blob download failed:', error);
+                // Fallback to window.open
+                console.log('Trying window.open fallback...');
+                const downloadWindow = window.open(downloadUrl, '_blank');
+                if (!downloadWindow) {
+                    alert('Download blocked. Please disable popup blocker and try again.');
+                }
+            });
     }
 }
 
