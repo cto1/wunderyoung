@@ -298,12 +298,74 @@ $router->addRoute('POST', '/worksheets/{worksheet_id}/download', function($param
 });
 
 // Get worksheet statistics (protected)
-$router->addRoute('GET', '/stats/worksheets', function($params, $data, $context) use ($worksheetAPI) {
+$router->addRoute('GET', '/worksheets/stats', function($params, $data, $context) use ($worksheetAPI) {
     if (!isset($context['userData'])) {
         return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
     return $worksheetAPI->getWorksheetStats($context['userData']['id']);
+});
+
+// Send welcome email for new child (protected)
+$router->addRoute('POST', '/send-welcome-email', function($params, $data, $context) use ($userAuthAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    try {
+        if (!isset($data['child_id']) || !isset($data['child_name']) || !isset($data['parent_email'])) {
+            throw new Exception('Missing required fields');
+        }
+        
+        // Verify child belongs to user
+        $db = Database::getInstance();
+        $pdo = $db->getPDO();
+        $stmt = $pdo->prepare("SELECT id FROM children WHERE id = ? AND user_id = ?");
+        $stmt->execute([$data['child_id'], $context['userData']['id']]);
+        
+        if (!$stmt->fetch()) {
+            throw new Exception('Child not found or unauthorized');
+        }
+        
+        // Send welcome email
+        $subject = "Welcome to Yes Homework! {$data['child_name']}'s First Worksheet is Ready";
+        $textContent = "Hi there!\n\nGreat news! We've created {$data['child_name']}'s first personalized worksheet and it's waiting in your inbox.\n\nThis worksheet has been tailored based on your child's interests and age group to make learning fun and engaging.\n\nWhat's next?\n1. Check your email for the worksheet PDF\n2. Print it out for your child\n3. Watch them enjoy their personalized learning activities!\n\nWe'll continue sending daily worksheets to help {$data['child_name']} learn and grow.\n\nHappy learning!\nThe Yes Homework Team";
+        
+        $htmlContent = "
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+            <h2 style='color: #3b82f6;'>Welcome to Yes Homework!</h2>
+            <p>Great news! We've created <strong>{$data['child_name']}'s</strong> first personalized worksheet and it's waiting in your inbox.</p>
+            
+            <div style='background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;'>
+                <p style='margin: 0;'>This worksheet has been tailored based on your child's interests and age group to make learning fun and engaging.</p>
+            </div>
+            
+            <h3 style='color: #1f2937;'>What's next?</h3>
+            <ol style='color: #4b5563;'>
+                <li>Check your email for the worksheet PDF</li>
+                <li>Print it out for your child</li>
+                <li>Watch them enjoy their personalized learning activities!</li>
+            </ol>
+            
+            <p>We'll continue sending daily worksheets to help <strong>{$data['child_name']}</strong> learn and grow.</p>
+            
+            <p style='color: #059669; font-weight: bold;'>Happy learning!<br>The Yes Homework Team</p>
+        </div>";
+        
+        // Use the existing email sending functionality from UserAuthAPI
+        $reflection = new ReflectionClass($userAuthAPI);
+        $sendEmailMethod = $reflection->getMethod('sendEmail');
+        $sendEmailMethod->setAccessible(true);
+        $sendEmailMethod->invoke($userAuthAPI, $data['parent_email'], $subject, $textContent, $htmlContent);
+        
+        return [
+            'status' => 'success',
+            'message' => 'Welcome email sent successfully'
+        ];
+        
+    } catch (Exception $e) {
+        return ['status' => 'error', 'message' => $e->getMessage()];
+    }
 });
 
 // ==================== AI WORKSHEET GENERATION ROUTES ====================
