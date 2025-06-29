@@ -62,7 +62,7 @@ async function handlePasswordLogin(email, loginButton) {
     loginButton.textContent = "Logging in...";
     
     try {
-        const response = await fetch("/api/auth/password-login", {
+        const response = await fetch("/app/proxy-server/proxy.php?api=auth_password_login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -74,7 +74,7 @@ async function handlePasswordLogin(email, loginButton) {
         
         if (result.status === "success") {
             // Generate JWT token using the existing flow
-            const tokenResponse = await fetch('/api/auth/token', {
+            const tokenResponse = await fetch('/app/proxy-server/proxy.php?api=auth_token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

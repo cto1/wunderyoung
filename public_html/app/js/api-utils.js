@@ -18,7 +18,7 @@ const api = {
         try {
             console.log('Refreshing JWT token...');
             
-            const response = await fetch('/api/auth/refresh-token', {
+            const response = await fetch('/app/proxy-server/proxy.php?api=auth_refresh_token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

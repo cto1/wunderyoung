@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     try {
         // Verify the login token
-        const response = await fetch(`../api/auth/verify?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`);
+        const response = await fetch(`/app/proxy-server/proxy.php?api=auth_verify&email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`);
         const result = await response.json();
 
         if (result.status === 'success') {

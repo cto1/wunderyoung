@@ -79,7 +79,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
     
     try {
         // Send magic link
-        const response = await fetch('../api/auth/login', {
+        const response = await fetch('/app/proxy-server/proxy.php?api=auth_login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

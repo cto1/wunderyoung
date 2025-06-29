@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // --- Detect Environment and Set Base URL ---
 $host = $_SERVER['HTTP_HOST'] ?? '';
 if (strpos($host, 'demo.exactsum.com') !== false) {
-    $base_url = "https://demo.exactsum.com/api";
+    $base_url = "https://demo.yeshomework.com/api";
 } else {
-    $base_url = "https://exactsum.com/api";
+    $base_url = "https://yeshomework.com/api";
 }
 
 // --- Extract JWT Token from Request Headers ---
@@ -58,68 +58,35 @@ $apiEndpoints = [
     "signup" => "$base_url/auth/signup",
 
 
-    // ----- [Teams] -----
-    "GET_org_users" => "$base_url/auth/{org_id}/users",
-    "POST_invite_user" => "$base_url/organizations/{org_id}/users",
-    "DEL_user" => "$base_url/organizations/{org_id}/users/{user_id}",
-    "PUT_change_user_type" => "$base_url/organizations/{org_id}/users/{user_id}/role",
-
     
-    // ----- [Settings] -----
-    "get_settings" => "$base_url/organizations/{org_id}/settings",
-    "update_setting" => "$base_url/organizations/{org_id}/settings",
-    "reset_to_defaults" => "$base_url/organizations/{org_id}/settings/reset",
-
-
-    // ----- [Vault Project] -----
+   
     
-    // [Vault Project -> Project Operation]
-    "GET_vault_projects" => "$base_url/organizations/{org_id}/vault/projects?include_file_counts=true",
-    "GET_vault_project" => "$base_url/organizations/{org_id}/vault/projects/{project_id}",
-    "POST_vault_project" => "$base_url/organizations/{org_id}/vault/projects",
-    "PUT_vault_project" => "$base_url/organizations/{org_id}/vault/projects/{project_id}",
-    "DELETE_vault_project" => "$base_url/organizations/{org_id}/vault/projects/{project_id}",
+    // ----- [Yes Homework - Authentication] -----
+    "auth_signup" => "/api/auth/signup",
+    "auth_login" => "/api/auth/login", 
+    "auth_verify" => "/api/auth/verify?email={email}&token={token}",
+    "auth_token" => "/api/auth/token",
+    "auth_password_login" => "/api/auth/password-login",
+    "auth_refresh_token" => "/api/auth/refresh-token",
     
-    // [Vault Project -> File Operation -> File CRUD]
-    'GET_BS_FILES' => "$base_url/organizations/{org_id}/vault/projects/{project_id}/files",
-    'GET_BS_FILE' => "$base_url/organizations/{org_id}/vault/projects/{project_id}/files/{file_id}",
-    "POST_BS_FILES" => "$base_url/organizations/{org_id}/vault/projects/{project_id}/files",
-    'PUT_BS_FILE' => "$base_url/organizations/{org_id}/vault/projects/{project_id}/files/{file_id}",
-    'DEL_BS_FILE' => "$base_url/organizations/{org_id}/vault/projects/{project_id}/files/{file_id}",
-    // [Vault Project -> File Operation -> OCR Operations]
-    'POST_process_OCR' => "$base_url/vault/files/{file_id}/ocr",
-    'GET_OCR_status' => "$base_url/vault/files/{file_id}/ocr-status",
-    'GET_project_transactions' => "$base_url/vault/projects/{project_id}/transactions",
-    // [Vault Project -> File Operation -> Citations]
-    // 'GET_file_citation_mappings' => "$base_url/vault/files/{file_id}/transaction-citations",
-
-    // [Vault Project -> Bank Statement Analysis -> AI]
-    'POST_BS_section_DP_AI' => "$base_url/organizations/{org_id}/bank-statements/{file_id}/analyze-section",
-    // [Vault Project -> Bank Statement Analysis -> SQL]
-    'POST_BS_section_SQL' => "$base_url/organizations/{org_id}/bank-statements/analyze-section-sql",
-    // [Vault Project -> Bank Statement Analysis -> Helpers]
+    // ----- [Yes Homework - Child Management] -----
+    "get_children" => "/api/children",
+    "add_child" => "/api/children", 
+    "update_child" => "/api/children/{child_id}",
+    "delete_child" => "/api/children/{child_id}",
+    "get_child_worksheets" => "/api/children/{child_id}/worksheets",
+    "get_child_feedback_summary" => "/api/children/{child_id}/feedback-summary",
+    "get_child_completion_streak" => "/api/children/{child_id}/completion-streak",
     
-
-    // xx
-    'POST_BSA_from_OCR_File' => "$base_url/organizations/{org_id}/bank-statements/{file_id}/analyze",
-
-    
-    // ----- [Companies House] -----
-
-    'GET_officers_from_CH' => "$base_url/company/{company_number}/officers",
-    'GET_company' => "$base_url/organizations/{org_id}/projects/{project_id}/companies/{company_number}",
-    'GET_companies' => "$base_url/organizations/{org_id}/projects/{project_id}/companies",
-    'POST_company' => "$base_url/organizations/{org_id}/projects/{project_id}/companies/{company_number}",
-    'DELETE_company' => "$base_url/organizations/{org_id}/projects/{project_id}/companies/{company_number}",
-
-    // ----- [Usage] -----
-    "getUsageData" => "$base_url/usage/organization/{org_id}",
-    "getUsageDataByFile" => "$base_url/usage/file/{file_id}",
-
-    // ----- [Ideas & Bugs] -----
-    "POST_submitIdea" => "$base_url/ideas/organization/{org_id}",
-    "GET_getIdeas" => "$base_url/ideas/organization/{org_id}", 
-    "POST_voteIdea" => "$base_url/ideas/{idea_id}/vote",
+    // ----- [Yes Homework - Worksheet Management] -----
+    "get_user_worksheets" => "/api/worksheets",
+    "create_worksheet" => "/api/worksheets",
+    "get_worksheet" => "/api/worksheets/{worksheet_id}",
+    "update_worksheet" => "/api/worksheets/{worksheet_id}",
+    "delete_worksheet" => "/api/worksheets/{worksheet_id}",
+    "get_worksheet_stats" => "/api/worksheets/stats",
+    "generate_child_worksheet" => "/api/children/{child_id}/generate-worksheet",
+    "send_welcome_email" => "/api/send-welcome-email",
     
     // ----- [Yes Homework - Download System] -----
     "get_token_info" => "/api/DownloadTokenAPI.php?action=get_info&token={token}",
@@ -133,12 +100,15 @@ $apiEndpoints = [
 $apiKey = $_GET['api'] ?? null;
 $orgId = $_GET['org_id'] ?? null;
 $token = $_GET['token'] ?? null;
+$email = $_GET['email'] ?? null;
 $userId = $_GET['user_id'] ?? null;
 $projectId = $_GET['project_id'] ?? null;
 $fileId = $_GET['file_id'] ?? null;
 $companyNumber = $_GET['company_number'] ?? null;
 $ideaId = $_GET['idea_id'] ?? null;
-$filter = $_GET['filter'] ?? null; 
+$filter = $_GET['filter'] ?? null;
+$childId = $_GET['child_id'] ?? null;
+$worksheetId = $_GET['worksheet_id'] ?? null; 
 
 
 if (!$apiKey || !isset($apiEndpoints[$apiKey])) {
@@ -188,22 +158,42 @@ if (strpos($apiEndpoints[$apiKey], '{filter}') !== false && !$filter) {
     echo json_encode(["status" => "error", "message" => "Missing filter parameter."]);
     exit();
 }
+if (strpos($apiEndpoints[$apiKey], '{email}') !== false && !$email) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "Missing email parameter."]);
+    exit();
+}
+if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "Missing child_id parameter."]);
+    exit();
+}
+if (strpos($apiEndpoints[$apiKey], '{worksheet_id}') !== false && !$worksheetId) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "Missing worksheet_id parameter."]);
+    exit();
+}
 
 // Construct API URL
 $apiUrl = str_replace(
-    ['{org_id}', '{token}', '{user_id}', '{project_id}', '{file_id}', '{company_number}', '{idea_id}', '{filter}'],
-    [$orgId, $token, $userId, $projectId, $fileId, $companyNumber, $ideaId, $filter],
+    ['{org_id}', '{token}', '{email}', '{user_id}', '{project_id}', '{file_id}', '{company_number}', '{idea_id}', '{filter}', '{child_id}', '{worksheet_id}'],
+    [$orgId, $token, $email, $userId, $projectId, $fileId, $companyNumber, $ideaId, $filter, $childId, $worksheetId],
     $apiEndpoints[$apiKey]
 );
 
 // Append any other GET parameters (like for filtering or pagination)
-$otherParams = array_diff_key($_GET, array_flip(['api', 'org_id', 'token', 'user_id', 'project_id', 'file_id', 'company_number', 'idea_id', 'filter']));
+$otherParams = array_diff_key($_GET, array_flip(['api', 'org_id', 'token', 'email', 'user_id', 'project_id', 'file_id', 'company_number', 'idea_id', 'filter', 'child_id', 'worksheet_id']));
 if (!empty($otherParams)) {
     $apiUrl .= (strpos($apiUrl, '?') === false ? '?' : '&') . http_build_query($otherParams);
 }
 
 // --- Handle Yes Homework Local API Calls ---
-$yesHomeworkApis = ['get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf'];
+$yesHomeworkApis = [
+    'auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token',
+    'get_children', 'add_child', 'update_child', 'delete_child', 'get_child_worksheets', 'get_child_feedback_summary', 'get_child_completion_streak',
+    'get_user_worksheets', 'create_worksheet', 'get_worksheet', 'update_worksheet', 'delete_worksheet', 'get_worksheet_stats', 'generate_child_worksheet', 'send_welcome_email',
+    'get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf'
+];
 if (in_array($apiKey, $yesHomeworkApis)) {
     // For local APIs, prepend the document root
     $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';

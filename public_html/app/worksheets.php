@@ -388,8 +388,12 @@ async function loadWorksheetPage() {
     try {
         // Load children and stats in parallel
         const [childrenResponse, statsResponse] = await Promise.all([
-            api.makeRequest('/children', 'GET'),
-            api.makeRequest('/worksheets/stats', 'GET')
+            fetch('/app/proxy-server/proxy.php?api=get_children', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` }
+            }).then(r => r.json()),
+            fetch('/app/proxy-server/proxy.php?api=get_worksheet_stats', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` }
+            }).then(r => r.json())
         ]);
         
         children = childrenResponse.children || [];
@@ -418,17 +422,20 @@ async function loadChildrenStats() {
     try {
         // Load stats for each child in parallel
         const statsPromises = children.map(child => 
-            api.makeRequest(`/children/${child.id}/worksheets`, 'GET')
-                .then(response => ({
-                    childId: child.id,
-                    worksheets: response.worksheets || [],
-                    total: response.total || 0
-                }))
-                .catch(error => ({
-                    childId: child.id,
-                    worksheets: [],
-                    total: 0
-                }))
+            fetch(`/app/proxy-server/proxy.php?api=get_child_worksheets&child_id=${child.id}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` }
+            })
+            .then(r => r.json())
+            .then(response => ({
+                childId: child.id,
+                worksheets: response.worksheets || [],
+                total: response.total || 0
+            }))
+            .catch(error => ({
+                childId: child.id,
+                worksheets: [],
+                total: 0
+            }))
         );
         
         const childrenStats = await Promise.all(statsPromises);
@@ -456,7 +463,10 @@ async function updateChildStats(childId, worksheets, total) {
     if (streakEl) {
         try {
             // Get accurate streak from feedback API
-            const response = await api.makeRequest(`/FeedbackAPI.php?child_id=${childId}&action=streak`, 'GET');
+            const response = await fetch(`/app/proxy-server/proxy.php?api=get_child_completion_streak&child_id=${childId}`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}` }
+            }).then(r => r.json());
+            
             if (response.status === 'success') {
                 streakEl.textContent = response.streak;
             } else {
@@ -674,12 +684,19 @@ async function handleAddChildSubmit(e) {
         }
         
         // Add child
-        const response = await api.makeRequest('/children', 'POST', {
-            name: name,
-            age_group: ageGroup,
-            interest1: interest1,
-            interest2: interest2
-        });
+        const response = await fetch('/app/proxy-server/proxy.php?api=add_child', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+            },
+            body: JSON.stringify({
+                name: name,
+                age_group: ageGroup,
+                interest1: interest1,
+                interest2: interest2
+            })
+        }).then(r => r.json());
         
         if (response.status === 'success') {
             closeAddChildModal();
@@ -713,10 +730,17 @@ async function sendWelcomeWorksheet(childId, childName) {
         // Generate today's worksheet for the new child
         const today = new Date().toISOString().split('T')[0];
         
-        const response = await api.makeRequest(`/children/${childId}/generate-worksheet`, 'POST', {
-            date: today,
-            is_welcome: true // Flag to indicate this is a welcome worksheet
-        });
+        const response = await fetch(`/app/proxy-server/proxy.php?api=generate_child_worksheet&child_id=${childId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+            },
+            body: JSON.stringify({
+                date: today,
+                is_welcome: true // Flag to indicate this is a welcome worksheet
+            })
+        }).then(r => r.json());
         
         if (response.status === 'success') {
             console.log(`Welcome worksheet generated and sent for ${childName}`);
@@ -740,11 +764,18 @@ async function sendWelcomeEmail(childId, childName) {
         const userData = api.getCurrentUser();
         
         // This would call an email API endpoint
-        const response = await api.makeRequest('/send-welcome-email', 'POST', {
-            child_id: childId,
-            child_name: childName,
-            parent_email: userData.email
-        });
+        const response = await fetch('/app/proxy-server/proxy.php?api=send_welcome_email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+            },
+            body: JSON.stringify({
+                child_id: childId,
+                child_name: childName,
+                parent_email: userData.email
+            })
+        }).then(r => r.json());
         
         if (response.status === 'success') {
             console.log(`Welcome email sent for ${childName}`);
@@ -981,12 +1012,19 @@ async function handleEditChildSubmit(e) {
         }
         
         // Update child
-        const response = await api.makeRequest(`/children/${currentEditChildId}`, 'PUT', {
-            name: name,
-            age_group: ageGroup,
-            interest1: interest1,
-            interest2: interest2
-        });
+        const response = await fetch(`/app/proxy-server/proxy.php?api=update_child&child_id=${currentEditChildId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+            },
+            body: JSON.stringify({
+                name: name,
+                age_group: ageGroup,
+                interest1: interest1,
+                interest2: interest2
+            })
+        }).then(r => r.json());
         
         if (response.status === 'success') {
             closeEditChildModal();
@@ -1056,7 +1094,12 @@ async function confirmDeleteChild() {
     btnText.textContent = 'Deleting...';
     
     try {
-        const response = await api.makeRequest(`/children/${currentDeleteChildId}`, 'DELETE');
+        const response = await fetch(`/app/proxy-server/proxy.php?api=delete_child&child_id=${currentDeleteChildId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+            }
+        }).then(r => r.json());
         
         if (response.status === 'success') {
             closeDeleteChildModal();

@@ -87,7 +87,7 @@ document.getElementById('signup-form').addEventListener('submit', async function
     document.getElementById('error-message').classList.add('hidden');
     
     try {
-        const response = await fetch('../api/auth/signup', {
+        const response = await fetch('/app/proxy-server/proxy.php?api=auth_signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
