@@ -211,6 +211,138 @@ include 'include/header.html';
             </div>
         </div>
 
+        <!-- Edit Child Modal -->
+        <div id="edit-child-modal" class="modal">
+            <div class="modal-box w-11/12 max-w-2xl">
+                <h3 class="font-bold text-2xl mb-6">Edit Child</h3>
+                
+                <form id="edit-child-form">
+                    <!-- Child Name -->
+                    <div class="form-control w-full mb-4">
+                        <label class="label">
+                            <span class="label-text font-semibold">Child's Name</span>
+                        </label>
+                        <input type="text" id="edit-child-name" class="input input-bordered w-full" placeholder="Enter your child's name" required>
+                    </div>
+
+                    <!-- Age Group -->
+                    <div class="form-control w-full mb-4">
+                        <label class="label">
+                            <span class="label-text font-semibold">Age Group / Year</span>
+                        </label>
+                        <select id="edit-child-age-group" class="select select-bordered w-full" required>
+                            <option value="">Select age group</option>
+                            <option value="3-4">Age 3-4 (Nursery)</option>
+                            <option value="4-5">Age 4-5 (Reception)</option>
+                            <option value="5-6">Age 5-6 (Year 1)</option>
+                            <option value="6-7">Age 6-7 (Year 2)</option>
+                            <option value="7-8">Age 7-8 (Year 3)</option>
+                            <option value="8-9">Age 8-9 (Year 4)</option>
+                            <option value="9-10">Age 9-10 (Year 5)</option>
+                            <option value="10-11">Age 10-11 (Year 6)</option>
+                        </select>
+                    </div>
+
+                    <!-- Interests Section -->
+                    <div class="mb-6">
+                        <label class="label">
+                            <span class="label-text font-semibold">Child's Interests (Select 2)</span>
+                        </label>
+                        <p class="text-sm text-gray-600 mb-3">Choose topics your child enjoys to personalize their worksheets</p>
+                        
+                        <!-- Interest 1 -->
+                        <div class="form-control w-full mb-3">
+                            <label class="label">
+                                <span class="label-text">First Interest</span>
+                            </label>
+                            <select id="edit-interest1" class="select select-bordered w-full" required>
+                                <option value="">Select first interest</option>
+                                <option value="animals">Animals & Nature</option>
+                                <option value="space">Space & Planets</option>
+                                <option value="dinosaurs">Dinosaurs</option>
+                                <option value="cars">Cars & Vehicles</option>
+                                <option value="sports">Sports & Games</option>
+                                <option value="music">Music & Dancing</option>
+                                <option value="art">Art & Drawing</option>
+                                <option value="cooking">Cooking & Food</option>
+                                <option value="books">Books & Stories</option>
+                                <option value="science">Science Experiments</option>
+                                <option value="princesses">Princesses & Fairy Tales</option>
+                                <option value="superheroes">Superheroes</option>
+                                <option value="robots">Robots & Technology</option>
+                                <option value="pirates">Pirates & Adventures</option>
+                                <option value="farms">Farms & Countryside</option>
+                                <option value="ocean">Ocean & Sea Life</option>
+                                <option value="custom1">Other (please specify below)</option>
+                            </select>
+                            <input type="text" id="edit-custom-interest1" class="input input-bordered w-full mt-2 hidden" placeholder="Please specify your child's interest">
+                        </div>
+
+                        <!-- Interest 2 -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text">Second Interest</span>
+                            </label>
+                            <select id="edit-interest2" class="select select-bordered w-full" required>
+                                <option value="">Select second interest</option>
+                                <option value="animals">Animals & Nature</option>
+                                <option value="space">Space & Planets</option>
+                                <option value="dinosaurs">Dinosaurs</option>
+                                <option value="cars">Cars & Vehicles</option>
+                                <option value="sports">Sports & Games</option>
+                                <option value="music">Music & Dancing</option>
+                                <option value="art">Art & Drawing</option>
+                                <option value="cooking">Cooking & Food</option>
+                                <option value="books">Books & Stories</option>
+                                <option value="science">Science Experiments</option>
+                                <option value="princesses">Princesses & Fairy Tales</option>
+                                <option value="superheroes">Superheroes</option>
+                                <option value="robots">Robots & Technology</option>
+                                <option value="pirates">Pirates & Adventures</option>
+                                <option value="farms">Farms & Countryside</option>
+                                <option value="ocean">Ocean & Sea Life</option>
+                                <option value="custom2">Other (please specify below)</option>
+                            </select>
+                            <input type="text" id="edit-custom-interest2" class="input input-bordered w-full mt-2 hidden" placeholder="Please specify your child's interest">
+                        </div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="edit-child-error-message" class="alert alert-error hidden mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="edit-child-error-text"></span>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="modal-action">
+                        <button type="button" class="btn btn-outline" onclick="closeEditChildModal()">Cancel</button>
+                        <button type="submit" class="btn btn-sophisticated" id="update-child-btn">
+                            <span class="loading loading-spinner loading-sm hidden" id="update-child-spinner"></span>
+                            <span id="update-child-text">Update Child</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-child-modal" class="modal">
+            <div class="modal-box text-center">
+                <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-4"></i>
+                <h3 class="font-bold text-2xl mb-2">Delete Child?</h3>
+                <p class="text-gray-600 mb-4" id="delete-child-message">Are you sure you want to delete this child? This will also delete all their worksheets and cannot be undone.</p>
+                <div class="modal-action justify-center">
+                    <button class="btn btn-outline" onclick="closeDeleteChildModal()">Cancel</button>
+                    <button class="btn btn-error" id="confirm-delete-btn" onclick="confirmDeleteChild()">
+                        <span class="loading loading-spinner loading-sm hidden" id="delete-child-spinner"></span>
+                        <span id="delete-child-text">Delete Child</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -238,12 +370,17 @@ function setupEventListeners() {
     document.getElementById('add-child-btn').addEventListener('click', openAddChildModal);
     document.getElementById('add-first-child-btn').addEventListener('click', openAddChildModal);
     
-    // Form submission
+    // Form submissions
     document.getElementById('add-child-form').addEventListener('submit', handleAddChildSubmit);
+    document.getElementById('edit-child-form').addEventListener('submit', handleEditChildSubmit);
     
-    // Custom interest toggles
+    // Custom interest toggles for add form
     document.getElementById('interest1').addEventListener('change', handleInterestChange);
     document.getElementById('interest2').addEventListener('change', handleInterestChange);
+    
+    // Custom interest toggles for edit form
+    document.getElementById('edit-interest1').addEventListener('change', handleEditInterestChange);
+    document.getElementById('edit-interest2').addEventListener('change', handleEditInterestChange);
 }
 
 // Load worksheet page data
@@ -696,20 +833,230 @@ async function generateWorksheet(childId) {
     }
 }
 
-// Edit child (placeholder)
-function editChild(childId) {
-    // TODO: Implement edit functionality
-    console.log('Edit child:', childId);
-    alert('Edit functionality coming soon!');
+// Global variables for edit/delete operations
+let currentEditChildId = null;
+let currentDeleteChildId = null;
+
+// Handle edit interest dropdown changes (for edit form)
+function handleEditInterestChange(e) {
+    const select = e.target;
+    const customInput = document.getElementById(`edit-custom-${select.id.replace('edit-', '')}`);
+    
+    if (select.value === `custom${select.id.slice(-1)}`) {
+        customInput.classList.remove('hidden');
+        customInput.required = true;
+    } else {
+        customInput.classList.add('hidden');
+        customInput.required = false;
+        customInput.value = '';
+    }
 }
 
-// Delete child (placeholder)
-function deleteChild(childId) {
-    if (confirm('Are you sure you want to delete this child? This will also delete all their worksheets.')) {
-        // TODO: Implement delete functionality
-        console.log('Delete child:', childId);
-        alert('Delete functionality coming soon!');
+// Open edit child modal
+function editChild(childId) {
+    const child = children.find(c => c.id === childId);
+    if (!child) {
+        showError('Child not found');
+        return;
     }
+    
+    currentEditChildId = childId;
+    
+    // Populate form with current child data
+    document.getElementById('edit-child-name').value = child.name;
+    document.getElementById('edit-child-age-group').value = child.age_group;
+    document.getElementById('edit-interest1').value = child.interest1;
+    document.getElementById('edit-interest2').value = child.interest2;
+    
+    // Handle custom interests
+    const interest1Select = document.getElementById('edit-interest1');
+    const interest2Select = document.getElementById('edit-interest2');
+    const customInput1 = document.getElementById('edit-custom-interest1');
+    const customInput2 = document.getElementById('edit-custom-interest2');
+    
+    // Check if interests are custom (not in dropdown options)
+    const standardInterests = ['animals', 'space', 'dinosaurs', 'cars', 'sports', 'music', 'art', 'cooking', 'books', 'science', 'princesses', 'superheroes', 'robots', 'pirates', 'farms', 'ocean'];
+    
+    if (!standardInterests.includes(child.interest1)) {
+        interest1Select.value = 'custom1';
+        customInput1.value = child.interest1;
+        customInput1.classList.remove('hidden');
+        customInput1.required = true;
+    }
+    
+    if (!standardInterests.includes(child.interest2)) {
+        interest2Select.value = 'custom2';
+        customInput2.value = child.interest2;
+        customInput2.classList.remove('hidden');
+        customInput2.required = true;
+    }
+    
+    // Clear any previous errors
+    document.getElementById('edit-child-error-message').classList.add('hidden');
+    
+    // Open modal
+    document.getElementById('edit-child-modal').classList.add('modal-open');
+}
+
+// Close edit child modal
+function closeEditChildModal() {
+    document.getElementById('edit-child-modal').classList.remove('modal-open');
+    currentEditChildId = null;
+    
+    // Reset form
+    document.getElementById('edit-child-form').reset();
+    document.getElementById('edit-custom-interest1').classList.add('hidden');
+    document.getElementById('edit-custom-interest2').classList.add('hidden');
+    document.getElementById('edit-child-error-message').classList.add('hidden');
+}
+
+// Handle edit child form submission
+async function handleEditChildSubmit(e) {
+    e.preventDefault();
+    
+    if (!currentEditChildId) {
+        showError('No child selected for editing');
+        return;
+    }
+    
+    const btn = document.getElementById('update-child-btn');
+    const spinner = document.getElementById('update-child-spinner');
+    const btnText = document.getElementById('update-child-text');
+    
+    // Show loading state
+    btn.disabled = true;
+    spinner.classList.remove('hidden');
+    btnText.textContent = 'Updating...';
+    
+    try {
+        // Get form data
+        const name = document.getElementById('edit-child-name').value.trim();
+        const ageGroup = document.getElementById('edit-child-age-group').value;
+        
+        // Get interests (handle custom inputs)
+        let interest1 = document.getElementById('edit-interest1').value;
+        let interest2 = document.getElementById('edit-interest2').value;
+        
+        if (interest1 === 'custom1') {
+            interest1 = document.getElementById('edit-custom-interest1').value.trim();
+        }
+        if (interest2 === 'custom2') {
+            interest2 = document.getElementById('edit-custom-interest2').value.trim();
+        }
+        
+        // Validate
+        if (!name || !ageGroup || !interest1 || !interest2) {
+            throw new Error('Please fill in all fields');
+        }
+        
+        if (interest1 === interest2) {
+            throw new Error('Please select two different interests');
+        }
+        
+        // Update child
+        const response = await api.makeRequest(`/children/${currentEditChildId}`, 'PUT', {
+            name: name,
+            age_group: ageGroup,
+            interest1: interest1,
+            interest2: interest2
+        });
+        
+        if (response.status === 'success') {
+            closeEditChildModal();
+            showSuccessMessage('Child updated successfully!');
+            
+            // Reload page data
+            await loadWorksheetPage();
+        } else {
+            throw new Error(response.message || 'Failed to update child');
+        }
+        
+    } catch (error) {
+        console.error('Error updating child:', error);
+        showEditChildError(error.message);
+    } finally {
+        // Reset button state
+        btn.disabled = false;
+        spinner.classList.add('hidden');
+        btnText.textContent = 'Update Child';
+    }
+}
+
+// Show edit child form error
+function showEditChildError(message) {
+    document.getElementById('edit-child-error-text').textContent = message;
+    document.getElementById('edit-child-error-message').classList.remove('hidden');
+}
+
+// Open delete child modal
+function deleteChild(childId) {
+    const child = children.find(c => c.id === childId);
+    if (!child) {
+        showError('Child not found');
+        return;
+    }
+    
+    currentDeleteChildId = childId;
+    
+    // Update modal message with child name
+    document.getElementById('delete-child-message').textContent = 
+        `Are you sure you want to delete ${child.name}? This will also delete all their worksheets and cannot be undone.`;
+    
+    // Open modal
+    document.getElementById('delete-child-modal').classList.add('modal-open');
+}
+
+// Close delete child modal
+function closeDeleteChildModal() {
+    document.getElementById('delete-child-modal').classList.remove('modal-open');
+    currentDeleteChildId = null;
+}
+
+// Confirm delete child
+async function confirmDeleteChild() {
+    if (!currentDeleteChildId) {
+        showError('No child selected for deletion');
+        return;
+    }
+    
+    const btn = document.getElementById('confirm-delete-btn');
+    const spinner = document.getElementById('delete-child-spinner');
+    const btnText = document.getElementById('delete-child-text');
+    
+    // Show loading state
+    btn.disabled = true;
+    spinner.classList.remove('hidden');
+    btnText.textContent = 'Deleting...';
+    
+    try {
+        const response = await api.makeRequest(`/children/${currentDeleteChildId}`, 'DELETE');
+        
+        if (response.status === 'success') {
+            closeDeleteChildModal();
+            showSuccessMessage('Child deleted successfully');
+            
+            // Reload page data
+            await loadWorksheetPage();
+        } else {
+            throw new Error(response.message || 'Failed to delete child');
+        }
+        
+    } catch (error) {
+        console.error('Error deleting child:', error);
+        showError('Failed to delete child. Please try again.');
+    } finally {
+        // Reset button state
+        btn.disabled = false;
+        spinner.classList.add('hidden');
+        btnText.textContent = 'Delete Child';
+    }
+}
+
+// Show success message (general)
+function showSuccessMessage(message) {
+    // You could implement a toast notification here
+    // For now, using a simple alert
+    alert(message);
 }
 </script>
 
