@@ -121,23 +121,21 @@ if (!in_array($apiKey, $authRoutes)) {
         echo json_encode(["status" => "error", "message" => "Missing child_id parameter."]);
         exit();
     }
-}
-
-// Validate other required parameters
-if (strpos($apiEndpoints[$apiKey], '{token}') !== false && !$token) {
-    http_response_code(400);
-    echo json_encode(["status" => "error", "message" => "Missing token parameter."]);
-    exit();
-}
-if (strpos($apiEndpoints[$apiKey], '{email}') !== false && !$email) {
-    http_response_code(400);
-    echo json_encode(["status" => "error", "message" => "Missing email parameter."]);
-    exit();
-}
-if (strpos($apiEndpoints[$apiKey], '{worksheet_id}') !== false && !$worksheetId) {
-    http_response_code(400);
-    echo json_encode(["status" => "error", "message" => "Missing worksheet_id parameter."]);
-    exit();
+    if (strpos($apiEndpoints[$apiKey], '{token}') !== false && !$token) {
+        http_response_code(400);
+        echo json_encode(["status" => "error", "message" => "Missing token parameter."]);
+        exit();
+    }
+    if (strpos($apiEndpoints[$apiKey], '{email}') !== false && !$email) {
+        http_response_code(400);
+        echo json_encode(["status" => "error", "message" => "Missing email parameter."]);
+        exit();
+    }
+    if (strpos($apiEndpoints[$apiKey], '{worksheet_id}') !== false && !$worksheetId) {
+        http_response_code(400);
+        echo json_encode(["status" => "error", "message" => "Missing worksheet_id parameter."]);
+        exit();
+    }
 }
 
 // Construct API URL
