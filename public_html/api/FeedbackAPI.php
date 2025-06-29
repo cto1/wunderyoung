@@ -319,71 +319,73 @@ class FeedbackAPI {
     }
 }
 
-// Handle API requests
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $api = new FeedbackAPI();
-    
-    // Get JSON input
-    $input = json_decode(file_get_contents('php://input'), true);
-    
-    if (!$input) {
-        http_response_code(400);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Invalid JSON input'
-        ]);
-        exit;
-    }
-    
-    $token = $input['token'] ?? '';
-    if (empty($token)) {
-        http_response_code(400);
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Missing download token'
-        ]);
-        exit;
-    }
-    
-    $result = $api->submitFeedback($token, $input);
-    
-    echo json_encode($result);
-}
-elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $api = new FeedbackAPI();
-    
-    // Handle streak calculation requests
-    if (isset($_GET['child_id']) && isset($_GET['action']) && $_GET['action'] === 'streak') {
-        $childId = intval($_GET['child_id']);
-        $streak = $api->getLearningStreak($childId);
+// Handle API requests - only execute if this file is being accessed directly
+if (basename($_SERVER['SCRIPT_NAME']) === 'FeedbackAPI.php') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $api = new FeedbackAPI();
         
-        echo json_encode([
-            'status' => 'success',
-            'streak' => $streak
-        ]);
-    }
-    // Handle difficulty preferences requests
-    elseif (isset($_GET['child_id']) && isset($_GET['action']) && $_GET['action'] === 'preferences') {
-        $childId = intval($_GET['child_id']);
-        $preferences = $api->getChildDifficultyPreferences($childId);
+        // Get JSON input
+        $input = json_decode(file_get_contents('php://input'), true);
         
-        echo json_encode([
-            'status' => 'success',
-            'preferences' => $preferences
-        ]);
+        if (!$input) {
+            http_response_code(400);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid JSON input'
+            ]);
+            exit;
+        }
+        
+        $token = $input['token'] ?? '';
+        if (empty($token)) {
+            http_response_code(400);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Missing download token'
+            ]);
+            exit;
+        }
+        
+        $result = $api->submitFeedback($token, $input);
+        
+        echo json_encode($result);
+    }
+    elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $api = new FeedbackAPI();
+        
+        // Handle streak calculation requests
+        if (isset($_GET['child_id']) && isset($_GET['action']) && $_GET['action'] === 'streak') {
+            $childId = intval($_GET['child_id']);
+            $streak = $api->getLearningStreak($childId);
+            
+            echo json_encode([
+                'status' => 'success',
+                'streak' => $streak
+            ]);
+        }
+        // Handle difficulty preferences requests
+        elseif (isset($_GET['child_id']) && isset($_GET['action']) && $_GET['action'] === 'preferences') {
+            $childId = intval($_GET['child_id']);
+            $preferences = $api->getChildDifficultyPreferences($childId);
+            
+            echo json_encode([
+                'status' => 'success',
+                'preferences' => $preferences
+            ]);
+        }
+        else {
+            http_response_code(400);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid request parameters'
+            ]);
+        }
     }
     else {
-        http_response_code(400);
+        http_response_code(405);
         echo json_encode([
             'status' => 'error',
-            'message' => 'Invalid request parameters'
+            'message' => 'Method not allowed'
         ]);
     }
-}
-else {
-    http_response_code(405);
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Method not allowed'
-    ]);
 } 

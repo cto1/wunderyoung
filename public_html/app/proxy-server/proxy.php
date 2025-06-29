@@ -107,15 +107,6 @@ if (!$apiKey || !isset($apiEndpoints[$apiKey])) {
     exit();
 }
 
-// EMERGENCY FIX: Bypass everything for auth_login
-if ($apiKey === 'auth_login') {
-    error_log("DEBUG: Emergency bypass for auth_login");
-    // Construct API URL for auth_login
-    $apiUrl = $apiEndpoints[$apiKey];
-    // Skip to the API handling section
-    goto handle_api_request;
-}
-
 // --- Parameter Validation ---
 // Skip ALL validation for authentication routes
 $authRoutes = [
@@ -123,13 +114,7 @@ $authRoutes = [
     'request_login', 'verify_login', 'JWT_token', 'signup'
 ];
 
-// Debug logging
-error_log("DEBUG: apiKey = $apiKey");
-error_log("DEBUG: authRoutes = " . json_encode($authRoutes));
-error_log("DEBUG: in_array result = " . (in_array($apiKey, $authRoutes) ? 'true' : 'false'));
-
 if (!in_array($apiKey, $authRoutes)) {
-    error_log("DEBUG: Entering parameter validation for $apiKey");
     // Only validate parameters for non-auth routes
     if (strpos($apiEndpoints[$apiKey], '{child_id}') !== false && !$childId) {
         http_response_code(400);
@@ -166,8 +151,14 @@ if (!empty($otherParams)) {
     $apiUrl .= (strpos($apiUrl, '?') === false ? '?' : '&') . http_build_query($otherParams);
 }
 
+// Debug logging for auth_login
+if ($apiKey === 'auth_login') {
+    error_log("DEBUG: Final apiUrl for auth_login = $apiUrl");
+    error_log("DEBUG: Request method = " . $_SERVER['REQUEST_METHOD']);
+    error_log("DEBUG: Input data = " . file_get_contents("php://input"));
+}
+
 // --- Handle Yes Homework API Calls ---
-handle_api_request:
 $yesHomeworkApis = [
     'auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token',
     'request_login', 'verify_login', 'JWT_token', 'signup',
@@ -184,6 +175,13 @@ $yesHomeworkApis = [
 $isLocalhost = in_array($host, ['localhost', '127.0.0.1', 'localhost:8080', '127.0.0.1:8080']) || 
                strpos($host, 'localhost:') === 0 || 
                strpos($host, '127.0.0.1:') === 0;
+
+// Debug logging for auth_login
+if ($apiKey === 'auth_login') {
+    error_log("DEBUG: host = $host");
+    error_log("DEBUG: isLocalhost = " . ($isLocalhost ? 'true' : 'false'));
+    error_log("DEBUG: Will use " . ($isLocalhost ? 'local API' : 'remote API'));
+}
 
 if (in_array($apiKey, $yesHomeworkApis) && $isLocalhost) {
     // Handle localhost requests by including local API files directly
