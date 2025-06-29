@@ -31,6 +31,8 @@ require_once 'Router.php';
 require_once 'UserAuthAPI.php';
 require_once 'WorksheetAPI.php';
 require_once 'WorksheetGeneratorAPI.php';
+require_once 'DownloadTokenAPI.php';
+require_once 'FeedbackAPI.php';
 require_once 'JWTAuth.php';
 require_once 'AuthMiddleware.php';
 
@@ -38,6 +40,8 @@ require_once 'AuthMiddleware.php';
 $userAuthAPI = new UserAuthAPI();
 $worksheetAPI = new WorksheetAPI();
 $worksheetGeneratorAPI = new WorksheetGeneratorAPI();
+$downloadTokenAPI = new DownloadTokenAPI();
+$feedbackAPI = new FeedbackAPI();
 $router = new Router();
 $jwtAuth = new JWTAuth();
 
@@ -370,14 +374,99 @@ $router->addRoute('POST', '/send-welcome-email', function($params, $data, $conte
 
 // ==================== AI WORKSHEET GENERATION ROUTES ====================
 
-// Generate personalized worksheet for a specific child (protected)
-$router->addRoute('POST', '/children/{child_id}/generate-worksheet', function($params, $data, $context) use ($worksheetGeneratorAPI) {
+// Create download link for worksheet (protected) - NEW FLOW
+$router->addRoute('POST', '/children/{child_id}/generate-worksheet', function($params, $data, $context) use ($downloadTokenAPI, $userAuthAPI) {
     if (!isset($context['userData'])) {
         return ['status' => 'error', 'message' => 'Authentication required'];
     }
     
-    $date = $data['date'] ?? null;
-    return $worksheetGeneratorAPI->generateWorksheet($context['userData']['id'], $params['child_id'], $date);
+    // Verify child belongs to user
+    $childrenResult = $userAuthAPI->getChildren($context['userData']['id']);
+    if ($childrenResult['status'] !== 'success') {
+        return $childrenResult;
+    }
+    
+    $childExists = false;
+    $childData = null;
+    foreach ($childrenResult['children'] as $child) {
+        if ($child['id'] === $params['child_id']) {
+            $childExists = true;
+            $childData = $child;
+            break;
+        }
+    }
+    
+    if (!$childExists) {
+        return ['status' => 'error', 'message' => 'Child not found or unauthorized'];
+    }
+    
+    $date = $data['date'] ?? date('Y-m-d');
+    $isWelcome = $data['is_welcome'] ?? false;
+    
+    // Create download token instead of generating worksheet immediately
+    $tokenResult = $downloadTokenAPI->createDownloadToken($params['child_id'], $date, $isWelcome);
+    
+    if ($tokenResult['status'] === 'success') {
+        // Send email with download link
+        $downloadUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . 
+                      '://' . $_SERVER['HTTP_HOST'] . '/download.php?token=' . $tokenResult['token'];
+        
+        try {
+            // Get user email
+            $userProfile = $userAuthAPI->getProfile($context['userData']['id']);
+            if ($userProfile['status'] === 'success') {
+                $userEmail = $userProfile['user']['email'];
+                
+                // Send email with download link
+                $subject = $isWelcome ? 
+                    "Welcome! {$childData['name']}'s First Worksheet is Ready" :
+                    "{$childData['name']}'s Daily Worksheet for " . date('F j, Y', strtotime($date));
+                
+                $textContent = $isWelcome ?
+                    "Hi there!\n\nGreat news! We've created {$childData['name']}'s first personalized worksheet.\n\nClick the link below to download it:\n{$downloadUrl}\n\nThis worksheet has been tailored based on your child's interests and age group to make learning fun and engaging.\n\nHappy learning!\nThe Yes Homework Team" :
+                    "Hi there!\n\n{$childData['name']}'s daily worksheet for " . date('F j, Y', strtotime($date)) . " is ready!\n\nClick the link below to download it:\n{$downloadUrl}\n\nThis worksheet has been personalized based on your child's interests and previous feedback.\n\nHappy learning!\nThe Yes Homework Team";
+                
+                $htmlContent = $isWelcome ?
+                    "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                        <h2 style='color: #3b82f6;'>Welcome to Yes Homework!</h2>
+                        <p>Great news! We've created <strong>{$childData['name']}'s</strong> first personalized worksheet.</p>
+                        <div style='text-align: center; margin: 30px 0;'>
+                            <a href='{$downloadUrl}' style='background: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;'>Download Worksheet</a>
+                        </div>
+                        <p>This worksheet has been tailored based on your child's interests and age group to make learning fun and engaging.</p>
+                        <p style='color: #059669; font-weight: bold;'>Happy learning!<br>The Yes Homework Team</p>
+                    </div>" :
+                    "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                        <h2 style='color: #3b82f6;'>{$childData['name']}'s Daily Worksheet</h2>
+                        <p><strong>{$childData['name']}'s</strong> daily worksheet for " . date('F j, Y', strtotime($date)) . " is ready!</p>
+                        <div style='text-align: center; margin: 30px 0;'>
+                            <a href='{$downloadUrl}' style='background: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: bold;'>Download Worksheet</a>
+                        </div>
+                        <p>This worksheet has been personalized based on your child's interests and previous feedback.</p>
+                        <p style='color: #059669; font-weight: bold;'>Happy learning!<br>The Yes Homework Team</p>
+                    </div>";
+                
+                // Use the existing email sending functionality
+                $reflection = new ReflectionClass($userAuthAPI);
+                $sendEmailMethod = $reflection->getMethod('sendEmail');
+                $sendEmailMethod->setAccessible(true);
+                $sendEmailMethod->invoke($userAuthAPI, $userEmail, $subject, $textContent, $htmlContent);
+            }
+            
+        } catch (Exception $e) {
+            error_log("Failed to send worksheet email: " . $e->getMessage());
+            // Don't fail the request if email fails
+        }
+        
+        return [
+            'status' => 'success',
+            'token' => $tokenResult['token'],
+            'download_url' => $downloadUrl,
+            'message' => 'Download link created and sent to your email'
+        ];
+    }
+    
+    return $tokenResult;
 });
 
 // Preview worksheet content without saving (protected)
@@ -446,6 +535,127 @@ $router->addRoute('GET', '/debug/env', function($params, $data, $context) {
             'php_version' => PHP_VERSION
         ]
     ];
+});
+
+// ==================== DOWNLOAD TOKEN ROUTES ====================
+
+// Get download token info (unprotected - public access via token)
+$router->addRoute('GET', '/download-tokens/{token}', function($params, $data, $context) use ($downloadTokenAPI) {
+    return $downloadTokenAPI->getDownloadTokenInfo($params['token']);
+});
+
+// Get previous worksheet for feedback (unprotected - public access via token)
+$router->addRoute('GET', '/download-tokens/{token}/previous-worksheet', function($params, $data, $context) use ($downloadTokenAPI) {
+    // First validate the token
+    $tokenResult = $downloadTokenAPI->getDownloadTokenInfo($params['token']);
+    if ($tokenResult['status'] !== 'success') {
+        return $tokenResult;
+    }
+    
+    $tokenData = $tokenResult['token_data'];
+    return $downloadTokenAPI->getPreviousWorksheetForFeedback($tokenData['child_id'], $tokenData['date']);
+});
+
+// Generate worksheet from download token (unprotected - public access via token)
+$router->addRoute('POST', '/download-tokens/{token}/generate', function($params, $data, $context) use ($downloadTokenAPI, $worksheetGeneratorAPI) {
+    // First validate the token
+    $tokenResult = $downloadTokenAPI->getDownloadTokenInfo($params['token']);
+    if ($tokenResult['status'] !== 'success') {
+        return $tokenResult;
+    }
+    
+    $tokenData = $tokenResult['token_data'];
+    
+    // Generate the worksheet
+    $worksheetResult = $worksheetGeneratorAPI->generateWorksheet(
+        $tokenData['user_id'], 
+        $tokenData['child_id'], 
+        $tokenData['date']
+    );
+    
+    if ($worksheetResult['status'] === 'success') {
+        // Mark token as used
+        $downloadTokenAPI->markTokenAsUsed($params['token']);
+        
+        return [
+            'status' => 'success',
+            'worksheet_id' => $worksheetResult['worksheet_id'],
+            'download_url' => $worksheetResult['download_url'] ?? null,
+            'message' => 'Worksheet generated successfully'
+        ];
+    }
+    
+    return $worksheetResult;
+});
+
+// ==================== FEEDBACK ROUTES ====================
+
+// Submit worksheet feedback (unprotected - can be accessed via email links)
+$router->addRoute('POST', '/feedback', function($params, $data, $context) use ($feedbackAPI) {
+    return $feedbackAPI->submitFeedback($data);
+});
+
+// Get feedback for a worksheet (protected)
+$router->addRoute('GET', '/feedback/{worksheet_id}', function($params, $data, $context) use ($feedbackAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    return $feedbackAPI->getFeedback($params['worksheet_id']);
+});
+
+// Get child feedback summary (protected)
+$router->addRoute('GET', '/children/{child_id}/feedback-summary', function($params, $data, $context) use ($feedbackAPI, $userAuthAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    // Verify child belongs to user
+    $childrenResult = $userAuthAPI->getChildren($context['userData']['id']);
+    if ($childrenResult['status'] !== 'success') {
+        return $childrenResult;
+    }
+    
+    $childExists = false;
+    foreach ($childrenResult['children'] as $child) {
+        if ($child['id'] === $params['child_id']) {
+            $childExists = true;
+            break;
+        }
+    }
+    
+    if (!$childExists) {
+        return ['status' => 'error', 'message' => 'Child not found or unauthorized'];
+    }
+    
+    return $feedbackAPI->getChildFeedbackSummary($params['child_id']);
+});
+
+// Get completion streak for child (protected)
+$router->addRoute('GET', '/children/{child_id}/completion-streak', function($params, $data, $context) use ($feedbackAPI, $userAuthAPI) {
+    if (!isset($context['userData'])) {
+        return ['status' => 'error', 'message' => 'Authentication required'];
+    }
+    
+    // Verify child belongs to user
+    $childrenResult = $userAuthAPI->getChildren($context['userData']['id']);
+    if ($childrenResult['status'] !== 'success') {
+        return $childrenResult;
+    }
+    
+    $childExists = false;
+    foreach ($childrenResult['children'] as $child) {
+        if ($child['id'] === $params['child_id']) {
+            $childExists = true;
+            break;
+        }
+    }
+    
+    if (!$childExists) {
+        return ['status' => 'error', 'message' => 'Child not found or unauthorized'];
+    }
+    
+    return $feedbackAPI->getCompletionStreak($params['child_id']);
 });
 
 // Handle the request
