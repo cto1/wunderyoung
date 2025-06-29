@@ -89,7 +89,20 @@ document.getElementById('login-form').addEventListener('submit', async function(
             })
         });
         
-        const result = await response.json();
+        // Debug: Log the raw response
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+        console.log('Response status:', response.status);
+        
+        // Try to parse JSON
+        let result;
+        try {
+            result = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('JSON parse error:', parseError);
+            console.error('Response was:', responseText);
+            throw new Error('Invalid JSON response from server');
+        }
         
         if (result.status === 'success') {
             showSuccess('Check your email! A login link has been sent to ' + email);
