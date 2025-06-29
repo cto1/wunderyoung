@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // --- Detect Environment and Set Base URL ---
 $host = $_SERVER['HTTP_HOST'] ?? '';
-if (strpos($host, 'demo.exactsum.com') !== false) {
+if (strpos($host, 'demo.yeshomework.com') !== false) {
     $base_url = "https://demo.yeshomework.com/api";
 } else {
     $base_url = "https://yeshomework.com/api";
@@ -61,7 +61,7 @@ $apiEndpoints = [
     
    
     
-    // ----- [Yes Homework - Authentication] -----
+    // ----- [Yes Homework - Authentication Routes] -----
     "auth_signup" => "/api/auth/signup",
     "auth_login" => "/api/auth/login", 
     "auth_verify" => "/api/auth/verify?email={email}&token={token}",
@@ -69,7 +69,11 @@ $apiEndpoints = [
     "auth_password_login" => "/api/auth/password-login",
     "auth_refresh_token" => "/api/auth/refresh-token",
     
-    // ----- [Yes Homework - Child Management] -----
+    // ----- [Yes Homework - User Profile Routes] -----
+    "get_user_profile" => "/api/users/profile",
+    "update_user_profile" => "/api/users/profile",
+    
+    // ----- [Yes Homework - Children Routes] -----
     "get_children" => "/api/children",
     "add_child" => "/api/children", 
     "update_child" => "/api/children/{child_id}",
@@ -77,16 +81,33 @@ $apiEndpoints = [
     "get_child_worksheets" => "/api/children/{child_id}/worksheets",
     "get_child_feedback_summary" => "/api/children/{child_id}/feedback-summary",
     "get_child_completion_streak" => "/api/children/{child_id}/completion-streak",
+    "preview_child_worksheet" => "/api/children/{child_id}/preview-worksheet",
     
-    // ----- [Yes Homework - Worksheet Management] -----
+    // ----- [Yes Homework - Worksheet Routes] -----
     "get_user_worksheets" => "/api/worksheets",
     "create_worksheet" => "/api/worksheets",
     "get_worksheet" => "/api/worksheets/{worksheet_id}",
     "update_worksheet" => "/api/worksheets/{worksheet_id}",
     "delete_worksheet" => "/api/worksheets/{worksheet_id}",
+    "download_worksheet" => "/api/worksheets/{worksheet_id}/download",
     "get_worksheet_stats" => "/api/worksheets/stats",
     "generate_child_worksheet" => "/api/children/{child_id}/generate-worksheet",
+    "generate_worksheets_bulk" => "/api/generate-worksheets-bulk",
     "send_welcome_email" => "/api/send-welcome-email",
+    
+    // ----- [Yes Homework - Download Token Routes] -----
+    "get_download_token" => "/api/download-tokens/{token}",
+    "get_token_previous_worksheet" => "/api/download-tokens/{token}/previous-worksheet",
+    "generate_from_token" => "/api/download-tokens/{token}/generate",
+    
+    // ----- [Yes Homework - Feedback Routes] -----
+    "submit_feedback_v2" => "/api/feedback",
+    "get_feedback" => "/api/feedback/{worksheet_id}",
+    
+    // ----- [Yes Homework - Testing/Debug Routes] -----
+    "test_openai" => "/api/test-openai",
+    "debug_env" => "/api/debug/env",
+    "health_check" => "/api/health",
     
     // ----- [Yes Homework - Download System] -----
     "get_token_info" => "/api/DownloadTokenAPI.php?action=get_info&token={token}",
@@ -188,18 +209,72 @@ if (!empty($otherParams)) {
 }
 
 // --- Handle Yes Homework Local API Calls ---
-$yesHomeworkApis = [
+$yesHomeworkMainApis = [
+    // Authentication
     'auth_signup', 'auth_login', 'auth_verify', 'auth_token', 'auth_password_login', 'auth_refresh_token',
-    'get_children', 'add_child', 'update_child', 'delete_child', 'get_child_worksheets', 'get_child_feedback_summary', 'get_child_completion_streak',
-    'get_user_worksheets', 'create_worksheet', 'get_worksheet', 'update_worksheet', 'delete_worksheet', 'get_worksheet_stats', 'generate_child_worksheet', 'send_welcome_email',
-    'get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf'
+    // User Profile
+    'get_user_profile', 'update_user_profile',
+    // Children Management
+    'get_children', 'add_child', 'update_child', 'delete_child', 'get_child_worksheets', 'get_child_feedback_summary', 'get_child_completion_streak', 'preview_child_worksheet',
+    // Worksheet Management
+    'get_user_worksheets', 'create_worksheet', 'get_worksheet', 'update_worksheet', 'delete_worksheet', 'download_worksheet', 'get_worksheet_stats', 'generate_child_worksheet', 'generate_worksheets_bulk', 'send_welcome_email',
+    // Download Tokens
+    'get_download_token', 'get_token_previous_worksheet', 'generate_from_token',
+    // Feedback
+    'submit_feedback_v2', 'get_feedback',
+    // Testing/Debug
+    'test_openai', 'debug_env', 'health_check'
 ];
-if (in_array($apiKey, $yesHomeworkApis)) {
-    // For local APIs, prepend the document root
+$yesHomeworkDirectApis = ['get_token_info', 'create_download_token', 'submit_feedback', 'download_pdf'];
+
+if (in_array($apiKey, $yesHomeworkMainApis)) {
+    // Handle routes that go through /api/index.php with proper routing
+    $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+    $localApiPath = $documentRoot . '/api/index.php';
+    
+    if (file_exists($localApiPath)) {
+        // Use the constructed API URL from the route mapping
+        $routePath = $apiUrl; // This already has the full route like "/api/auth/login"
+        
+        // Set up environment for the API router
+        $_SERVER['REQUEST_URI'] = $routePath;
+        $_SERVER['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
+        
+        // For GET requests with special parameters (like auth_verify)
+        if ($apiKey === 'auth_verify' && $email && $token) {
+            $_GET['email'] = $email;
+            $_GET['token'] = $token;
+        }
+        
+        // Temporarily change working directory and include the API
+        $oldCwd = getcwd();
+        chdir(dirname($localApiPath));
+        
+        // Capture output
+        ob_start();
+        include $localApiPath;
+        $response = ob_get_contents();
+        ob_end_clean();
+        
+        // Restore working directory
+        chdir($oldCwd);
+        
+        // Output the response
+        header("Content-Type: application/json");
+        echo $response;
+        exit();
+    } else {
+        http_response_code(404);
+        echo json_encode(["status" => "error", "message" => "API index file not found: $localApiPath"]);
+        exit();
+    }
+}
+
+// Handle direct API files (DownloadAPI, etc.)
+else if (in_array($apiKey, $yesHomeworkDirectApis)) {
     $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
     $localApiPath = $documentRoot . $apiUrl;
     
-    // Include and execute the local API
     if (file_exists($localApiPath)) {
         // Temporarily change working directory and include the API
         $oldCwd = getcwd();
