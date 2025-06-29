@@ -375,17 +375,26 @@ The HTML should be ready for PDF conversion.";
     
     // Stream PDF directly from content (without storing)
     public function streamPDFToBrowserFromContent($htmlContent, $childName, $date) {
+        error_log("PDF Generation: Adding answer spacing to content");
+        
         // Add answer spacing to the content
         $pdfContent = $this->addAnswerSpacing($htmlContent);
         
+        error_log("PDF Generation: Checking for PDF libraries");
+        
         // Try TCPDF first, fallback to DOMPDF
         if (class_exists('TCPDF')) {
+            error_log("PDF Generation: Using TCPDF library");
             $this->streamPDFWithTCPDF($pdfContent, $childName, $date);
         } elseif (class_exists('Dompdf\Dompdf')) {
+            error_log("PDF Generation: Using DOMPDF library");
             $this->streamPDFWithDOMPDF($pdfContent, $childName, $date);
         } else {
+            error_log("PDF Generation: No PDF library available");
             throw new Exception('No PDF library available');
         }
+        
+        error_log("PDF Generation: PDF streaming completed");
     }
 
     // Preview worksheet content without saving
