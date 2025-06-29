@@ -35,3 +35,4 @@ public_html/api/database/database.sqlite
 public_html/api/.env
 inspiration/*
 .DS_Store
+*.pdf

@@ -4,11 +4,11 @@
     "type": "project",
     "require": {
         "php": ">=8.0",
+        "dompdf/dompdf": "^2.0",
         "mailgun/mailgun-php": "^4.0",
-        "symfony/http-client": "^6.0|^7.0",
+        "mpdf/mpdf": "^8.2",
         "nyholm/psr7": "^1.0",
-        "tecnickcom/tcpdf": "^6.7",
-        "dompdf/dompdf": "^2.0"
+        "symfony/http-client": "^6.0|^7.0"
     },
     "autoload": {
         "psr-4": {
@@ -21,4 +21,4 @@
         "sort-packages": true
     },
     "minimum-stability": "stable"
-} 
+}

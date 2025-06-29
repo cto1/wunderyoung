@@ -1,0 +1,12 @@
+# Deny direct access to PDF files
+<Files "*.pdf">
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Allow access only through the API
+<Files "*.pdf">
+    Order Allow,Deny
+    Allow from 127.0.0.1
+    Allow from ::1
+</Files> 
