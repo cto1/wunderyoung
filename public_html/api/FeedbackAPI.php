@@ -51,7 +51,7 @@ class FeedbackAPI {
                 $completed,
                 $feedbackData['math_difficulty'],
                 $feedbackData['other_difficulty'], // Use as english_difficulty
-                '', // science_difficulty (not collected separately)
+                $feedbackData['other_difficulty'], // Use same value for science_difficulty
                 $feedbackData['other_difficulty'],
                 $feedbackData['comments'] ?? ''
             ]);
