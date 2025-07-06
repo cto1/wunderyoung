@@ -29,18 +29,14 @@ try {
     
     $routeResult = $router->route($method, $path);
     
-    // Debug: Show route result
     if (isset($routeResult['error'])) {
         http_response_code($routeResult['code']);
-        echo json_encode(['error' => $routeResult['error'], 'debug_method' => $method, 'debug_path' => $path]);
+        echo json_encode(['error' => $routeResult['error']]);
         exit;
     }
     
     $handler = $routeResult['handler'];
     $input = json_decode(file_get_contents('php://input'), true) ?? [];
-    
-    // Debug: Log the handler and method
-    error_log("Handler: " . $handler . " Method: " . $method . " Path: " . $path);
     
     switch ($handler) {
         case 'health':
