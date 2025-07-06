@@ -63,7 +63,7 @@ class Router {
             $api = new $className();
             
             if (method_exists($api, $methodName)) {
-                $api->$methodName();
+                $this->callApiMethod($api, $methodName, $path);
             } else {
                 $this->sendError(500, 'Method not found');
             }
