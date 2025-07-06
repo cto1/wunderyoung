@@ -31,7 +31,7 @@ try {
     
     if (isset($routeResult['error'])) {
         http_response_code($routeResult['code']);
-        echo json_encode(['error' => $routeResult['error']]);
+        echo json_encode(['error' => $routeResult['error'], 'debug_method' => $method, 'debug_path' => $path]);
         exit;
     }
     
