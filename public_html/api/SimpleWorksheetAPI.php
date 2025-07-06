@@ -312,55 +312,69 @@ class SimpleWorksheetAPI {
         $mpdf->SetAuthor('Yes Homework');
         $mpdf->SetCreator('Yes Homework');
         
-        // Add CSS styling
+        // Add CSS styling for 2-page layout
         $css = '
             body { 
                 font-family: Arial, sans-serif; 
-                font-size: 12px; 
-                line-height: 1.6; 
+                font-size: 13px; 
+                line-height: 1.8; 
                 margin: 0; 
-                padding: 20px; 
+                padding: 25px; 
                 color: #333;
             }
-            h1 { 
+            .page-header { 
                 color: #2563eb; 
                 text-align: center; 
-                font-size: 20px; 
-                margin-bottom: 10px;
-                border-bottom: 2px solid #2563eb;
-                padding-bottom: 10px;
+                font-size: 22px; 
+                margin-bottom: 15px;
+                border-bottom: 3px solid #2563eb;
+                padding-bottom: 15px;
             }
-            h2 { 
+            .page-subtitle { 
                 color: #64748b; 
                 text-align: center; 
-                font-size: 14px; 
-                margin-bottom: 30px;
+                font-size: 16px; 
+                margin-bottom: 40px;
                 font-weight: normal;
             }
-            h3 { 
+            .section-title { 
                 color: #1e40af; 
-                font-size: 16px; 
-                margin-top: 30px; 
-                margin-bottom: 15px;
-                border-left: 4px solid #3b82f6;
-                padding-left: 15px;
+                font-size: 20px; 
+                margin-bottom: 30px;
+                border-left: 5px solid #3b82f6;
+                padding-left: 20px;
                 font-weight: bold;
+                text-align: center;
+                background-color: #f8fafc;
+                padding: 15px;
+                border-radius: 5px;
             }
-            p { 
-                margin-bottom: 15px; 
-                text-align: justify;
+            .question-item { 
+                margin-bottom: 45px;
+                padding: 15px;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                background-color: #fafbfc;
             }
-            ol, ul { 
-                margin: 15px 0; 
-                padding-left: 25px;
+            .question-text {
+                font-weight: 600;
+                color: #1e293b;
+                margin-bottom: 20px;
+                font-size: 14px;
             }
-            li { 
-                margin-bottom: 8px; 
-                line-height: 1.5;
+            .answer-space {
+                border-bottom: 2px dotted #94a3b8;
+                height: 40px;
+                margin-bottom: 10px;
             }
-            .section { 
-                margin-bottom: 25px; 
-                page-break-inside: avoid;
+            .page-break {
+                page-break-before: always;
+            }
+            .page-1 {
+                min-height: 700px;
+            }
+            .page-2 {
+                min-height: 700px;
             }
         ';
         
@@ -375,10 +389,11 @@ class SimpleWorksheetAPI {
         // Debug: Log the cleaned content
         error_log("Cleaned content: " . $cleanContent);
         
-        // Build full HTML content
-        $fullHtml = '<h1>' . htmlspecialchars($childName) . "'s Worksheet</h1>";
-        $fullHtml .= '<h2>' . date('F j, Y', strtotime($date)) . '</h2>';
-        $fullHtml .= $cleanContent;
+        // Parse content into sections
+        $sections = $this->parseWorksheetSections($cleanContent);
+        
+        // Build full HTML content with page breaks
+        $fullHtml = $this->buildTwoPageWorksheet($childName, $date, $sections);
         
         // Write content and save to file
         $mpdf->WriteHTML($fullHtml, \Mpdf\HTMLParserMode::HTML_BODY);
@@ -419,6 +434,62 @@ class SimpleWorksheetAPI {
         $content = trim($content);
         
         return $content;
+    }
+    
+    private function parseWorksheetSections($content) {
+        $sections = ['math' => [], 'english' => []];
+        
+        // Extract math questions
+        if (preg_match('/<h3[^>]*>Math Problems<\/h3>\s*<ol>(.*?)<\/ol>/is', $content, $matches)) {
+            preg_match_all('/<li[^>]*>(.*?)<\/li>/is', $matches[1], $mathMatches);
+            $sections['math'] = $mathMatches[1];
+        }
+        
+        // Extract English questions
+        if (preg_match('/<h3[^>]*>English Questions<\/h3>\s*<ol>(.*?)<\/ol>/is', $content, $matches)) {
+            preg_match_all('/<li[^>]*>(.*?)<\/li>/is', $matches[1], $englishMatches);
+            $sections['english'] = $englishMatches[1];
+        }
+        
+        return $sections;
+    }
+    
+    private function buildTwoPageWorksheet($childName, $date, $sections) {
+        $html = '';
+        
+        // PAGE 1 - Math Questions
+        $html .= '<div class="page-1">';
+        $html .= '<div class="page-header">' . htmlspecialchars($childName) . '\'s Math Worksheet</div>';
+        $html .= '<div class="page-subtitle">' . date('F j, Y', strtotime($date)) . '</div>';
+        $html .= '<div class="section-title">Math Problems</div>';
+        
+        foreach ($sections['math'] as $index => $question) {
+            $questionNum = $index + 1;
+            $html .= '<div class="question-item">';
+            $html .= '<div class="question-text">' . $questionNum . '. ' . strip_tags($question) . '</div>';
+            $html .= '<div class="answer-space"></div>';
+            $html .= '<div class="answer-space"></div>';
+            $html .= '</div>';
+        }
+        $html .= '</div>';
+        
+        // PAGE 2 - English Questions
+        $html .= '<div class="page-break page-2">';
+        $html .= '<div class="page-header">' . htmlspecialchars($childName) . '\'s English Worksheet</div>';
+        $html .= '<div class="page-subtitle">' . date('F j, Y', strtotime($date)) . '</div>';
+        $html .= '<div class="section-title">English Questions</div>';
+        
+        foreach ($sections['english'] as $index => $question) {
+            $questionNum = $index + 1;
+            $html .= '<div class="question-item">';
+            $html .= '<div class="question-text">' . $questionNum . '. ' . strip_tags($question) . '</div>';
+            $html .= '<div class="answer-space"></div>';
+            $html .= '<div class="answer-space"></div>';
+            $html .= '</div>';
+        }
+        $html .= '</div>';
+        
+        return $html;
     }
 }
 
