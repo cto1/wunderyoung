@@ -274,7 +274,7 @@ class SimpleWorksheetAPI {
         - EXACTLY 10 math questions, EXACTLY 10 English questions
         - Some questions should be equastions like 13+6= or 5*2=
         - Each question 1-2 lines maximum
-        - Use {$interestText} themes in 3-4 questions maximum
+        - Use {$interestText} themes in 3-4 questions maximum in Math and English
         - Age-appropriate for {$ageGroup} year olds";
     }
     
