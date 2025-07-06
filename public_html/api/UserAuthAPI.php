@@ -299,7 +299,7 @@ class UserAuthAPI {
         }
         
         $magicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') .
-                    '://' . $_SERVER['HTTP_HOST'] . '/auth/magic-login?token=' . $magicToken;
+                    '://' . $_SERVER['HTTP_HOST'] . '/auth/magic-login.php?token=' . $magicToken;
         
         $subject = 'Your Magic Login Link - Wunderyoung';
         $message = $this->buildMagicLinkEmail($name, $magicUrl);
