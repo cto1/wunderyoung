@@ -294,24 +294,96 @@ class SimpleWorksheetAPI {
         
         // Add CSS styling
         $css = '
-            body { font-family: Arial, sans-serif; font-size: 12px; line-height: 1.4; margin: 0; padding: 0; }
-            h1, h2 { color: #3b82f6; text-align: center; margin-bottom: 20px; }
-            h1 { font-size: 18px; }
-            h2 { font-size: 14px; }
-            h3 { color: #1e40af; font-size: 14px; margin-top: 20px; margin-bottom: 10px; }
-            p { margin-bottom: 10px; }
+            body { 
+                font-family: Arial, sans-serif; 
+                font-size: 12px; 
+                line-height: 1.6; 
+                margin: 0; 
+                padding: 20px; 
+                color: #333;
+            }
+            h1 { 
+                color: #2563eb; 
+                text-align: center; 
+                font-size: 20px; 
+                margin-bottom: 10px;
+                border-bottom: 2px solid #2563eb;
+                padding-bottom: 10px;
+            }
+            h2 { 
+                color: #64748b; 
+                text-align: center; 
+                font-size: 14px; 
+                margin-bottom: 30px;
+                font-weight: normal;
+            }
+            h3 { 
+                color: #1e40af; 
+                font-size: 16px; 
+                margin-top: 30px; 
+                margin-bottom: 15px;
+                border-left: 4px solid #3b82f6;
+                padding-left: 15px;
+                font-weight: bold;
+            }
+            p { 
+                margin-bottom: 15px; 
+                text-align: justify;
+            }
+            ol, ul { 
+                margin: 15px 0; 
+                padding-left: 25px;
+            }
+            li { 
+                margin-bottom: 8px; 
+                line-height: 1.5;
+            }
+            .section { 
+                margin-bottom: 25px; 
+                page-break-inside: avoid;
+            }
         ';
         
         $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
         
+        // Clean up the HTML content by removing inline CSS and fixing structure
+        $cleanContent = $this->cleanHtmlContent($htmlContent);
+        
         // Build full HTML content
         $fullHtml = '<h1>' . htmlspecialchars($childName) . "'s Worksheet</h1>";
         $fullHtml .= '<h2>' . date('F j, Y', strtotime($date)) . '</h2>';
-        $fullHtml .= $htmlContent;
+        $fullHtml .= $cleanContent;
         
         // Write content and save to file
         $mpdf->WriteHTML($fullHtml, \Mpdf\HTMLParserMode::HTML_BODY);
         $mpdf->Output($outputPath, 'F');
+    }
+    
+    private function cleanHtmlContent($htmlContent) {
+        // Remove inline CSS style blocks
+        $content = preg_replace('/<style[^>]*>.*?<\/style>/is', '', $htmlContent);
+        
+        // Remove any remaining inline styles
+        $content = preg_replace('/style\s*=\s*["\'][^"\']*["\']/i', '', $content);
+        
+        // Convert common text patterns to proper HTML structure
+        $content = preg_replace('/^([A-Z][^<\n]*)/m', '<h3>$1</h3>', $content);
+        
+        // Wrap numbered lists in proper list tags
+        $content = preg_replace('/(\d+\.\s+[^\n]+)/m', '<li>$1</li>', $content);
+        $content = preg_replace('/(<li>.*<\/li>)/s', '<ol>$1</ol>', $content);
+        
+        // Fix duplicate ol tags
+        $content = preg_replace('/<\/ol>\s*<ol>/s', '', $content);
+        
+        // Wrap paragraphs
+        $content = preg_replace('/([^>])\n([^<\n]+)/m', '$1<p>$2</p>', $content);
+        
+        // Clean up extra whitespace
+        $content = preg_replace('/\s+/', ' ', $content);
+        $content = preg_replace('/>\s+</', '><', $content);
+        
+        return $content;
     }
 }
 
