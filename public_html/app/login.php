@@ -59,6 +59,23 @@ include 'include/header.html';
 
             <div class="divider">OR</div>
 
+            <!-- Magic Link Login -->
+            <div class="space-y-4">
+                <button type="button" id="magic-link-btn" class="btn btn-outline btn-secondary w-full">
+                    <span id="magic-text">✨ Login with Magic Link</span>
+                    <span id="magic-spinner" class="loading loading-spinner loading-sm hidden"></span>
+                </button>
+                
+                <div id="magic-success" class="alert alert-info hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>📧 Magic link sent! Check your email and click the link to sign in.</span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
             <div class="text-center">
                 <p class="text-sm text-gray-600">Don't have an account?</p>
                 <a href="/app/signup.php" class="btn btn-outline btn-primary w-full mt-2">Create Account</a>
@@ -147,6 +164,54 @@ function setLoading(loading) {
         submitButton.disabled = false;
     }
 }
+
+// Magic Link Login
+document.getElementById('magic-link-btn').addEventListener('click', async function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    if (!email) {
+        showError('Please enter your email address first');
+        return;
+    }
+    
+    // Show loading state
+    const magicText = document.getElementById('magic-text');
+    const magicSpinner = document.getElementById('magic-spinner');
+    const magicBtn = document.getElementById('magic-link-btn');
+    
+    magicText.textContent = 'Sending magic link...';
+    magicSpinner.classList.remove('hidden');
+    magicBtn.disabled = true;
+    hideMessages();
+    
+    try {
+        const response = await fetch('/api/auth/magic-link', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            document.getElementById('magic-success').classList.remove('hidden');
+            document.getElementById('login-form').style.display = 'none';
+        } else {
+            showError(result.message || 'Failed to send magic link');
+        }
+    } catch (error) {
+        showError('Network error. Please try again.');
+    } finally {
+        magicText.textContent = '✨ Login with Magic Link';
+        magicSpinner.classList.add('hidden');
+        magicBtn.disabled = false;
+    }
+});
 
 // Pre-fill email if passed in URL
 const urlParams = new URLSearchParams(window.location.search);

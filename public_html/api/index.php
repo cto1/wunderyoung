@@ -97,6 +97,36 @@ try {
             echo json_encode($result ? ['status' => 'valid'] : ['status' => 'invalid']);
             break;
             
+        case 'auth_magic_link':
+            require_once __DIR__ . '/UserAuthAPI.php';
+            $api = new UserAuthAPI();
+            
+            $email = $input['email'] ?? null;
+            if (!$email) {
+                http_response_code(400);
+                echo json_encode(['error' => 'email is required']);
+                exit;
+            }
+            
+            $result = $api->requestMagicLink($email);
+            echo json_encode($result);
+            break;
+            
+        case 'auth_magic_login':
+            require_once __DIR__ . '/UserAuthAPI.php';
+            $api = new UserAuthAPI();
+            
+            $magicToken = $input['token'] ?? null;
+            if (!$magicToken) {
+                http_response_code(400);
+                echo json_encode(['error' => 'token is required']);
+                exit;
+            }
+            
+            $result = $api->magicLogin($magicToken);
+            echo json_encode($result);
+            break;
+            
         case 'children_get':
             require_once __DIR__ . '/ChildAPI.php';
             $api = new ChildAPI();

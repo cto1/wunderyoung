@@ -50,6 +50,19 @@ class Database {
         } catch (Exception $e) {
             // Column already exists, ignore
         }
+        
+        // Add magic link columns if they don't exist
+        try {
+            $this->pdo->exec("ALTER TABLE users ADD COLUMN magic_token TEXT");
+        } catch (Exception $e) {
+            // Column already exists, ignore
+        }
+        
+        try {
+            $this->pdo->exec("ALTER TABLE users ADD COLUMN magic_expires_at DATETIME");
+        } catch (Exception $e) {
+            // Column already exists, ignore
+        }
 
         // 👧 Children (siblings)
         $sql = "CREATE TABLE IF NOT EXISTS children (

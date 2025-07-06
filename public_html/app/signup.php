@@ -73,6 +73,37 @@ include 'include/header.html';
 
             <div class="divider">OR</div>
 
+            <!-- Passwordless Signup -->
+            <div class="space-y-4">
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold text-gray-700">✨ Passwordless Signup</h3>
+                    <p class="text-sm text-gray-500">Create account with just name and email</p>
+                </div>
+                
+                <form id="passwordless-form" class="space-y-4">
+                    <div class="form-control">
+                        <input type="text" id="passwordless-name" placeholder="Your full name" class="input input-bordered" required>
+                    </div>
+                    <div class="form-control">
+                        <input type="email" id="passwordless-email" placeholder="your@email.com" class="input input-bordered" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-secondary w-full">
+                        <span id="passwordless-text">🚀 Create Account & Send Magic Link</span>
+                        <span id="passwordless-spinner" class="loading loading-spinner loading-sm hidden"></span>
+                    </button>
+                </form>
+                
+                <div id="passwordless-success" class="alert alert-info hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>🎉 Account created! Check your email for a magic login link.</span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
             <div class="text-center">
                 <p class="text-sm text-gray-600">Already have an account?</p>
                 <a href="/app/login.php" class="btn btn-outline btn-primary w-full mt-2">Sign In</a>
@@ -178,11 +209,103 @@ function setLoading(loading) {
     }
 }
 
+// Passwordless Signup
+document.getElementById('passwordless-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('passwordless-name').value;
+    const email = document.getElementById('passwordless-email').value;
+    
+    // Show loading state
+    const passwordlessText = document.getElementById('passwordless-text');
+    const passwordlessSpinner = document.getElementById('passwordless-spinner');
+    const passwordlessBtn = document.querySelector('#passwordless-form button[type="submit"]');
+    
+    passwordlessText.textContent = 'Creating account...';
+    passwordlessSpinner.classList.remove('hidden');
+    passwordlessBtn.disabled = true;
+    hideMessages();
+    
+    try {
+        // Create account with temporary password
+        const tempPassword = Math.random().toString(36).substring(2, 15);
+        
+        const signupResponse = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: tempPassword
+            })
+        });
+        
+        const signupResult = await signupResponse.json();
+        
+        if (signupResult.status === 'success') {
+            // Now send magic link
+            const magicResponse = await fetch('/api/auth/magic-link', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email
+                })
+            });
+            
+            const magicResult = await magicResponse.json();
+            
+            if (magicResult.status === 'success') {
+                document.getElementById('passwordless-success').classList.remove('hidden');
+                document.getElementById('passwordless-form').style.display = 'none';
+                document.getElementById('signup-form').style.display = 'none';
+            } else {
+                showError('Account created but failed to send magic link. You can use the regular login.');
+            }
+        } else {
+            if (signupResult.message === 'User already exists') {
+                // User exists, just send magic link
+                const magicResponse = await fetch('/api/auth/magic-link', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email
+                    })
+                });
+                
+                const magicResult = await magicResponse.json();
+                
+                if (magicResult.status === 'success') {
+                    document.getElementById('passwordless-success').classList.remove('hidden');
+                    document.getElementById('passwordless-form').style.display = 'none';
+                    document.getElementById('signup-form').style.display = 'none';
+                } else {
+                    showError('Account exists. Please use the regular login.');
+                }
+            } else {
+                showError(signupResult.message || 'Failed to create account');
+            }
+        }
+    } catch (error) {
+        showError('Network error. Please try again.');
+    } finally {
+        passwordlessText.textContent = '🚀 Create Account & Send Magic Link';
+        passwordlessSpinner.classList.add('hidden');
+        passwordlessBtn.disabled = false;
+    }
+});
+
 // Pre-fill email if passed in URL
 const urlParams = new URLSearchParams(window.location.search);
 const emailParam = urlParams.get('email');
 if (emailParam) {
     document.getElementById('email').value = emailParam;
+    document.getElementById('passwordless-email').value = emailParam;
 }
 </script>
 
