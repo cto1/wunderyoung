@@ -462,8 +462,7 @@ class SimpleWorksheetAPI {
         // PAGE 1 - Math Questions
         $html .= '<div class="page-1">';
         $html .= '<div class="page-header">' . htmlspecialchars($childName) . '\'s Math Worksheet</div>';
-        $html .= '<div class="page-subtitle">' . date('F j, Y', strtotime($date)) . '</div>';
-        $html .= '<div class="section-title">Math Problems</div>';
+        $html .= '<div class="page-subtitle">' . date('d/m/Y', strtotime($date)) . '</div>';
         
         foreach ($sections['math'] as $index => $question) {
             $questionNum = $index + 1;
@@ -477,8 +476,7 @@ class SimpleWorksheetAPI {
         // PAGE 2 - English Questions
         $html .= '<div class="page-break page-2">';
         $html .= '<div class="page-header">' . htmlspecialchars($childName) . '\'s English Worksheet</div>';
-        $html .= '<div class="page-subtitle">' . date('F j, Y', strtotime($date)) . '</div>';
-        $html .= '<div class="section-title">English Questions</div>';
+        $html .= '<div class="page-subtitle">' . date('d/m/Y', strtotime($date)) . '</div>';
         
         foreach ($sections['english'] as $index => $question) {
             $questionNum = $index + 1;
