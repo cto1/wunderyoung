@@ -9,7 +9,7 @@ class OpenaiProvider implements AiProviderInterface {
     private $lastTokenUsage = ['input' => 0, 'output' => 0];
     private $lastLatency = 0;
     
-    public function __construct(string $apiKey, string $model = 'gpt-4') {
+    public function __construct(string $apiKey, string $model = 'gpt-4.1-nano') {
         $this->apiKey = $apiKey;
         $this->model = $model;
     }
