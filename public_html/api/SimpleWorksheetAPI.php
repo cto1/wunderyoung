@@ -265,13 +265,13 @@ class SimpleWorksheetAPI {
     private function generatePDFFile($htmlContent, $childName, $date, $outputPath) {
         require_once __DIR__ . '/../../vendor/autoload.php';
         
-        // Create temp directory for MPDF
-        $tempDir = __DIR__ . '/../temp/mpdf';
+        // Create temp directory for MPDF with full permissions
+        $tempDir = sys_get_temp_dir() . '/mpdf_worksheets';
         if (!file_exists($tempDir)) {
-            mkdir($tempDir, 0755, true);
+            mkdir($tempDir, 0777, true);
         }
         
-        // Create MPDF instance with custom temp directory
+        // Create MPDF instance with system temp directory
         $mpdf = new \Mpdf\Mpdf([
             'format' => 'A4',
             'orientation' => 'P',
