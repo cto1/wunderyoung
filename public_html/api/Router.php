@@ -2,7 +2,7 @@
 
 class Router {
     private $routes = [];
-    private $publicRoutes = ['/health', '/auth/signup', '/auth/login', '/auth/magic-link', '/auth/magic-login', '/worksheets/pdf'];
+    private $publicRoutes = ['/health', '/auth/signup', '/auth/login', '/auth/magic-link', '/auth/magic-login', '/auth/passwordless-signup', '/worksheets/pdf'];
     
     public function __construct() {
         $this->setupRoutes();
@@ -18,6 +18,7 @@ class Router {
         $this->routes['POST']['/auth/verify'] = 'auth_verify';
         $this->routes['POST']['/auth/magic-link'] = 'auth_magic_link';
         $this->routes['POST']['/auth/magic-login'] = 'auth_magic_login';
+        $this->routes['POST']['/auth/passwordless-signup'] = 'auth_passwordless_signup';
         
         // Children routes
         $this->routes['GET']['/children'] = 'children_get';

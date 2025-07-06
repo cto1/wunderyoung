@@ -127,6 +127,22 @@ try {
             echo json_encode($result);
             break;
             
+        case 'auth_passwordless_signup':
+            require_once __DIR__ . '/UserAuthAPI.php';
+            $api = new UserAuthAPI();
+            
+            $email = $input['email'] ?? null;
+            
+            if (!$email) {
+                http_response_code(400);
+                echo json_encode(['error' => 'email is required']);
+                exit;
+            }
+            
+            $result = $api->passwordlessSignup($email);
+            echo json_encode($result);
+            break;
+            
         case 'children_get':
             require_once __DIR__ . '/ChildAPI.php';
             $api = new ChildAPI();

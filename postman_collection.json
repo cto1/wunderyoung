@@ -92,6 +92,88 @@
             }
           ],
           "response": []
+        },
+        {
+          "name": "Request Magic Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/magic-link",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "magic-link"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Magic Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"magic_token_from_email\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/magic-login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "magic-login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.collectionVariables.set('auth_token', response.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Passwordless Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/passwordless-signup",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "passwordless-signup"]
+            }
+          },
+          "response": []
         }
       ]
     },

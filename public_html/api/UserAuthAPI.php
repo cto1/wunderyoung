@@ -144,13 +144,66 @@ class UserAuthAPI {
     }
     
     /**
+     * Passwordless signup - create account with just email, send magic link
+     * POST /api/UserAuthAPI.php?action=passwordless-signup
+     */
+    public function passwordlessSignup($email) {
+        try {
+            // Validate input
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                throw new Exception('Invalid email format');
+            }
+            
+            // Check if user already exists
+            $stmt = $this->pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            if ($stmt->fetch()) {
+                // User exists, just send magic link
+                return $this->requestMagicLink($email);
+            }
+            
+            // Create user without password or name
+            $userId = Database::generateUserId();
+            $stmt = $this->pdo->prepare("
+                INSERT INTO users (id, email, password_hash, plan, created_at) 
+                VALUES (?, ?, NULL, 'free', CURRENT_TIMESTAMP)
+            ");
+            $stmt->execute([$userId, $email]);
+            
+            // Generate and send magic link
+            $magicToken = bin2hex(random_bytes(32));
+            $expiresAt = date('Y-m-d H:i:s', time() + (15 * 60)); // 15 minutes
+            
+            // Store magic token
+            $stmt = $this->pdo->prepare("
+                UPDATE users 
+                SET magic_token = ?, magic_expires_at = ? 
+                WHERE id = ?
+            ");
+            $stmt->execute([$magicToken, $expiresAt, $userId]);
+            
+            // Send magic link email
+            $this->sendMagicLinkEmail($email, $email, $magicToken);
+            
+            return [
+                'status' => 'success',
+                'user_id' => $userId,
+                'message' => 'Account created! Magic link sent to your email address'
+            ];
+            
+        } catch (Exception $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+    
+    /**
      * Send magic login link via email
      * POST /api/UserAuthAPI.php?action=request-magic-link
      */
     public function requestMagicLink($email) {
         try {
             // Check if user exists
-            $stmt = $this->pdo->prepare("SELECT id, email, name FROM users WHERE email = ?");
+            $stmt = $this->pdo->prepare("SELECT id, email FROM users WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -171,7 +224,7 @@ class UserAuthAPI {
             $stmt->execute([$magicToken, $expiresAt, $user['id']]);
             
             // Send magic link email
-            $this->sendMagicLinkEmail($user['email'], $user['name'], $magicToken);
+            $this->sendMagicLinkEmail($user['email'], $user['email'], $magicToken);
             
             return [
                 'status' => 'success',
@@ -191,7 +244,7 @@ class UserAuthAPI {
         try {
             // Find valid magic link
             $stmt = $this->pdo->prepare("
-                SELECT id, email, name 
+                SELECT id, email 
                 FROM users 
                 WHERE magic_token = ? AND magic_expires_at > datetime('now')
             ");
@@ -213,7 +266,6 @@ class UserAuthAPI {
                 'status' => 'success',
                 'user_id' => $data['id'],
                 'token' => $token,
-                'name' => $data['name'],
                 'message' => 'Login successful'
             ];
             
@@ -395,6 +447,20 @@ if (basename($_SERVER['SCRIPT_NAME']) === 'UserAuthAPI.php') {
                     }
                     
                     $result = $api->magicLogin($magicToken);
+                    header('Content-Type: application/json');
+                    echo json_encode($result);
+                    break;
+                    
+                case 'passwordless-signup':
+                    $email = $input['email'] ?? null;
+                    
+                    if (!$email) {
+                        http_response_code(400);
+                        echo json_encode(['status' => 'error', 'message' => 'email is required']);
+                        exit;
+                    }
+                    
+                    $result = $api->passwordlessSignup($email);
                     header('Content-Type: application/json');
                     echo json_encode($result);
                     break;

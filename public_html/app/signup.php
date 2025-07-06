@@ -77,13 +77,10 @@ include 'include/header.html';
             <div class="space-y-4">
                 <div class="text-center">
                     <h3 class="text-lg font-semibold text-gray-700">✨ Passwordless Signup</h3>
-                    <p class="text-sm text-gray-500">Create account with just name and email</p>
+                    <p class="text-sm text-gray-500">Create account with just your email</p>
                 </div>
                 
                 <form id="passwordless-form" class="space-y-4">
-                    <div class="form-control">
-                        <input type="text" id="passwordless-name" placeholder="Your full name" class="input input-bordered" required>
-                    </div>
                     <div class="form-control">
                         <input type="email" id="passwordless-email" placeholder="your@email.com" class="input input-bordered" required>
                     </div>
@@ -213,7 +210,6 @@ function setLoading(loading) {
 document.getElementById('passwordless-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
-    const name = document.getElementById('passwordless-name').value;
     const email = document.getElementById('passwordless-email').value;
     
     // Show loading state
@@ -227,69 +223,25 @@ document.getElementById('passwordless-form').addEventListener('submit', async fu
     hideMessages();
     
     try {
-        // Create account with temporary password
-        const tempPassword = Math.random().toString(36).substring(2, 15);
-        
-        const signupResponse = await fetch('/api/auth/signup', {
+        // Use dedicated passwordless signup endpoint
+        const signupResponse = await fetch('/api/auth/passwordless-signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                name: name,
-                email: email,
-                password: tempPassword
+                email: email
             })
         });
         
         const signupResult = await signupResponse.json();
         
         if (signupResult.status === 'success') {
-            // Now send magic link
-            const magicResponse = await fetch('/api/auth/magic-link', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email
-                })
-            });
-            
-            const magicResult = await magicResponse.json();
-            
-            if (magicResult.status === 'success') {
-                document.getElementById('passwordless-success').classList.remove('hidden');
-                document.getElementById('passwordless-form').style.display = 'none';
-                document.getElementById('signup-form').style.display = 'none';
-            } else {
-                showError('Account created but failed to send magic link. You can use the regular login.');
-            }
+            document.getElementById('passwordless-success').classList.remove('hidden');
+            document.getElementById('passwordless-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'none';
         } else {
-            if (signupResult.message === 'User already exists') {
-                // User exists, just send magic link
-                const magicResponse = await fetch('/api/auth/magic-link', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email
-                    })
-                });
-                
-                const magicResult = await magicResponse.json();
-                
-                if (magicResult.status === 'success') {
-                    document.getElementById('passwordless-success').classList.remove('hidden');
-                    document.getElementById('passwordless-form').style.display = 'none';
-                    document.getElementById('signup-form').style.display = 'none';
-                } else {
-                    showError('Account exists. Please use the regular login.');
-                }
-            } else {
-                showError(signupResult.message || 'Failed to create account');
-            }
+            showError(signupResult.message || 'Failed to create account');
         }
     } catch (error) {
         showError('Network error. Please try again.');
