@@ -325,47 +325,49 @@ class SimpleWorksheetAPI {
             .page-header { 
                 color: #2563eb; 
                 text-align: center; 
-                font-size: 22px; 
-                margin-bottom: 15px;
-                border-bottom: 3px solid #2563eb;
-                padding-bottom: 15px;
+                font-size: 18px; 
+                margin-bottom: 8px;
+                border-bottom: 2px solid #2563eb;
+                padding-bottom: 8px;
             }
             .page-subtitle { 
                 color: #64748b; 
                 text-align: center; 
-                font-size: 16px; 
-                margin-bottom: 40px;
+                font-size: 14px; 
+                margin-bottom: 20px;
                 font-weight: normal;
             }
             .section-title { 
                 color: #1e40af; 
-                font-size: 20px; 
-                margin-bottom: 30px;
-                border-left: 5px solid #3b82f6;
-                padding-left: 20px;
+                font-size: 16px; 
+                margin-bottom: 20px;
+                border-left: 4px solid #3b82f6;
+                padding-left: 15px;
                 font-weight: bold;
                 text-align: center;
                 background-color: #f8fafc;
-                padding: 15px;
-                border-radius: 5px;
+                padding: 10px;
+                border-radius: 4px;
             }
             .question-item { 
-                margin-bottom: 45px;
-                padding: 15px;
+                margin-bottom: 15px;
+                padding: 8px;
                 border: 1px solid #e2e8f0;
-                border-radius: 8px;
+                border-radius: 4px;
                 background-color: #fafbfc;
+                height: 50px;
             }
             .question-text {
                 font-weight: 600;
                 color: #1e293b;
-                margin-bottom: 20px;
-                font-size: 14px;
+                margin-bottom: 8px;
+                font-size: 12px;
+                line-height: 1.3;
             }
             .answer-space {
-                border-bottom: 2px dotted #94a3b8;
-                height: 40px;
-                margin-bottom: 10px;
+                border-bottom: 1px dotted #94a3b8;
+                height: 25px;
+                margin-bottom: 3px;
             }
             .page-break {
                 page-break-before: always;
@@ -468,7 +470,6 @@ class SimpleWorksheetAPI {
             $html .= '<div class="question-item">';
             $html .= '<div class="question-text">' . $questionNum . '. ' . strip_tags($question) . '</div>';
             $html .= '<div class="answer-space"></div>';
-            $html .= '<div class="answer-space"></div>';
             $html .= '</div>';
         }
         $html .= '</div>';
@@ -483,7 +484,6 @@ class SimpleWorksheetAPI {
             $questionNum = $index + 1;
             $html .= '<div class="question-item">';
             $html .= '<div class="question-text">' . $questionNum . '. ' . strip_tags($question) . '</div>';
-            $html .= '<div class="answer-space"></div>';
             $html .= '<div class="answer-space"></div>';
             $html .= '</div>';
         }
