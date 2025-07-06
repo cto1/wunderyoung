@@ -236,7 +236,10 @@ class SimpleWorksheetAPI {
     
     // Private helper methods
     private function generateWorksheetContent($child, $date) {
-        $prompt = $this->buildWorksheetPrompt($child['name'], $child['age_group'], [$child['interest1'], $child['interest2']], $date);
+        // Get past 5 worksheets to avoid repeating questions
+        $pastWorksheets = $this->getPastWorksheets($child['id'], 5);
+        
+        $prompt = $this->buildWorksheetPrompt($child['name'], $child['age_group'], [$child['interest1'], $child['interest2']], $date, $pastWorksheets);
         $systemPrompt = $this->getSystemPrompt();
         
         $result = $this->openai->callApiWithoutEcho($prompt, $systemPrompt);
@@ -248,10 +251,40 @@ class SimpleWorksheetAPI {
         return $result['content'];
     }
     
-    private function buildWorksheetPrompt($childName, $ageGroup, $interests, $date) {
+    private function getPastWorksheets($childId, $limit = 5) {
+        $stmt = $this->pdo->prepare("
+            SELECT content, date 
+            FROM worksheets 
+            WHERE child_id = ? 
+            ORDER BY date DESC 
+            LIMIT ?
+        ");
+        $stmt->execute([$childId, $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    private function buildWorksheetPrompt($childName, $ageGroup, $interests, $date, $pastWorksheets = []) {
         $interestText = implode(' and ', array_filter($interests));
         
-        return "Create worksheet content for {$childName}, age {$ageGroup}, who loves {$interestText}.
+        // Build context from past worksheets
+        $pastContext = "";
+        if (!empty($pastWorksheets)) {
+            $pastContext = "\n\nIMPORTANT - AVOID REPEATING THESE QUESTIONS FROM PREVIOUS WORKSHEETS:\n";
+            $pastContext .= "=== PAST WORKSHEETS TO AVOID REPEATING ===\n";
+            
+            foreach ($pastWorksheets as $index => $worksheet) {
+                $pastContext .= "Worksheet from {$worksheet['date']}:\n";
+                // Clean up the content to extract just the questions
+                $content = strip_tags($worksheet['content']);
+                $content = preg_replace('/\s+/', ' ', $content);
+                $pastContext .= substr($content, 0, 500) . "...\n\n";
+            }
+            
+            $pastContext .= "=== END PAST WORKSHEETS ===\n";
+            $pastContext .= "Generate completely NEW and DIFFERENT questions. Do NOT repeat any similar questions, math problems, or English exercises from above.\n\n";
+        }
+        
+        return "Create worksheet content for {$childName}, age {$ageGroup}, who loves {$interestText}.{$pastContext}
 
         Return ONLY HTML content (no DOCTYPE, no <html>, no <head>, no <style> tags).
 
@@ -275,7 +308,8 @@ class SimpleWorksheetAPI {
         - Some questions should be equastions like 13+6= or 5*2=
         - Each question 1-2 lines maximum
         - Use {$interestText} themes in 3-4 questions maximum in Math and English
-        - Age-appropriate for {$ageGroup} year olds";
+        - Age-appropriate for {$ageGroup} year olds
+        - CRITICAL: Create completely new questions that are different from the past worksheets shown above";
     }
     
     private function getSystemPrompt() {
