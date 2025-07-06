@@ -137,6 +137,11 @@ class SimpleWorksheetAPI {
             // Generate PDF using MPDF
             $this->generatePDFFile($worksheet['content'], $worksheet['child_name'], $worksheet['date'], $pdfPath);
             
+            // Verify PDF was created
+            if (!file_exists($pdfPath)) {
+                throw new Exception('PDF file was not created successfully');
+            }
+            
             // Update database with PDF path
             $relativePath = 'worksheets/' . $worksheet['child_id'] . '/' . $pdfFilename;
             $stmt = $this->pdo->prepare("UPDATE worksheets SET pdf_path = ? WHERE id = ?");
@@ -181,7 +186,7 @@ class SimpleWorksheetAPI {
             $pdfPath = __DIR__ . '/../' . $worksheet['pdf_path'];
             
             if (!file_exists($pdfPath)) {
-                throw new Exception('PDF file not found');
+                throw new Exception('PDF file not found at: ' . $pdfPath . ' (pdf_path from DB: ' . $worksheet['pdf_path'] . ')');
             }
             
             // Stream PDF to browser
