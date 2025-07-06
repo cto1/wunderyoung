@@ -2,7 +2,7 @@
 
 class Router {
     private $routes = [];
-    private $publicRoutes = ['/health', '/auth/signup', '/auth/login'];
+    private $publicRoutes = ['/health', '/auth/signup', '/auth/login', '/worksheets/pdf'];
     
     public function __construct() {
         $this->setupRoutes();
@@ -25,6 +25,7 @@ class Router {
         
         // Worksheet routes
         $this->routes['POST']['/worksheets/generate'] = 'worksheets_generate';
+        $this->routes['POST']['/worksheets/pdf'] = 'worksheets_create_pdf';
         $this->routes['GET']['/worksheets/pdf'] = 'worksheets_pdf';
         
         // Feedback routes

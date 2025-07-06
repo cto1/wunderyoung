@@ -175,6 +175,21 @@ try {
             echo json_encode($result);
             break;
             
+        case 'worksheets_create_pdf':
+            require_once __DIR__ . '/SimpleWorksheetAPI.php';
+            $api = new SimpleWorksheetAPI();
+            
+            $worksheetId = $input['worksheet_id'] ?? null;
+            if (!$worksheetId) {
+                http_response_code(400);
+                echo json_encode(['error' => 'worksheet_id is required']);
+                exit;
+            }
+            
+            $result = $api->createPDF($worksheetId);
+            echo json_encode($result);
+            break;
+            
         case 'worksheets_pdf':
             require_once __DIR__ . '/SimpleWorksheetAPI.php';
             $api = new SimpleWorksheetAPI();
@@ -186,8 +201,8 @@ try {
                 exit;
             }
             
-            $result = $api->createPDF($worksheetId);
-            echo json_encode($result);
+            // downloadPDF outputs the PDF directly, no JSON response
+            $api->downloadPDF($worksheetId);
             break;
             
         case 'feedback_submit':

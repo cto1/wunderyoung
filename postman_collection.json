@@ -257,23 +257,44 @@
           "response": []
         },
         {
-          "name": "Generate PDF",
+          "name": "Create PDF",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [
               {
                 "key": "Authorization",
                 "value": "Bearer {{auth_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
             ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"worksheet_id\": \"ws_123\"\n}"
+            },
             "url": {
-              "raw": "{{base_url}}/worksheets/pdf?worksheet_id=1",
+              "raw": "{{base_url}}/worksheets/pdf",
+              "host": ["{{base_url}}"],
+              "path": ["worksheets", "pdf"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download PDF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/worksheets/pdf?worksheet_id=ws_123",
               "host": ["{{base_url}}"],
               "path": ["worksheets", "pdf"],
               "query": [
                 {
                   "key": "worksheet_id",
-                  "value": "1"
+                  "value": "ws_123"
                 }
               ]
             }
