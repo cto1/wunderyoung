@@ -124,8 +124,8 @@ class SimpleWorksheetAPI {
                 throw new Exception('Worksheet not found');
             }
             
-            // Create PDF directory
-            $pdfDir = __DIR__ . '/../pdfs/' . $worksheet['child_id'];
+            // Create PDF directory in public_html/worksheets
+            $pdfDir = __DIR__ . '/../worksheets/' . $worksheet['child_id'];
             if (!file_exists($pdfDir)) {
                 mkdir($pdfDir, 0755, true);
             }
@@ -138,7 +138,7 @@ class SimpleWorksheetAPI {
             $this->generatePDFFile($worksheet['content'], $worksheet['child_name'], $worksheet['date'], $pdfPath);
             
             // Update database with PDF path
-            $relativePath = 'pdfs/' . $worksheet['child_id'] . '/' . $pdfFilename;
+            $relativePath = 'worksheets/' . $worksheet['child_id'] . '/' . $pdfFilename;
             $stmt = $this->pdo->prepare("UPDATE worksheets SET pdf_path = ? WHERE id = ?");
             $stmt->execute([$relativePath, $worksheetId]);
             
@@ -265,7 +265,13 @@ class SimpleWorksheetAPI {
     private function generatePDFFile($htmlContent, $childName, $date, $outputPath) {
         require_once __DIR__ . '/../../vendor/autoload.php';
         
-        // Create MPDF instance
+        // Create temp directory for MPDF
+        $tempDir = __DIR__ . '/../temp/mpdf';
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        
+        // Create MPDF instance with custom temp directory
         $mpdf = new \Mpdf\Mpdf([
             'format' => 'A4',
             'orientation' => 'P',
@@ -273,6 +279,7 @@ class SimpleWorksheetAPI {
             'margin_right' => 20,
             'margin_top' => 20,
             'margin_bottom' => 20,
+            'tempDir' => $tempDir
         ]);
         
         // Set document properties
