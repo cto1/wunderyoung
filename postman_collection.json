@@ -163,7 +163,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Child Name\",\n  \"age\": 8,\n  \"grade\": \"3rd Grade\"\n}"
+              "raw": "{\n  \"name\": \"Child Name\",\n  \"age_group\": 8,\n  \"interest1\": \"dinosaurs\",\n  \"interest2\": \"space\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/children",
@@ -189,7 +189,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 1,\n  \"name\": \"Updated Child Name\",\n  \"age\": 9,\n  \"grade\": \"4th Grade\"\n}"
+              "raw": "{\n  \"child_id\": \"child_123\",\n  \"name\": \"Updated Child Name\",\n  \"age_group\": 9,\n  \"interest1\": \"dinosaurs\",\n  \"interest2\": \"space\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/children",
@@ -215,7 +215,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": 1\n}"
+              "raw": "{\n  \"child_id\": \"child_123\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/children",
@@ -246,7 +246,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"subject\": \"Math\",\n  \"grade\": \"3rd Grade\",\n  \"topic\": \"Addition\",\n  \"difficulty\": \"medium\"\n}"
+              "raw": "{\n  \"child_id\": \"child_123\",\n  \"date\": \"2025-01-15\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/worksheets/generate",
@@ -301,7 +301,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Great app!\",\n  \"category\": \"general\"\n}"
+              "raw": "{\n  \"token\": \"fb_abc123_ws_456\",\n  \"parentName\": \"Jane Doe\",\n  \"parentEmail\": \"jane@example.com\",\n  \"difficulty\": \"just_right\",\n  \"engagement\": \"very_engaged\",\n  \"completion\": \"completed_all\",\n  \"favoritePart\": \"The math problems\",\n  \"challengingPart\": \"The reading section\",\n  \"suggestions\": \"More variety in questions\",\n  \"wouldRecommend\": \"yes\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/feedback",
@@ -350,7 +350,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"to\": \"recipient@example.com\",\n  \"subject\": \"Test Email\",\n  \"body\": \"This is a test email from Wunderyoung API\"\n}"
+              "raw": "{\n  \"child_id\": \"child_123\",\n  \"worksheet_id\": \"ws_456\",\n  \"parent_email\": \"parent@example.com\",\n  \"email_type\": \"both\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/email/send",
