@@ -189,7 +189,15 @@ try {
             
             require_once __DIR__ . '/SimpleWorksheetAPI.php';
             $api = new SimpleWorksheetAPI();
-            echo json_encode(['debug' => 'API instantiated', 'worksheet_id' => $worksheetId]);
+            
+            try {
+                $result = $api->createPDF($worksheetId);
+                echo json_encode($result);
+            } catch (Exception $e) {
+                echo json_encode(['error' => 'Exception caught', 'message' => $e->getMessage()]);
+            } catch (Error $e) {
+                echo json_encode(['error' => 'Fatal error caught', 'message' => $e->getMessage()]);
+            }
             break;
             
         case 'worksheets_pdf':
