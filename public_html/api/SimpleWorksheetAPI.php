@@ -316,10 +316,10 @@ class SimpleWorksheetAPI {
         $css = '
             body { 
                 font-family: Arial, sans-serif; 
-                font-size: 13px; 
-                line-height: 1.8; 
+                font-size: 12px; 
+                line-height: 1.4; 
                 margin: 0; 
-                padding: 25px; 
+                padding: 15px; 
                 color: #333;
             }
             .page-header { 
@@ -333,41 +333,41 @@ class SimpleWorksheetAPI {
             .page-subtitle { 
                 color: #64748b; 
                 text-align: center; 
-                font-size: 14px; 
-                margin-bottom: 20px;
+                font-size: 12px; 
+                margin-bottom: 15px;
                 font-weight: normal;
             }
             .section-title { 
                 color: #1e40af; 
-                font-size: 16px; 
-                margin-bottom: 20px;
+                font-size: 14px; 
+                margin-bottom: 15px;
                 border-left: 4px solid #3b82f6;
-                padding-left: 15px;
+                padding-left: 12px;
                 font-weight: bold;
                 text-align: center;
                 background-color: #f8fafc;
-                padding: 10px;
-                border-radius: 4px;
+                padding: 8px;
+                border-radius: 3px;
             }
             .question-item { 
-                margin-bottom: 15px;
-                padding: 8px;
+                margin-bottom: 8px;
+                padding: 5px;
                 border: 1px solid #e2e8f0;
-                border-radius: 4px;
+                border-radius: 3px;
                 background-color: #fafbfc;
-                height: 50px;
+                height: 42px;
             }
             .question-text {
                 font-weight: 600;
                 color: #1e293b;
-                margin-bottom: 8px;
-                font-size: 12px;
-                line-height: 1.3;
+                margin-bottom: 4px;
+                font-size: 11px;
+                line-height: 1.2;
             }
             .answer-space {
                 border-bottom: 1px dotted #94a3b8;
-                height: 25px;
-                margin-bottom: 3px;
+                height: 20px;
+                margin-bottom: 2px;
             }
             .page-break {
                 page-break-before: always;
@@ -377,29 +377,6 @@ class SimpleWorksheetAPI {
             }
             .page-2 {
                 min-height: 700px;
-            }
-            .footer {
-                position: fixed;
-                bottom: 20px;
-                left: 0;
-                right: 0;
-                text-align: center;
-                font-size: 11px;
-                color: #64748b;
-                border-top: 1px solid #e2e8f0;
-                padding-top: 15px;
-                background-color: white;
-            }
-            .footer-brand {
-                font-weight: bold;
-                color: #2563eb;
-                font-size: 12px;
-            }
-            .footer-tagline {
-                font-style: italic;
-                color: #94a3b8;
-                margin-top: 5px;
-                font-size: 10px;
             }
         ';
         
@@ -510,12 +487,6 @@ class SimpleWorksheetAPI {
             $html .= '<div class="answer-space"></div>';
             $html .= '</div>';
         }
-        $html .= '</div>';
-        
-        // Add footer that appears on all pages
-        $html .= '<div class="footer">';
-        $html .= '<div class="footer-brand">Wunderyoung.com</div>';
-        $html .= '<div class="footer-tagline">✨ Where Learning Meets Wonder ✨</div>';
         $html .= '</div>';
         
         return $html;
