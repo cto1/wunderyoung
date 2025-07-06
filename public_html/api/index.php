@@ -29,14 +29,18 @@ try {
     
     $routeResult = $router->route($method, $path);
     
+    // Debug: Show route result
     if (isset($routeResult['error'])) {
         http_response_code($routeResult['code']);
-        echo json_encode(['error' => $routeResult['error']]);
+        echo json_encode(['error' => $routeResult['error'], 'debug_method' => $method, 'debug_path' => $path]);
         exit;
     }
     
     $handler = $routeResult['handler'];
     $input = json_decode(file_get_contents('php://input'), true) ?? [];
+    
+    // Debug: Log the handler and method
+    error_log("Handler: " . $handler . " Method: " . $method . " Path: " . $path);
     
     switch ($handler) {
         case 'health':
@@ -176,30 +180,8 @@ try {
             break;
             
         case 'worksheets_create_pdf':
-            require_once __DIR__ . '/SimpleWorksheetAPI.php';
-            $api = new SimpleWorksheetAPI();
-            
-            $worksheetId = $input['worksheet_id'] ?? null;
-            if (!$worksheetId) {
-                http_response_code(400);
-                echo json_encode(['error' => 'worksheet_id is required']);
-                exit;
-            }
-            
-            try {
-                // Debug: Check if Authorization header is present
-                $headers = getallheaders();
-                if (!isset($headers['Authorization'])) {
-                    echo json_encode(['error' => 'Authorization header missing', 'headers' => array_keys($headers)]);
-                    exit;
-                }
-                
-                $result = $api->createPDF($worksheetId);
-                echo json_encode($result);
-            } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Internal server error', 'message' => $e->getMessage()]);
-            }
+            echo json_encode(['debug' => 'reached worksheets_create_pdf case']);
+            exit;
             break;
             
         case 'worksheets_pdf':
