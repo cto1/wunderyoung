@@ -263,25 +263,86 @@ class SimpleWorksheetAPI {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    private function extractQuestionsFromContent($htmlContent) {
+        $questions = ['math' => [], 'english' => []];
+        
+        // Parse HTML and extract questions
+        $dom = new DOMDocument();
+        @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $htmlContent);
+        $xpath = new DOMXPath($dom);
+        
+        // Find all <li> elements within <ol> tags
+        $listItems = $xpath->query('//ol/li');
+        
+        $currentSection = '';
+        $h3Elements = $xpath->query('//h3');
+        $mathStarted = false;
+        $englishStarted = false;
+        
+        foreach ($h3Elements as $h3) {
+            $headingText = strtolower(trim($h3->textContent));
+            if (strpos($headingText, 'math') !== false) {
+                $mathStarted = true;
+                $englishStarted = false;
+            } elseif (strpos($headingText, 'english') !== false) {
+                $englishStarted = true;
+                $mathStarted = false;
+            }
+        }
+        
+        // Reset and extract questions properly
+        $allOls = $xpath->query('//ol');
+        $olIndex = 0;
+        
+        foreach ($allOls as $ol) {
+            $items = $xpath->query('.//li', $ol);
+            $section = $olIndex === 0 ? 'math' : 'english';
+            
+            foreach ($items as $item) {
+                $questionText = trim($item->textContent);
+                if (!empty($questionText) && strlen($questionText) > 3) {
+                    $questions[$section][] = $questionText;
+                }
+            }
+            $olIndex++;
+        }
+        
+        return $questions;
+    }
+    
     private function buildWorksheetPrompt($childName, $ageGroup, $interests, $date, $pastWorksheets = []) {
         $interestText = implode(' and ', array_filter($interests));
         
         // Build context from past worksheets
         $pastContext = "";
         if (!empty($pastWorksheets)) {
-            $pastContext = "\n\nIMPORTANT - AVOID REPEATING THESE QUESTIONS FROM PREVIOUS WORKSHEETS:\n";
-            $pastContext .= "=== PAST WORKSHEETS TO AVOID REPEATING ===\n";
+            $pastContext = "\n\n🚫 CRITICAL: DO NOT REPEAT ANY OF THESE PREVIOUS QUESTIONS 🚫\n";
+            $pastContext .= "=== QUESTIONS ALREADY USED (MUST AVOID) ===\n";
             
-            foreach ($pastWorksheets as $index => $worksheet) {
-                $pastContext .= "Worksheet from {$worksheet['date']}:\n";
-                // Clean up the content to extract just the questions
-                $content = strip_tags($worksheet['content']);
-                $content = preg_replace('/\s+/', ' ', $content);
-                $pastContext .= substr($content, 0, 500) . "...\n\n";
+            foreach ($pastWorksheets as $worksheet) {
+                $pastContext .= "📅 Worksheet from {$worksheet['date']}:\n";
+                
+                // Extract individual questions more precisely
+                $questions = $this->extractQuestionsFromContent($worksheet['content']);
+                if (!empty($questions)) {
+                    $pastContext .= "Math questions used:\n";
+                    foreach ($questions['math'] as $q) {
+                        $pastContext .= "• " . trim($q) . "\n";
+                    }
+                    $pastContext .= "English questions used:\n";
+                    foreach ($questions['english'] as $q) {
+                        $pastContext .= "• " . trim($q) . "\n";
+                    }
+                }
+                $pastContext .= "\n";
             }
             
-            $pastContext .= "=== END PAST WORKSHEETS ===\n";
-            $pastContext .= "Generate completely NEW and DIFFERENT questions. Do NOT repeat any similar questions, math problems, or English exercises from above.\n\n";
+            $pastContext .= "=== END USED QUESTIONS ===\n\n";
+            $pastContext .= "⚠️ MANDATORY REQUIREMENTS:\n";
+            $pastContext .= "1. Create COMPLETELY DIFFERENT questions from those listed above\n";
+            $pastContext .= "2. Use DIFFERENT numbers, operations, and word problems\n";
+            $pastContext .= "3. Vary the question types and formats\n";
+            $pastContext .= "4. If any question looks similar to above, rewrite it completely\n\n";
         }
         
         return "Create worksheet content for {$childName}, age {$ageGroup}, who loves {$interestText}.{$pastContext}
@@ -305,19 +366,34 @@ class SimpleWorksheetAPI {
 
         Requirements:
         - EXACTLY 10 math questions, EXACTLY 10 English questions
-        - Some questions should be equastions like 13+6= or 5*2=
+        - Some questions should be equations like 13+6= or 5*2=
         - Each question 1-2 lines maximum
         - Use {$interestText} themes in 3-4 questions maximum in Math and English
         - Age-appropriate for {$ageGroup} year olds
-        - CRITICAL: Create completely new questions that are different from the past worksheets shown above";
+        
+        🔥 CRITICAL REQUIREMENTS FOR UNIQUENESS:
+        - Every single question MUST be completely different from previous worksheets
+        - Use different numbers, different operations, different scenarios
+        - Vary question formats: word problems, equations, fill-in-blanks, multiple choice
+        - If creating math equations, use different number combinations
+        - For English questions, use different topics, grammar points, and vocabulary
+        - Think creatively to ensure NO repetition whatsoever";
     }
     
     private function getSystemPrompt() {
-        return "You are an educational content creator. Follow instructions exactly.
+        return "You are an educational content creator specializing in creating UNIQUE, NON-REPETITIVE worksheets.
+
+        🎯 PRIMARY OBJECTIVES:
+        1. Follow instructions exactly
+        2. Create completely original questions that avoid ANY repetition from past worksheets
+        3. Ensure maximum variety and creativity in question design
 
         CRITICAL: Return ONLY HTML body content. NO DOCTYPE, NO <html>, NO <head>, NO <style> tags.
         
         Use only: <h3>, <ol>, <li>, <p> tags.
+        
+        ⚠️ UNIQUENESS MANDATE: If you see previous questions listed, you MUST create entirely different questions. 
+        Think of new scenarios, different numbers, alternative formats, and creative approaches.
         
         Generate exactly what is requested - no additional content or explanations.";
     }

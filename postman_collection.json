@@ -14,6 +14,11 @@
       "key": "auth_token",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "worksheet_id",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -354,6 +359,24 @@
               "path": ["worksheets", "generate"]
             }
           },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Save worksheet_id to collection variable for PDF generation",
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.worksheet_id) {",
+                  "        pm.collectionVariables.set('worksheet_id', response.worksheet_id);",
+                  "        console.log('Saved worksheet_id:', response.worksheet_id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "response": []
         },
         {
@@ -372,7 +395,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"worksheet_id\": \"ws_123\"\n}"
+              "raw": "{\n  \"worksheet_id\": \"{{worksheet_id}}\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/worksheets/pdf",
@@ -388,13 +411,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/worksheets/pdf?worksheet_id=ws_123",
+              "raw": "{{base_url}}/worksheets/pdf?worksheet_id={{worksheet_id}}",
               "host": ["{{base_url}}"],
               "path": ["worksheets", "pdf"],
               "query": [
                 {
                   "key": "worksheet_id",
-                  "value": "ws_123"
+                  "value": "{{worksheet_id}}"
                 }
               ]
             }
