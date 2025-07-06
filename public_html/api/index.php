@@ -158,6 +158,13 @@ try {
             echo json_encode($result);
             break;
             
+        case 'worksheets_list':
+            require_once __DIR__ . '/SimpleWorksheetAPI.php';
+            $api = new SimpleWorksheetAPI();
+            $result = $api->getWorksheets();
+            echo json_encode($result);
+            break;
+            
         case 'worksheets_generate':
             require_once __DIR__ . '/SimpleWorksheetAPI.php';
             $api = new SimpleWorksheetAPI();

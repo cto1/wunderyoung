@@ -24,6 +24,7 @@ class Router {
         $this->routes['DELETE']['/children'] = 'children_delete';
         
         // Worksheet routes
+        $this->routes['GET']['/worksheets'] = 'worksheets_list';
         $this->routes['POST']['/worksheets/generate'] = 'worksheets_generate';
         $this->routes['POST']['/worksheets/pdf'] = 'worksheets_create_pdf';
         $this->routes['GET']['/worksheets/pdf'] = 'worksheets_pdf';

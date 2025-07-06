@@ -251,20 +251,28 @@ class SimpleWorksheetAPI {
     private function buildWorksheetPrompt($childName, $ageGroup, $interests, $date) {
         $interestText = implode(' and ', array_filter($interests));
         
-        return "Create an engaging, age-appropriate worksheet for {$childName}, who is {$ageGroup} years old and loves {$interestText}. 
-        
-        The worksheet should be for {$date} and include:
-        - Math problems appropriate for {$ageGroup} year olds
-        - Reading comprehension with {$interestText} theme
-        - Creative writing prompt
-        - Simple science or art activity
-        
-        Make it fun, educational, and personalized to {$childName}'s interests. Keep it to about 1-2 pages of content.";
+        return "Create a worksheet for {$childName}, age {$ageGroup}, who loves {$interestText}. Date: {$date}
+
+        EXACTLY include these sections:
+
+        **Math Problems**
+        Create 10 short math questions appropriate for age {$ageGroup}. Use {$interestText} themes where possible.
+        Examples: 'If a dinosaur eats 3 leaves, how many in 5 minutes?' Keep questions 1-2 lines each.
+
+        **English Questions** 
+        Create 10 short English questions appropriate for age {$ageGroup}. Include {$interestText} themes.
+        Examples: spelling, grammar, vocabulary, or simple comprehension. Keep questions 1-2 lines each.
+
+        Make all questions short, clear, and age-appropriate. No long paragraphs or complex instructions.";
     }
     
     private function getSystemPrompt() {
-        return "You are an expert educational content creator. Create engaging, age-appropriate worksheets that are fun and educational. 
-        Return only the HTML content for the worksheet, no explanations or metadata.";
+        return "You are an educational content creator. Generate clean HTML with:
+        - <h3> tags for section headers (Math Problems, English Questions)
+        - <ol> tags for numbered question lists
+        - Keep questions short (1-2 lines max)
+        - No CSS styles or extra formatting
+        - Return only HTML content, no explanations";
     }
     
     private function generatePDFFile($htmlContent, $childName, $date, $outputPath) {
@@ -346,8 +354,14 @@ class SimpleWorksheetAPI {
         
         $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
         
+        // Debug: Log the raw content from AI
+        error_log("Raw AI content: " . $htmlContent);
+        
         // Clean up the HTML content by removing inline CSS and fixing structure
         $cleanContent = $this->cleanHtmlContent($htmlContent);
+        
+        // Debug: Log the cleaned content
+        error_log("Cleaned content: " . $cleanContent);
         
         // Build full HTML content
         $fullHtml = '<h1>' . htmlspecialchars($childName) . "'s Worksheet</h1>";
@@ -360,28 +374,18 @@ class SimpleWorksheetAPI {
     }
     
     private function cleanHtmlContent($htmlContent) {
-        // Remove inline CSS style blocks
-        $content = preg_replace('/<style[^>]*>.*?<\/style>/is', '', $htmlContent);
+        // For now, let's return the content as-is to see what we're getting
+        $content = $htmlContent;
         
-        // Remove any remaining inline styles
-        $content = preg_replace('/style\s*=\s*["\'][^"\']*["\']/i', '', $content);
+        // Only remove CSS style blocks
+        $content = preg_replace('/<style[^>]*>.*?<\/style>/is', '', $content);
         
-        // Convert common text patterns to proper HTML structure
-        $content = preg_replace('/^([A-Z][^<\n]*)/m', '<h3>$1</h3>', $content);
+        // Remove inline style attributes
+        $content = preg_replace('/\s*style\s*=\s*["\'][^"\']*["\']/i', '', $content);
         
-        // Wrap numbered lists in proper list tags
-        $content = preg_replace('/(\d+\.\s+[^\n]+)/m', '<li>$1</li>', $content);
-        $content = preg_replace('/(<li>.*<\/li>)/s', '<ol>$1</ol>', $content);
-        
-        // Fix duplicate ol tags
-        $content = preg_replace('/<\/ol>\s*<ol>/s', '', $content);
-        
-        // Wrap paragraphs
-        $content = preg_replace('/([^>])\n([^<\n]+)/m', '$1<p>$2</p>', $content);
-        
-        // Clean up extra whitespace
+        // Just clean up excessive whitespace
         $content = preg_replace('/\s+/', ' ', $content);
-        $content = preg_replace('/>\s+</', '><', $content);
+        $content = trim($content);
         
         return $content;
     }
@@ -448,5 +452,4 @@ if (basename($_SERVER['SCRIPT_NAME']) === 'SimpleWorksheetAPI.php') {
         http_response_code(405);
         echo json_encode(['status' => 'error', 'message' => 'Method not allowed']);
     }
-}
-?> 
+} 

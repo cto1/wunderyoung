@@ -231,6 +231,24 @@
       "name": "Worksheets",
       "item": [
         {
+          "name": "List Worksheets",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/worksheets",
+              "host": ["{{base_url}}"],
+              "path": ["worksheets"]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Generate Worksheet",
           "request": {
             "method": "POST",
