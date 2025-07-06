@@ -37,7 +37,7 @@
         event.preventDefault();
         const email = event.target.querySelector('input[type="email"]').value;
         if (email) {
-            window.location.href = `/app/signup.php?email=${encodeURIComponent(email)}`;
+            window.location.href = `/app/login.php?email=${encodeURIComponent(email)}`;
         }
     }
 
@@ -45,7 +45,7 @@
         event.preventDefault();
         const email = event.target.querySelector('input[type="email"]').value;
         if (email) {
-            window.location.href = `/app/signup.php?email=${encodeURIComponent(email)}`;
+            window.location.href = `/app/login.php?email=${encodeURIComponent(email)}`;
         }
     }
 

@@ -1,13 +1,18 @@
 <?php 
 $page_title = "Sign In - Yes Homework";
-$page_description = "Sign in to your Yes Homework account";
+$page_description = "Sign in or create your Yes Homework account";
 include 'include/header.html'; 
 ?>
 
 <div class="min-h-screen flex items-center justify-center px-4">
     <div class="card w-full max-w-md card-sophisticated shadow-2xl">
         <div class="card-body">
-            <h2 class="card-title text-2xl font-bold text-center mb-6">Sign In</h2>
+            <h2 class="card-title text-2xl font-bold text-center mb-6">✨ Magic Link Access</h2>
+            
+            <div class="text-center mb-6">
+                <p class="text-gray-600">Enter your email to sign in or create an account</p>
+                <p class="text-sm text-gray-500 mt-2">We'll send you a secure link - no passwords needed!</p>
+            </div>
             
             <!-- Success Message -->
             <div id="success-message" class="alert alert-success hidden mb-4">
@@ -25,168 +30,55 @@ include 'include/header.html';
                 <span id="error-text"></span>
             </div>
 
-            <!-- Login Form -->
-            <form id="login-form" class="space-y-4">
+            <!-- Magic Link Form -->
+            <form id="magic-link-form" class="space-y-6">
                 <div class="form-control">
                     <label class="label">
-                        <span class="label-text">Email Address</span>
+                        <span class="label-text font-semibold">Email Address</span>
                     </label>
-                    <input type="email" id="email" name="email" placeholder="your@email.com" class="input input-bordered" required>
-                </div>
-
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Password</span>
-                    </label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" class="input input-bordered" required>
-                    <label class="label">
-                        <a href="#" class="label-text-alt link link-primary">Forgot password?</a>
-                    </label>
-                </div>
-
-                <div class="form-control">
-                    <label class="label cursor-pointer">
-                        <span class="label-text">Remember me</span>
-                        <input type="checkbox" id="remember" class="checkbox checkbox-primary">
-                    </label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" class="input input-bordered input-lg" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-full btn-lg">
-                    <span id="submit-text">Sign In</span>
+                    <span id="submit-text">🚀 Send Magic Link</span>
                     <span id="loading-spinner" class="loading loading-spinner loading-sm hidden"></span>
                 </button>
             </form>
-
-            <div class="divider">OR</div>
-
-            <!-- Magic Link Login -->
-            <div class="space-y-4">
-                <button type="button" id="magic-link-btn" class="btn btn-outline btn-secondary w-full">
-                    <span id="magic-text">✨ Login with Magic Link</span>
-                    <span id="magic-spinner" class="loading loading-spinner loading-sm hidden"></span>
-                </button>
                 
-                <div id="magic-success" class="alert alert-info hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>📧 Magic link sent! Check your email and click the link to sign in.</span>
+            <div id="magic-success" class="alert alert-success hidden mt-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div>
+                    <h3 class="font-bold">✨ Magic link sent!</h3>
+                    <div class="text-xs">Check your email and click the link to access your account</div>
                 </div>
             </div>
 
-            <div class="divider"></div>
-
-            <div class="text-center">
-                <p class="text-sm text-gray-600">Don't have an account?</p>
-                <a href="/app/signup.php" class="btn btn-outline btn-primary w-full mt-2">Create Account</a>
+            <div class="text-center mt-6">
+                <p class="text-xs text-gray-500">
+                    By continuing, you agree to our 
+                    <a href="/terms.php" class="link link-primary">Terms of Service</a> and 
+                    <a href="/privacy.php" class="link link-primary">Privacy Policy</a>
+                </p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-document.getElementById('login-form').addEventListener('submit', async function(e) {
+document.getElementById('magic-link-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const remember = document.getElementById('remember').checked;
     
     // Show loading state
     setLoading(true);
     hideMessages();
     
     try {
-        const response = await fetch('/api/UserAuthAPI.php?action=login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (result.status === 'success') {
-            // Store token
-            localStorage.setItem('authToken', result.token);
-            
-            // Store user info if remember is checked
-            if (remember) {
-                localStorage.setItem('userName', result.name);
-                localStorage.setItem('userEmail', email);
-            }
-            
-            // Redirect immediately to worksheets page
-            window.location.href = '/app/worksheets.php';
-        } else {
-            showError(result.message || 'Sign in failed');
-        }
-    } catch (error) {
-        showError('Network error. Please try again.');
-    } finally {
-        setLoading(false);
-    }
-});
-
-function showSuccess(message) {
-    document.getElementById('success-text').textContent = message;
-    document.getElementById('success-message').classList.remove('hidden');
-    document.getElementById('error-message').classList.add('hidden');
-}
-
-function showError(message) {
-    document.getElementById('error-text').textContent = message;
-    document.getElementById('error-message').classList.remove('hidden');
-    document.getElementById('success-message').classList.add('hidden');
-}
-
-function hideMessages() {
-    document.getElementById('success-message').classList.add('hidden');
-    document.getElementById('error-message').classList.add('hidden');
-}
-
-function setLoading(loading) {
-    const submitText = document.getElementById('submit-text');
-    const spinner = document.getElementById('loading-spinner');
-    const submitButton = document.querySelector('button[type="submit"]');
-    
-    if (loading) {
-        submitText.textContent = 'Signing In...';
-        spinner.classList.remove('hidden');
-        submitButton.disabled = true;
-    } else {
-        submitText.textContent = 'Sign In';
-        spinner.classList.add('hidden');
-        submitButton.disabled = false;
-    }
-}
-
-// Magic Link Login
-document.getElementById('magic-link-btn').addEventListener('click', async function(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    if (!email) {
-        showError('Please enter your email address first');
-        return;
-    }
-    
-    // Show loading state
-    const magicText = document.getElementById('magic-text');
-    const magicSpinner = document.getElementById('magic-spinner');
-    const magicBtn = document.getElementById('magic-link-btn');
-    
-    magicText.textContent = 'Sending magic link...';
-    magicSpinner.classList.remove('hidden');
-    magicBtn.disabled = true;
-    hideMessages();
-    
-    try {
-        const response = await fetch('/api/auth/magic-link', {
+        // Try passwordless signup first (handles both new users and existing users)
+        const response = await fetch('/api/auth/passwordless-signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -199,19 +91,50 @@ document.getElementById('magic-link-btn').addEventListener('click', async functi
         const result = await response.json();
         
         if (result.status === 'success') {
-            document.getElementById('magic-success').classList.remove('hidden');
-            document.getElementById('login-form').style.display = 'none';
+            showSuccess();
+            document.getElementById('magic-link-form').style.display = 'none';
         } else {
             showError(result.message || 'Failed to send magic link');
         }
     } catch (error) {
         showError('Network error. Please try again.');
     } finally {
-        magicText.textContent = '✨ Login with Magic Link';
-        magicSpinner.classList.add('hidden');
-        magicBtn.disabled = false;
+        setLoading(false);
     }
 });
+
+function showSuccess() {
+    document.getElementById('magic-success').classList.remove('hidden');
+    document.getElementById('error-message').classList.add('hidden');
+}
+
+function showError(message) {
+    document.getElementById('error-text').textContent = message;
+    document.getElementById('error-message').classList.remove('hidden');
+    document.getElementById('success-message').classList.add('hidden');
+}
+
+function hideMessages() {
+    document.getElementById('magic-success').classList.add('hidden');
+    document.getElementById('error-message').classList.add('hidden');
+}
+
+function setLoading(loading) {
+    const submitText = document.getElementById('submit-text');
+    const spinner = document.getElementById('loading-spinner');
+    const submitButton = document.querySelector('button[type="submit"]');
+    
+    if (loading) {
+        submitText.textContent = 'Sending magic link...';
+        spinner.classList.remove('hidden');
+        submitButton.disabled = true;
+    } else {
+        submitText.textContent = '🚀 Send Magic Link';
+        spinner.classList.add('hidden');
+        submitButton.disabled = false;
+    }
+}
+
 
 // Pre-fill email if passed in URL
 const urlParams = new URLSearchParams(window.location.search);

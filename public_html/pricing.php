@@ -75,7 +75,7 @@ include 'website/include/header.html';
                             <strong>Perfect for:</strong> Small families wanting to try the service
                         </div>
                         
-                        <a href="/app/signup.php" class="btn btn-outline btn-primary w-full btn-lg">
+                        <a href="/app/login.php" class="btn btn-outline btn-primary w-full btn-lg">
                             <i class="fas fa-rocket mr-2"></i>
                             Start Free Now
                         </a>
@@ -139,7 +139,7 @@ include 'website/include/header.html';
                             <strong>Perfect for:</strong> Most UK families (2-4 kids)
                         </div>
                         
-                        <a href="/app/signup.php?plan=plus" class="btn btn-primary w-full btn-lg">
+                        <a href="/app/login.php?plan=plus" class="btn btn-primary w-full btn-lg">
                             <i class="fas fa-crown mr-2"></i>
                             Start Family Plus
                         </a>
@@ -202,7 +202,7 @@ include 'website/include/header.html';
                             <strong>Perfect for:</strong> Teachers, homeschool groups, tutoring centers
                         </div>
                         
-                        <a href="/app/signup.php?plan=classroom" class="btn btn-outline btn-secondary w-full btn-lg">
+                        <a href="/app/login.php?plan=classroom" class="btn btn-outline btn-secondary w-full btn-lg">
                             <i class="fas fa-chalkboard-teacher mr-2"></i>
                             Start Classroom
                         </a>
@@ -299,7 +299,7 @@ include 'website/include/header.html';
                 Join thousands of families already using Yes Homework. Start free, no credit card required.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/app/signup.php" class="btn btn-white btn-lg">
+                <a href="/app/login.php" class="btn btn-white btn-lg">
                     <i class="fas fa-rocket mr-2"></i>
                     Start Free Today
                 </a>
