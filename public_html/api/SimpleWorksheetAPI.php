@@ -142,9 +142,9 @@ class SimpleWorksheetAPI {
             $stmt = $this->pdo->prepare("UPDATE worksheets SET pdf_path = ? WHERE id = ?");
             $stmt->execute([$relativePath, $worksheetId]);
             
-            // Generate download URL
+            // Generate download URL using new routing system
             $downloadUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') .
-                           '://' . $_SERVER['HTTP_HOST'] . '/api/SimpleWorksheetAPI.php?worksheet_id=' . $worksheetId;
+                           '://' . $_SERVER['HTTP_HOST'] . '/api/worksheets/pdf?worksheet_id=' . $worksheetId;
             
             return [
                 'status' => 'success',
