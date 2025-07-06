@@ -251,28 +251,40 @@ class SimpleWorksheetAPI {
     private function buildWorksheetPrompt($childName, $ageGroup, $interests, $date) {
         $interestText = implode(' and ', array_filter($interests));
         
-        return "Create a worksheet for {$childName}, age {$ageGroup}, who loves {$interestText}. Date: {$date}
+        return "Create worksheet content for {$childName}, age {$ageGroup}, who loves {$interestText}.
 
-        EXACTLY include these sections:
+        Return ONLY HTML content (no DOCTYPE, no <html>, no <head>, no <style> tags).
 
-        **Math Problems**
-        Create 10 short math questions appropriate for age {$ageGroup}. Use {$interestText} themes where possible.
-        Examples: 'If a dinosaur eats 3 leaves, how many in 5 minutes?' Keep questions 1-2 lines each.
+        Format:
+        <h3>Math Problems</h3>
+        <ol>
+        <li>Question 1</li>
+        <li>Question 2</li>
+        ...10 questions total
+        </ol>
 
-        **English Questions** 
-        Create 10 short English questions appropriate for age {$ageGroup}. Include {$interestText} themes.
-        Examples: spelling, grammar, vocabulary, or simple comprehension. Keep questions 1-2 lines each.
+        <h3>English Questions</h3>
+        <ol>
+        <li>Question 1</li>
+        <li>Question 2</li>
+        ...10 questions total
+        </ol>
 
-        Make all questions short, clear, and age-appropriate. No long paragraphs or complex instructions.";
+        Requirements:
+        - EXACTLY 10 math questions, EXACTLY 10 English questions
+        - Each question 1-2 lines maximum
+        - Use {$interestText} themes in questions
+        - Age-appropriate for {$ageGroup} year olds";
     }
     
     private function getSystemPrompt() {
-        return "You are an educational content creator. Generate clean HTML with:
-        - <h3> tags for section headers (Math Problems, English Questions)
-        - <ol> tags for numbered question lists
-        - Keep questions short (1-2 lines max)
-        - No CSS styles or extra formatting
-        - Return only HTML content, no explanations";
+        return "You are an educational content creator. Follow instructions exactly.
+
+        CRITICAL: Return ONLY HTML body content. NO DOCTYPE, NO <html>, NO <head>, NO <style> tags.
+        
+        Use only: <h3>, <ol>, <li>, <p> tags.
+        
+        Generate exactly what is requested - no additional content or explanations.";
     }
     
     private function generatePDFFile($htmlContent, $childName, $date, $outputPath) {
@@ -374,17 +386,36 @@ class SimpleWorksheetAPI {
     }
     
     private function cleanHtmlContent($htmlContent) {
-        // For now, let's return the content as-is to see what we're getting
         $content = $htmlContent;
         
-        // Only remove CSS style blocks
+        // If AI returned full HTML document, extract only body content
+        if (strpos($content, '<!DOCTYPE') !== false || strpos($content, '<html>') !== false) {
+            // Extract content between <body> tags
+            if (preg_match('/<body[^>]*>(.*?)<\/body>/is', $content, $matches)) {
+                $content = $matches[1];
+            } else {
+                // Fallback: remove DOCTYPE, html, head tags
+                $content = preg_replace('/<!DOCTYPE[^>]*>/i', '', $content);
+                $content = preg_replace('/<html[^>]*>/i', '', $content);
+                $content = preg_replace('/<\/html>/i', '', $content);
+                $content = preg_replace('/<head[^>]*>.*?<\/head>/is', '', $content);
+                $content = preg_replace('/<body[^>]*>/i', '', $content);
+                $content = preg_replace('/<\/body>/i', '', $content);
+            }
+        }
+        
+        // Remove CSS style blocks
         $content = preg_replace('/<style[^>]*>.*?<\/style>/is', '', $content);
         
         // Remove inline style attributes
         $content = preg_replace('/\s*style\s*=\s*["\'][^"\']*["\']/i', '', $content);
         
-        // Just clean up excessive whitespace
+        // Remove class attributes since we're not using them
+        $content = preg_replace('/\s*class\s*=\s*["\'][^"\']*["\']/i', '', $content);
+        
+        // Clean up extra whitespace and newlines
         $content = preg_replace('/\s+/', ' ', $content);
+        $content = preg_replace('/>\s+</', '><', $content);
         $content = trim($content);
         
         return $content;
