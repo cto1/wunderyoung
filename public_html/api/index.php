@@ -180,8 +180,16 @@ try {
             break;
             
         case 'worksheets_create_pdf':
-            echo json_encode(['debug' => 'reached worksheets_create_pdf case']);
-            exit;
+            $worksheetId = $input['worksheet_id'] ?? null;
+            if (!$worksheetId) {
+                http_response_code(400);
+                echo json_encode(['error' => 'worksheet_id is required']);
+                exit;
+            }
+            
+            require_once __DIR__ . '/SimpleWorksheetAPI.php';
+            $api = new SimpleWorksheetAPI();
+            echo json_encode(['debug' => 'API instantiated', 'worksheet_id' => $worksheetId]);
             break;
             
         case 'worksheets_pdf':
