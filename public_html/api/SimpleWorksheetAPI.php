@@ -378,6 +378,29 @@ class SimpleWorksheetAPI {
             .page-2 {
                 min-height: 700px;
             }
+            .footer {
+                position: fixed;
+                bottom: 20px;
+                left: 0;
+                right: 0;
+                text-align: center;
+                font-size: 11px;
+                color: #64748b;
+                border-top: 1px solid #e2e8f0;
+                padding-top: 15px;
+                background-color: white;
+            }
+            .footer-brand {
+                font-weight: bold;
+                color: #2563eb;
+                font-size: 12px;
+            }
+            .footer-tagline {
+                font-style: italic;
+                color: #94a3b8;
+                margin-top: 5px;
+                font-size: 10px;
+            }
         ';
         
         $mpdf->WriteHTML($css, \Mpdf\HTMLParserMode::HEADER_CSS);
@@ -487,6 +510,12 @@ class SimpleWorksheetAPI {
             $html .= '<div class="answer-space"></div>';
             $html .= '</div>';
         }
+        $html .= '</div>';
+        
+        // Add footer that appears on all pages
+        $html .= '<div class="footer">';
+        $html .= '<div class="footer-brand">Wunderyoung.com</div>';
+        $html .= '<div class="footer-tagline">✨ Where Learning Meets Wonder ✨</div>';
         $html .= '</div>';
         
         return $html;
