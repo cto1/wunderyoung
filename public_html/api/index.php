@@ -186,8 +186,20 @@ try {
                 exit;
             }
             
-            $result = $api->createPDF($worksheetId);
-            echo json_encode($result);
+            try {
+                // Debug: Check if Authorization header is present
+                $headers = getallheaders();
+                if (!isset($headers['Authorization'])) {
+                    echo json_encode(['error' => 'Authorization header missing', 'headers' => array_keys($headers)]);
+                    exit;
+                }
+                
+                $result = $api->createPDF($worksheetId);
+                echo json_encode($result);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Internal server error', 'message' => $e->getMessage()]);
+            }
             break;
             
         case 'worksheets_pdf':
