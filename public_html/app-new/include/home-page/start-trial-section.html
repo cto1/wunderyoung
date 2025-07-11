@@ -1,0 +1,86 @@
+<section id="start-trial-section" class="relative w-full overflow-hidden bg-base-100 py-24 sm:py-32">
+
+    <!-- Animated background elements -->
+    <div class="animate-float absolute top-0 left-0 z-20 h-72 w-72 bg-primary opacity-5 blur-3xl"></div>
+    <div class="animate-float absolute bottom-0 right-0 z-20 h-72 w-72 bg-accent opacity-5 blur-3xl"></div>
+    <div class="absolute inset-0 z-10 flex items-center justify-center">
+        <div class="animate-orbit h-[60rem] w-[60rem]">
+            <div class="absolute h-px w-full rounded-full bg-base-content/10 rotate-[-20deg]"></div>
+            <div class="absolute h-px w-full rounded-full bg-base-content/10 rotate-[20deg]"></div>
+            <div class="absolute h-px w-full rounded-full bg-base-content/10 rotate-[90deg]"></div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 mx-auto max-w-5xl px-4">
+        <div class="relative rounded-xl bg-gradient-to-r from-primary to-accent p-px">
+            <div class="relative rounded-[11px] bg-base-200 p-8 text-center sm:p-12">
+
+                <!-- Border elements -->
+                <div
+                    class="pointer-events-none absolute top-0 left-0 h-8 w-8 rounded-tl-xl border-l-2 border-t-2 border-primary/50">
+                </div>
+                <div
+                    class="pointer-events-none absolute top-0 right-0 h-8 w-8 rounded-tr-xl border-r-2 border-t-2 border-primary/50">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 left-0 h-8 w-8 rounded-bl-xl border-l-2 border-b-2 border-primary/50">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 right-0 h-8 w-8 rounded-br-xl border-r-2 border-b-2 border-primary/50">
+                </div>
+
+                <!-- Headline -->
+                <h2 class="font-['Teko'] text-5xl font-bold uppercase tracking-tight sm:text-6xl">
+                    <?= __("cta_title"); ?>
+                </h2>
+                <p class="mx-auto mt-4 max-w-2xl text-lg">
+                    <?= __("cta_subtitle"); ?>
+                </p>
+
+                <!-- Input + Button -->
+                <div class="mx-auto mt-8 w-full max-w-md">
+                    <form class="space-y-5" onsubmit="handleSignup(event)">
+                        <input type="email" placeholder="Enter your email address" class="input w-full h-14
+                        border-base-content bg-base-100 rounded-md text-center text-lg focus:border-primary
+                        focus:outline-none" required />
+                        <button type="submit"
+                            class="btn h-auto min-h-0 w-full rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary py-3.5 font-['Teko'] text-xl uppercase tracking-wider text-white transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0]">
+                            <i class="fa-solid fa-rocket mr-1"></i>
+                            <?= __("cta_button_text"); ?>
+                        </button>
+                    </form>
+                    <p class="mt-4 text-sm">
+                        <?= __("cta_form_subtext"); ?>
+                    </p>
+                </div>
+
+                <!-- Gradient Border -->
+                <div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary my-8 lg:my-12"></div>
+
+                <!-- Bottom -->
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                    <div class="flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-shield-halved text-xl text-primary"></i>
+                        <span class="font-sans text-sm font-medium">
+                            <?= __("cta_trust_1"); ?>
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-bolt-lightning text-xl text-secondary"></i>
+                        <span class="font-sans text-sm font-medium">
+                            <?= __("cta_trust_2"); ?>
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-heart text-xl text-accent"></i>
+                        <span class="font-sans text-sm font-medium">
+                            <?= __("cta_trust_3"); ?>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

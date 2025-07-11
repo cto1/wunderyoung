@@ -1,0 +1,130 @@
+<section class="relative w-full overflow-hidden bg-base-200 py-24 sm:py-32" id="features">
+
+    <!-- Background Gradient  -->
+    <div
+        class="absolute top-0 left-0 h-full w-full bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,hsl(var(--p)/0.2),rgba(255,255,255,0))]">
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 mx-auto max-w-6xl px-4 md:px-8">
+
+        <!-- Headline -->
+        <div class="mb-16 text-center lg:mb-24 max-w-5xl mx-auto">
+            <h2 class="font-['Teko'] text-5xl font-bold uppercase tracking-tight sm:text-6xl">
+                <?= __("features_title_part1"); ?>
+                <br class="hidden md:block">
+                <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    <?= __("features_title_part2"); ?>
+                </span>
+            </h2>
+        </div>
+
+
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-3 lg:gap-8">
+
+            <!-- Left Cards -->
+            <div class="space-y-12">
+                <div class="flex flex-col items-center gap-4 text-center lg:flex-row lg:text-left">
+                    <div
+                        class="grid h-16 w-16 flex-shrink-0 place-items-center rounded-md border border-primary/50 bg-primary/10 text-primary">
+                        <i class="fa-solid fa-pencil-ruler text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-['Teko'] text-2xl font-bold uppercase tracking-wider">
+                            <?= __("feature_1_title"); ?>
+                        </h3>
+                        <p class="mt-1 text-base-content/90">
+                            <?= __("feature_1_desc"); ?>
+                        </p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-4 text-center lg:flex-row lg:text-left">
+                    <div
+                        class="grid h-16 w-16 flex-shrink-0 place-items-center rounded-md border border-secondary/50 bg-secondary/10 text-secondary">
+                        <i class="fa-solid fa-heart text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-['Teko'] text-2xl font-bold uppercase tracking-wider">
+                            <?= __("feature_2_title"); ?>
+                        </h3>
+                        <p class="mt-1 text-base-content/90">
+                            <?= __("feature_2_desc"); ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demo Preview Card -->
+            <div class="order-first lg:order-none">
+                <div class="relative z-20 mx-auto max-w-md">
+                    <div class="mb-4">
+                        <div class="relative">
+                            <select id="language-select"
+                                class="select w-full appearance-none rounded-xl rounded-b-none border-x border-t border-b-2 border-base-content bg-base-100 pr-10 font-['Teko'] text-base uppercase tracking-wider focus:border-accent focus:outline-none focus:ring-0">
+                                <option disabled selected value="">
+                                    <?= __("features_select_language_placeholder"); ?>
+                                </option>
+                                <option>
+                                    <?= __("features_select_language_option_1"); ?>
+                                </option>
+                                <option>
+                                    <?= __("features_select_language_option_2"); ?>
+                                </option>
+                                <option>
+                                    <?= __("features_select_language_option_3"); ?>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div
+                        class="relative rounded-xl rounded-t-none border border-base/10 bg-base-300/50 p-4 shadow-2xl backdrop-blur-lg border border-base-content">
+                        <div
+                            class="h-[500px] w-full rounded-md bg-base-100 flex items-center justify-center p-4 lg:h-auto lg:aspect-[0.71] border border-base-content/50">
+                            <p id="demo-output" class="font-sans text-base-content transition-all duration-300">
+                                Interactive Demo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pointer-events-none absolute -inset-2 z-10 rounded-xl bg-secondary/5 blur-xl"></div>
+            </div>
+
+            <!-- Right Cards -->
+            <div class="space-y-12">
+                <div class="flex flex-col items-center gap-4 text-center lg:flex-row-reverse lg:text-right">
+                    <div
+                        class="grid h-16 w-16 flex-shrink-0 place-items-center rounded-md border border-accent/50 bg-accent/10 text-accent">
+                        <i class="fa-solid fa-print text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-['Teko'] text-2xl font-bold uppercase tracking-wider">
+                            <?= __("feature_3_title"); ?>
+                        </h3>
+                        <p class="mt-1 text-base-content/90">
+                            <?= __("feature_3_desc"); ?>
+                        </p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-4 text-center lg:flex-row-reverse lg:text-right">
+                    <div
+                        class="grid h-16 w-16 flex-shrink-0 place-items-center rounded-md border-purple-500/50 bg-purple-500/10 text-purple-500">
+                        <i class="fa-solid fa-palette text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-['Teko'] text-2xl font-bold uppercase tracking-wider">
+                            <?= __("feature_4_title"); ?>
+                        </h3>
+                        <p class="mt-1 text-base-content/90">
+                            <?= __("feature_4_desc"); ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary"></div>

@@ -1,0 +1,179 @@
+<section class="relative w-full overflow-hidden bg-base-100 pt-20 pb-28 sm:pt-24 sm:pb-32">
+
+    <!-- Animated background elements -->
+    <div class="animate-float absolute bottom-0 left-0 z-10 h-96 w-96 rounded-full bg-secondary opacity-10 blur-3xl">
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 mx-auto max-w-6xl px-4">
+
+        <!-- Headline -->
+        <div class="mb-12 text-center">
+            <p class="font-['Teko'] text-lg uppercase tracking-widest text-accent">
+                <?= __("faq_badge"); ?>
+            </p>
+            <h2 class="mt-2 font-['Teko'] text-5xl font-bold uppercase tracking-tight sm:text-6xl">
+                <?= __("faq_title_part1"); ?>
+                <br />
+                <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    <?= __("faq_title_part2"); ?>
+                </span>
+            </h2>
+        </div>
+
+        <!-- FAQ's -->
+        <div class="mx-auto grid max-w-4xl grid-cols-1 gap-4 lg:gap-6">
+
+            <!-- FAQ-1 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q1_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q1_answer_p1"); ?>
+                    </p>
+                    <ul class="space-y-2 pt-2">
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span>
+                                <?= __("faq_q1_answer_li1"); ?>
+                            </span></li>
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span>
+                                <?= __("faq_q1_answer_li2"); ?>
+                            </span></li>
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span>
+                                <?= __("faq_q1_answer_li3"); ?>
+                            </span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FAQ-2 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q2_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q2_answer_p1"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ-3 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q3_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q3_answer_p1"); ?>
+                    </p>
+                    <ul class="space-y-2 pt-2">
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span>
+                                <?= __("faq_q3_answer_li1"); ?>
+                            </span></li>
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span>
+                                <?= __("faq_q3_answer_li2"); ?>
+                            </span></li>
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span>
+                                <?= __("faq_q3_answer_li3"); ?>
+                            </span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FAQ-4 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q4_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q4_answer_p1"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ-5 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q5_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q5_answer_p1"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ-6 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q6_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q6_answer_p1"); ?>
+                    </p>
+                    <p>
+                        <?= __("faq_q6_answer_p2"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ-7 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q7_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q7_answer_p1"); ?>
+                    </p>
+                    <p>
+                        <?= __("faq_q7_answer_p2"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- FAQ-8 -->
+            <div
+                class="collapse collapse-plus rounded-md border border-base-content bg-base-200 transition-all duration-300 hover:border-accent hover:bg-base-300">
+                <input type="checkbox" name="faq-accordion" />
+                <div class="collapse-title font-['Teko'] text-xl font-bold uppercase tracking-wider">
+                    <?= __("faq_q8_question"); ?>
+                </div>
+                <div class="collapse-content space-y-2">
+                    <p>
+                        <?= __("faq_q8_answer_p1"); ?>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px mx-auto bg-gradient-to-r from-primary via-accent to-secondary"></div>

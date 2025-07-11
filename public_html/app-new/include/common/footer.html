@@ -1,0 +1,100 @@
+<!-- Gradient Border -->
+<div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary"></div>
+
+<footer class="bg-base-300 font-['Teko']">
+    <div class="max-w-[1280px] mx-auto px-4">
+
+        <!-- Top Container -->
+        <div class="flex flex-col md:flex-row justify-between gap-12 lg:gap-16 py-14 lg:py-20">
+
+            <div class="max-w-sm">
+                <a href="javascript:void(0);"
+                    class="flex items-center gap-3 text-2xl font-bold transition-all duration-300 hover:opacity-80"
+                    aria-label="Homepage">
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="484.000000pt" height="346.000000pt"
+                        viewBox="0 0 484.000000 346.000000" preserveAspectRatio="xMidYMid meet"
+                        class="h-10 w-10 text-primary">
+                        <g transform="translate(0.000000,346.000000) scale(0.100000,-0.100000)" fill="currentColor"
+                            stroke="none">
+                            <path
+                                d="M2220 3449 c-501 -55 -925 -239 -1307 -566 -440 -375 -726 -927 -782 -1507 -7 -64 -11 -364 -11 -718 l0 -608 215 0 215 0 0 613 c0 623 3 697 40 876 54 256 167 509 320 716 188 252 420 446 695 580 203 99 354 146 580 181 88 13 151 15 315 11 221 -6 307 -19 502 -76 442 -129 867 -463 1088 -856 l34 -60 -49 38 c-221 169 -500 300 -760 356 -275 60 -586 53 -863 -18 -314 -81 -603 -246 -834 -475 -245 -242 -402 -513 -491 -846 -50 -187 -57 -268 -57 -669 l0 -371 209 0 208 0 6 357 c7 425 17 503 92 715 123 344 420 655 770 806 252 109 577 142 852 87 392 -80 727 -314 938 -657 25 -39 43 -74 40 -76 -2 -3 -22 7 -43 21 -124 81 -339 164 -506 194 -119 21 -342 21 -463 -1 -386 -68 -716 -286 -928 -614 -65 -101 -129 -240 -159 -346 -31 -106 -56 -286 -56 -402 l0 -84 214 0 213 0 6 133 c6 154 27 240 87 365 98 205 241 348 443 447 291 141 634 122 913 -50 91 -56 232 -192 289 -279 88 -136 141 -308 151 -498 l7 -118 215 0 214 0 -5 653 c-4 594 -7 664 -25 784 -77 489 -282 902 -625 1260 -355 369 -813 604 -1343 688 -120 19 -447 27 -564 14z" />
+                        </g>
+                    </svg>
+                    <span
+                        class="bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text tracking-wide text-3xl leading-none relative top-[4px] uppercase">
+                        <?= __("website_name"); ?>
+                    </span>
+                </a>
+                <p class="mt-4 text-lg tracking-wider">
+                    <?= __("website_tagline"); ?>
+                </p>
+            </div>
+
+            <div
+                class="flex flex-col sm:flex-row items-start text-left gap-12 sm:gap-20 md:gap-16 text-lg tracking-wider">
+                <div>
+                    <h6 class="uppercase font-bold text-accent mb-6">
+                        <?= __("footer_product_heading"); ?>
+                    </h6>
+                    <div class="flex flex-col space-y-3 font-medium">
+                        <a href="javascript:void(0);" class="transition-colors hover:text-primary">
+                            <?= __("footer_link_dashboard"); ?>
+                        </a>
+                        <a href="javascript:void(0);" class="transition-colors hover:text-primary">
+                            <?= __("footer_link_pricing"); ?>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h6 class="uppercase font-bold text-accent mb-6">
+                        <?= __("footer_resources_heading"); ?>
+                    </h6>
+                    <div class="flex flex-col space-y-3 font-medium">
+                        <a href="javascript:void(0);" class="transition-colors hover:text-primary">
+                            <?= __("footer_link_ai_analysis"); ?>
+                        </a>
+                        <a href="javascript:void(0);" class="transition-colors hover:text-primary">
+                            <?= __("footer_link_roi_calculator"); ?>
+                        </a>
+                        <a href="javascript:void(0);" class="transition-colors hover:text-primary">
+                            <?= __("footer_link_worksheets"); ?>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h6 class="uppercase font-bold text-accent mb-6">
+                        <?= __("footer_company_heading"); ?>
+                    </h6>
+                    <div class="flex flex-col space-y-3 font-medium">
+                        <a href="mailto:support@yeshomework.com" class="transition-colors hover:text-primary">
+                            <?= __("footer_link_support"); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Gradient Border -->
+        <div class="h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+
+        <!-- Bottom Container -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-y-6 py-8 border-t border-secondary">
+            <div
+                class="flex flex-col sm:flex-row items-center gap-x-4 gap-y-2 text-base font-medium tracking-wide order-2 sm:order-1">
+                <a href="javascript:void(0);" class="transition-colors hover:text-primary">
+                    <?= __("footer_link_privacy"); ?>
+                </a>
+                <a href="javascript:void(0);" class="transition-colors hover:text-primary">
+                    <?= __("footer_link_terms"); ?>
+                </a>
+            </div>
+            <p class="text-base font-medium tracking-wide text-center sm:text-right order-1 sm:order-2">
+                <?= __("footer_copyright", ['year' => date('Y')]); ?>
+            </p>
+        </div>
+
+    </div>
+</footer>

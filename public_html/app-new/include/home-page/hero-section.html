@@ -1,0 +1,258 @@
+<section class="relative w-full overflow-hidden bg-base-100 pb-20 pt-24 sm:pb-24 sm:pt-32">
+
+    <!-- Animated background elements -->
+    <div
+        class="absolute top-0 left-0 h-full w-full transform-gpu bg-gradient-to-br from-primary/20 via-transparent to-accent/10 opacity-15">
+    </div>
+    <div
+        class="absolute top-0 right-0 h-full w-full transform-gpu bg-gradient-to-bl from-primary/20 via-transparent to-accent/10 opacity-15">
+    </div>
+    <div class="absolute inset-0 transform-gpu bg-gradient-to-tr from-accent/10 to-primary opacity-15"></div>
+    <div class="absolute inset-0 transform-gpu bg-gradient-to-tl from-accent/10 to-primary opacity-15"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-15"></div>
+
+    <!-- Content -->
+    <div class="relative mx-auto grid max-w-[1280px] grid-cols-1 gap-16 lg:gap-12 px-4 lg:grid-cols-2">
+
+        <!-- Left Column: Text Content -->
+        <div class="z-10 flex flex-col items-center text-center lg:items-start lg:text-left">
+
+            <div class="font-['Teko'] font-bold uppercase tracking-tight text-5xl sm:text-6xl">
+                <span>
+                    <?= __("hero_headline_part1"); ?>
+                </span>
+                <br class="block lg:hidden">
+                <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    <?= __("hero_headline_highlight"); ?>
+                </span>
+            </div>
+
+            <p class="mt-6 max-w-lg sm:max-w-2xl font-sans text-lg lg:text-xl">
+                <?= __("hero_subheadline"); ?>
+            </p>
+
+            <ul
+                class="mt-8 hidden sm:flex flex-col sm:flex-row flex-wrap justify-start gap-4 text-left font-['Teko'] text-xl tracking-wider lg:flex-col lg:space-y-4 lg:gap-0">
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid fa-bolt text-primary"></i>
+                    <span>
+                        <?= __("hero_feature_1"); ?>
+                    </span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid fa-bolt text-primary"></i>
+                    <span>
+                        <?= __("hero_feature_2"); ?>
+                    </span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid fa-bolt text-primary"></i>
+                    <span>
+                        <?= __("hero_feature_3"); ?>
+                    </span>
+                </li>
+            </ul>
+
+            <div class="mt-10">
+                <a href="javascript:void(0);"
+                    class="btn h-auto min-h-[3.5rem] text-base-100 rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary px-10 py-4 font-['Teko'] text-xl uppercase tracking-wider transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
+                    <?= __("hero_cta"); ?>
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Column: Interactive Visual Showcase -->
+        <div class="relative flex flex-col items-center justify-center lg:h-full">
+
+            <!-- Desktop Visual -->
+            <div class="hidden sm:block">
+
+                <!-- Group 1 -->
+                <div class="image-group w-full text-center">
+
+                    <p class="mb-8 font-['Teko'] text-xl tracking-wider">
+                        <?= __("hero_image_text_1"); ?>
+                    </p>
+
+                    <div class="relative h-96">
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 -translate-x-[100%] cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-10">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300 -rotate-6">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-primary/20 font-['Teko'] text-8xl text-base-content/10">
+                                    1</div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 -translate-x-1/2 cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-20">
+                            <div class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-primary/20 font-['Teko'] text-8xl text-secondary/20">
+                                    2</div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 translate-x-[0%] cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-10">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300 rotate-6">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-primary/20 font-['Teko'] text-8xl text-base-content/10">
+                                    3</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Group 2 -->
+                <div class="image-group hidden w-full text-center">
+
+                    <p class="mb-8 font-['Teko'] text-xl tracking-wider">
+                        <?= __("hero_image_text_2"); ?>
+                    </p>
+
+                    <div class="relative h-96">
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 -translate-x-[100%] cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-10">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300 -rotate-6">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-secondary/20 font-['Teko'] text-8xl text-secondary/20">
+                                    1</div>
+                            </div>
+                        </div>
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 -translate-x-1/2 cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-20">
+                            <div class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-secondary/20 font-['Teko'] text-8xl text-secondary/20">
+                                    2</div>
+                            </div>
+                        </div>
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 translate-x-[0%] cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-10">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300 rotate-6">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-secondary/20 font-['Teko'] text-8xl text-secondary/20">
+                                    3</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Group 3 -->
+                <div class="image-group hidden w-full text-center">
+
+                    <p class="mb-8 font-['Teko'] text-xl tracking-wider">
+                        <?= __("hero_image_text_3"); ?>
+                    </p>
+
+                    <div class="relative h-96">
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 -translate-x-[100%] cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-10">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300 -rotate-6">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-accent/20 font-['Teko'] text-8xl text-accent/20">
+                                    1</div>
+                            </div>
+                        </div>
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 -translate-x-1/2 cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-20">
+                            <div class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-accent/20 font-['Teko'] text-8xl text-accent/20">
+                                    2</div>
+                            </div>
+                        </div>
+                        <div
+                            class="group absolute top-0 left-1/2 h-80 w-56 translate-x-[0%] cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105 z-10">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300 rotate-6">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-accent/20 font-['Teko'] text-8xl text-accent/20">
+                                    3</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Mobile Visual -->
+            <div class="block sm:hidden w-full text-center">
+                <div class="relative h-96">
+
+                    <!-- Group 1 -->
+                    <div class="mobile-image-group flex flex-col items-center justify-center text-center">
+                        <p class="mb-4 font-['Teko'] text-xl tracking-wider">
+                            <?= __("hero_image_text_1"); ?>
+                        </p>
+                        <div
+                            class="group h-80 w-56 cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-primary/20 font-['Teko'] text-8xl text-primary/20">
+                                    A
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Group 2 -->
+                    <div class="mobile-image-group hidden flex flex-col items-center justify-center text-center">
+                        <p class="mb-4 font-['Teko'] text-xl tracking-wider">
+                            <?= __("hero_image_text_2"); ?>
+                        </p>
+                        <div
+                            class="group h-80 w-56 cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-secondary/20 font-['Teko'] text-8xl text-primary/20">
+                                    B
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Group 3 -->
+                    <div class="mobile-image-group hidden flex flex-col items-center justify-center text-center">
+                        <p class="mb-4 font-['Teko'] text-xl tracking-wider">
+                            <?= __("hero_image_text_3"); ?>
+                        </p>
+                        <div
+                            class="group h-80 w-56 cursor-pointer transition-all duration-300 hover:z-30 hover:scale-105">
+                            <div
+                                class="h-full w-full rounded-lg border-2 border-white/10 bg-base-300 p-2 shadow-2xl transition-all duration-300">
+                                <div
+                                    class="flex h-full w-full items-center justify-center rounded-md bg-accent/20 font-['Teko'] text-8xl text-primary/20">
+                                    C
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Play Me Button -->
+            <button id="play-button"
+                class="btn btn-ghost btn-sm font-['Teko'] uppercase tracking-widest bg-base-300 border-secondary hover:border-primary hover:bg-primary/10 hover:text-primary">
+                <i class="fa-solid fa-arrow-pointer"></i>
+                <?= __("hero_play_me_button"); ?>
+            </button>
+        </div>
+    </div>
+
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary"></div>

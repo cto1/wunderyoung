@@ -1,0 +1,205 @@
+<section class="relative w-full overflow-hidden">
+
+    <!-- Animated background elements -->
+    <div class="animate-float absolute top-0 right-0 z-10 h-96 w-96 rounded-full bg-accent opacity-10 blur-3xl"
+        style="animation-delay: -4s;"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 mx-auto max-w-7xl px-4 pt-28 pb-20 sm:pt-32 sm:pb-24">
+
+        <!-- Headline -->
+        <div class="mb-20 text-center">
+            <h2 class="font-['Teko'] text-5xl font-bold uppercase tracking-tight sm:text-6xl">
+                <?= __("pricing_title_part1"); ?>
+                <br />
+                <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    <?= __("pricing_title_part2"); ?>
+                </span>
+            </h2>
+            <p class="mx-auto mt-4 max-w-xl text-lg">
+                <?= __("pricing_subtitle"); ?>
+            </p>
+        </div>
+
+        <!-- Pricing Cards -->
+        <div class="grid grid-cols-1 items-stretch gap-12 lg:gap-8 lg:grid-cols-3">
+
+            <!-- Card-1 -->
+            <div
+                class="relative flex flex-col rounded-xl border border-base-content/20 bg-base-200 p-8 backdrop-blur-lg">
+                <div
+                    class="pointer-events-none absolute top-0 left-0 h-6 w-6 rounded-tl-xl border-l border-t border-base-content">
+                </div>
+                <div
+                    class="pointer-events-none absolute top-0 right-0 h-6 w-6 rounded-tr-xl border-r border-t border-base-content">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 left-0 h-6 w-6 rounded-bl-xl border-l border-b border-base-content">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 right-0 h-6 w-6 rounded-br-xl border-r border-b border-base-content">
+                </div>
+
+                <h3 class="font-['Teko'] text-2xl font-bold uppercase tracking-wider text-accent">
+                    <?= __("plan_1_title"); ?>
+                </h3>
+                <p class="mt-4 flex items-baseline gap-2">
+                    <span class="font-['Teko'] text-5xl font-bold tracking-tight">
+                        <?= __("plan_1_price"); ?>
+                    </span>
+                    <span class="font-sans text-sm font-semibold">
+                        <?= __("plan_currency"); ?>
+                    </span>
+                </p>
+                <ul class="my-8 flex-1 space-y-3 font-medium text-base-content/80">
+                    <li class="flex items-center gap-3">
+                    <li class="flex items-start gap-3"><i
+                            class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                <?= __("plan_feature_unlimited"); ?>
+                            </span></li>
+                    <li class="flex items-center gap-3">
+                    <li class="flex items-start gap-3"><i
+                            class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                <?= __("plan_feature_topics"); ?>
+                            </span></li>
+                    <li class="flex items-center gap-3">
+                    <li class="flex items-start gap-3"><i
+                            class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                <?= __("plan_feature_levels"); ?>
+                            </span></li>
+                </ul>
+                <a href="javascript:void(0);"
+                    class="btn btn-outline border-base-content/30 font-['Teko'] text-lg uppercase tracking-wider hover:border-primary hover:bg-primary hover:text-primary-content">
+                    <?= __("plan_1_cta"); ?>
+                </a>
+                <p class="mt-3 text-center text-xs">
+                    <?= __("plan_subtext"); ?>
+                </p>
+            </div>
+
+            <!-- Card-2 -->
+            <div class="relative lg:scale-105">
+                <div class="rounded-xl"></div>
+
+                <div
+                    class="relative z-10 flex h-full flex-col rounded-xl border border-primary/50 bg-base-300 p-8 backdrop-blur-lg">
+                    <div
+                        class="pointer-events-none absolute top-0 left-0 h-8 w-8 rounded-tl-xl border-l-2 border-t-2 border-primary">
+                    </div>
+                    <div
+                        class="pointer-events-none absolute top-0 right-0 h-8 w-8 rounded-tr-xl border-r-2 border-t-2 border-primary">
+                    </div>
+                    <div
+                        class="pointer-events-none absolute bottom-0 left-0 h-8 w-8 rounded-bl-xl border-l-2 border-b-2 border-primary">
+                    </div>
+                    <div
+                        class="pointer-events-none absolute bottom-0 right-0 h-8 w-8 rounded-br-xl border-r-2 border-b-2 border-primary">
+                    </div>
+
+                    <div class="absolute -top-4 left-1/2 z-20 -translate-x-1/2">
+                        <span
+                            class="rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 font-['Teko'] text-sm font-bold uppercase tracking-widest text-white">
+                            <?= __("plan_2_badge"); ?>
+                        </span>
+                    </div>
+
+                    <h3 class="font-['Teko'] text-2xl font-bold uppercase tracking-wider text-primary">
+                        <?= __("plan_2_title"); ?>
+                    </h3>
+                    <p class="mt-4 flex items-baseline gap-2">
+                        <span
+                            class="bg-gradient-to-br from-primary to-accent bg-clip-text font-['Teko'] text-5xl font-bold tracking-tight text-transparent">
+                            <?= __("plan_2_price"); ?>
+                        </span>
+                        <span class="font-sans text-sm font-semibold">
+                            <?= __("plan_currency"); ?>
+                        </span>
+                    </p>
+                    <ul class="my-8 flex-1 space-y-3 font-medium text-base-content/80">
+                        <li class="flex items-center gap-3">
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                    <?= __("plan_feature_unlimited"); ?>
+                                </span></li>
+                        <li class="flex items-center gap-3">
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                    <?= __("plan_feature_topics"); ?>
+                                </span></li>
+                        <li class="flex items-center gap-3">
+                        <li class="flex items-start gap-3"><i
+                                class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                    <?= __("plan_feature_levels"); ?>
+                                </span></li>
+                    </ul>
+                    <a href="javascript:void(0);"
+                        class="btn rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary font-['Teko'] text-lg uppercase tracking-wider text-white transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0]">
+                        <?= __("plan_2_cta"); ?>
+                    </a>
+                    <p class="mt-3 text-center text-xs">
+                        <?= __("plan_subtext"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card-3 -->
+            <div
+                class="relative flex flex-col rounded-xl border border-base-content/20 bg-base-200 p-8 backdrop-blur-lg">
+                <div
+                    class="pointer-events-none absolute top-0 left-0 h-6 w-6 rounded-tl-xl border-l border-t border-base-content">
+                </div>
+                <div
+                    class="pointer-events-none absolute top-0 right-0 h-6 w-6 rounded-tr-xl border-r border-t border-base-content">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 left-0 h-6 w-6 rounded-bl-xl border-l border-b border-base-content">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 right-0 h-6 w-6 rounded-br-xl border-r border-b border-base-content">
+                </div>
+
+                <h3 class="font-['Teko'] text-2xl font-bold uppercase tracking-wider text-accent">
+                    <?= __("plan_3_title"); ?>
+                </h3>
+                <p class="mt-4 flex items-baseline gap-2">
+                    <span class="font-['Teko'] text-5xl font-bold tracking-tight">
+                        <?= __("plan_3_price"); ?>
+                    </span>
+                    <span class="font-sans text-sm font-semibold">
+                        <?= __("plan_currency"); ?>
+                    </span>
+                </p>
+                <ul class="my-8 flex-1 space-y-3 font-medium text-base-content/80">
+                    <li class="flex items-center gap-3">
+                    <li class="flex items-start gap-3"><i
+                            class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                <?= __("plan_feature_unlimited"); ?>
+                            </span></li>
+                    <li class="flex items-center gap-3">
+                    <li class="flex items-start gap-3"><i
+                            class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                <?= __("plan_feature_topics"); ?>
+                            </span></li>
+                    <li class="flex items-center gap-3">
+                    <li class="flex items-start gap-3"><i
+                            class="fa-solid fa-check-double mt-1 flex-shrink-0 text-accent"></i><span><span>
+                                <?= __("plan_feature_levels"); ?>
+                            </span></li>
+                </ul>
+                <a href="javascript:void(0);"
+                    class="btn btn-outline border-base-content/30 font-['Teko'] text-lg uppercase tracking-wider hover:border-primary hover:bg-primary hover:text-primary-content">
+                    <?= __("plan_3_cta"); ?>
+                </a>
+                <p class="mt-3 text-center text-xs">
+                    <?= __("plan_subtext"); ?>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px mx-auto w-[80%] max-w-7xl bg-gradient-to-r from-primary via-accent to-secondary"></div>

@@ -1,0 +1,118 @@
+<header class="bg-base-300 relativetop-0 z-50 shadow-lg shadow-black/20">
+    <div class="max-w-[1280px] mx-auto navbar flex justify-between px-4 py-3">
+
+        <!-- Left side Content -->
+        <div>
+            <a href="javascript:void(0);" class="flex items-center gap-3 text-2xl font-bold transition-all duration-300 hover:opacity-80"
+                aria-label="Homepage">
+
+                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="484.000000pt" height="346.000000pt"
+                    viewBox="0 0 484.000000 346.000000" preserveAspectRatio="xMidYMid meet"
+                    class="h-10 w-10 text-primary">
+                    <g transform="translate(0.000000,346.000000) scale(0.100000,-0.100000)" fill="currentColor"
+                        stroke="none">
+                        <path
+                            d="M2220 3449 c-501 -55 -925 -239 -1307 -566 -440 -375 -726 -927 -782 -1507 -7 -64 -11 -364 -11 -718 l0 -608 215 0 215 0 0 613 c0 623 3 697 40 876 54 256 167 509 320 716 188 252 420 446 695 580 203 99 354 146 580 181 88 13 151 15 315 11 221 -6 307 -19 502 -76 442 -129 867 -463 1088 -856 l34 -60 -49 38 c-221 169 -500 300 -760 356 -275 60 -586 53 -863 -18 -314 -81 -603 -246 -834 -475 -245 -242 -402 -513 -491 -846 -50 -187 -57 -268 -57 -669 l0 -371 209 0 208 0 6 357 c7 425 17 503 92 715 123 344 420 655 770 806 252 109 577 142 852 87 392 -80 727 -314 938 -657 25 -39 43 -74 40 -76 -2 -3 -22 7 -43 21 -124 81 -339 164 -506 194 -119 21 -342 21 -463 -1 -386 -68 -716 -286 -928 -614 -65 -101 -129 -240 -159 -346 -31 -106 -56 -286 -56 -402 l0 -84 214 0 213 0 6 133 c6 154 27 240 87 365 98 205 241 348 443 447 291 141 634 122 913 -50 91 -56 232 -192 289 -279 88 -136 141 -308 151 -498 l7 -118 215 0 214 0 -5 653 c-4 594 -7 664 -25 784 -77 489 -282 902 -625 1260 -355 369 -813 604 -1343 688 -120 19 -447 27 -564 14z" />
+                    </g>
+                </svg>
+                <span
+                    class="bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text font-['Teko'] tracking-wide text-2xl sm:text-3xl leading-none relative top-[4px] uppercase">
+                    <?= __("website_name"); ?>
+                </span>
+            </a>
+        </div>
+
+        <!-- Right side Content -->
+        <div>
+
+            <!-- Desktop Navbar Content  -->
+            <div class="hidden lg:flex items-center font-['Teko'] text-lg">
+                <ul class="menu menu-horizontal px-1 uppercase font-bold tracking-wider flex items-center text-lg">
+                    <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
+                            <?= __("nav_features"); ?>
+                        </a></li>
+                    <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
+                            <?= __("nav_pricing"); ?>
+                        </a></li>
+
+                    <li>
+                        <details class="dropdown dropdown-end group">
+                            <summary
+                                class="list-none flex items-center gap-2 px-4 py-1 cursor-pointer transition-colors duration-200 hover:text-accent"
+                                style="list-style: none;">
+                                <span class="relative top-[1px]">
+                                    <?= __("nav_resources"); ?>
+                                </span>
+                            </summary>
+                            <ul tabindex="0"
+                                class="dropdown-content z-[1] menu p-2 shadow-xl bg-base-200 rounded-md w-52 top-6 border border-white/10 uppercase">
+                                <li><a class="hover:text-accent">
+                                        <?= __("nav_resources_roi_calculator"); ?>
+                                    </a></li>
+                                <li><a class="hover:text-accent">
+                                        <?= __("nav_resources_ai_analysis"); ?>
+                                    </a></li>
+                                <li><a class="hover:text-accent">
+                                        <?= __("nav_resources_worksheets"); ?>
+                                    </a></li>
+                            </ul>
+                        </details>
+                    </li>
+                </ul>
+                <div class="w-px h-6 bg-accent mx-6 skew-x-[-15deg]"></div>
+                <a href="javascript:void(0);"
+                    class="py-2 px-4 rounded-md uppercase font-bold tracking-wider ml-4 transition-all duration-500 hover:-translate-y-0.5 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
+                    <?= __("nav_get_started"); ?>
+                </a>
+            </div>
+
+            <!-- Mobile Navbar Content -->
+            <div class="flex items-center lg:hidden">
+                <details class="dropdown dropdown-end">
+                    <summary class="btn btn-ghost sm:mr-3">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </summary>
+                    <ul tabindex="0"
+                        class="dropdown-content z-[50] menu p-4 shadow-xl bg-base-200 rounded-md w-72 mt-1 !right-2.5 border border-white/10 uppercase font-bold tracking-wider">
+                        <li><a class="hover:text-accent">
+                                <?= __("nav_features"); ?>
+                            </a></li>
+                        <li><a class="hover:text-accent">
+                                <?= __("nav_pricing"); ?>
+                            </a></li>
+
+                        <div class="divider my-4 h-px border-0 bg-gradient-to-r from-primary to-accent"></div>
+                        <li class="menu-title"><span class="text-xs">
+                                <?= __("nav_resources"); ?>
+                            </span></li>
+                        <li><a class="text-sm hover:text-accent">
+                                <?= __("nav_resources_roi_calculator"); ?>
+                            </a></li>
+                        <li><a class="text-sm hover:text-accent">
+                                <?= __("nav_resources_ai_analysis"); ?>
+                            </a></li>
+                        <li><a class="text-sm hover:text-accent">
+                                <?= __("nav_resources_worksheets"); ?>
+                            </a></li>
+
+                        <div class="sm:hidden divider my-4 h-px border-0 bg-gradient-to-r from-primary to-accent"></div>
+                        <a href="javascript:void(0);"
+                            class="flex sm:hidden btn btn-primary rounded-md uppercase font-bold tracking-wider ml-2 transition-all duration-500 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
+                            <?= __("nav_get_started"); ?>
+                        </a>
+
+                    </ul>
+                </details>
+                <a href="javascript:void(0);"
+                    class="hidden sm:flex py-2 px-4 rounded-md uppercase font-bold tracking-wider transition-all duration-500 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
+                    <?= __("nav_get_started"); ?>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+<!-- Gradient Border -->
+<div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary"></div>

@@ -1,0 +1,106 @@
+<section class="relative w-full overflow-hidden bg-base-100 py-24 sm:py-32" id="worksheet-previews">
+
+    <!-- Animated background elements -->
+    <div class="animate-float absolute top-0 right-0 z-10 h-96 w-96 rounded-full bg-accent opacity-10 blur-3xl"
+        style="animation-delay: -4s;"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 mx-auto max-w-7xl px-4">
+
+        <!-- Headline -->
+        <div class="mb-16 text-center lg:mb-24">
+            <span
+                class="rounded-md bg-gradient-to-r from-accent to-secondary px-4 py-1.5 font-['Teko'] text-sm font-bold uppercase tracking-widest text-base-100">
+                <?= __("previews_badge"); ?>
+            </span>
+            <h2 class="mt-6 font-['Teko'] text-5xl font-bold uppercase tracking-tight sm:text-6xl">
+                <?= __("previews_title"); ?>
+            </h2>
+            <p class="mx-auto mt-4 max-w-2xl text-lg">
+                <?= __("previews_subtitle"); ?>
+            </p>
+        </div>
+
+        <!-- Category Cards Content -->
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+            <!-- Card-1 -->
+            <div
+                class="card transform-gpu rounded-xl border border-base-content/60 bg-base-100/50 p-1 shadow-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                <div class="card-body items-start p-6 text-left">
+                    <div
+                        class="flex h-48 w-full items-center justify-center rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10">
+                        <i class="fa-solid fa-calculator text-6xl text-primary opacity-50"></i>
+                    </div>
+                    <div class="badge badge-primary mt-6 font-sans font-bold">
+                        <?= __("card_1_category"); ?>
+                    </div>
+                    <h3 class="card-title mt-2 font-['Teko'] text-2xl font-bold uppercase tracking-wider">
+                        <?= __("card_1_title"); ?>
+                    </h3>
+                    <p class="text-sm text-base-content/90">
+                        <?= __("card_1_desc"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card-2 -->
+            <div
+                class="card transform-gpu rounded-xl border border-base-content/60 bg-base-100/50 p-1 shadow-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                <div class="card-body items-start p-6 text-left">
+                    <div
+                        class="flex h-48 w-full items-center justify-center rounded-lg bg-gradient-to-br from-secondary/10 to-accent/10">
+                        <i class="fa-solid fa-book-open-reader text-6xl text-secondary opacity-50"></i>
+                    </div>
+                    <div class="badge badge-secondary mt-6 font-sans font-bold">
+                        <?= __("card_2_category"); ?>
+                    </div>
+                    <h3 class="card-title mt-2 font-['Teko'] text-2xl font-bold uppercase tracking-wider">
+                        <?= __("card_2_title"); ?>
+                    </h3>
+                    <p class="text-sm text-base-content/80">
+                        <?= __("card_2_desc"); ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card-3 -->
+            <div
+                class="card transform-gpu rounded-xl border border-base-content/60 bg-base-100/50 p-1 shadow-xl backdrop-blur-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                <div class="card-body items-start p-6 text-left">
+                    <div
+                        class="flex h-48 w-full items-center justify-center rounded-lg bg-gradient-to-br from-accent/10 to-primary/10">
+                        <i class="fa-solid fa-globe text-6xl text-accent opacity-50"></i>
+                    </div>
+                    <div class="mt-6 flex items-center gap-2">
+                        <div class="badge badge-accent font-sans font-bold text-white">
+                            <?= __("card_3_category"); ?>
+                        </div>
+                    </div>
+                    <h3 class="card-title mt-2 font-['Teko'] text-2xl font-bold uppercase tracking-wider">
+                        <?= __("card_3_title"); ?>
+                    </h3>
+                    <p class="text-sm text-base-content/80">
+                        <?= __("card_3_desc"); ?>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Button -->
+        <div class="mt-16 text-center lg:mt-24">
+            <a href="#start-trial-section"
+                class="btn h-auto min-h-[3.5rem] rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary px-10 py-4 font-['Teko'] text-xl uppercase tracking-wider text-white shadow-lg shadow-primary/30 transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0] gap-3">
+                <span class="relative top-[2px]">
+                    <?= __("previews_cta"); ?>
+                </span>
+                <i class="fa-solid fa-download"></i>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px mx-auto w-[80%] max-w-7xl bg-gradient-to-r from-primary via-accent to-secondary"></div>
