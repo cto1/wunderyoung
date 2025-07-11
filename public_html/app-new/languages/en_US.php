@@ -4,7 +4,7 @@ return [
 
     /* ----------------------------------------------------------- */
     /* -------------------- [Common & Header] -------------------- */
-    'website_title' => 'Yes Homework',
+    'website_title' => 'Wunderyoung',
 
 
 
@@ -12,7 +12,7 @@ return [
     /* -------------------- [Navbar & Footer] -------------------- */
 
     // ---------- Navbar ----------
-    'website_name' => 'Yes Homework',
+    'website_name' => 'Wunderyoung',
     'nav_features' => 'Features',
     'nav_pricing' => 'Pricing',
     'nav_resources' => 'Resources',
@@ -34,7 +34,7 @@ return [
     'footer_link_support' => 'Support',
     'footer_link_privacy' => 'Privacy Policy',
     'footer_link_terms' => 'Terms of Service',
-    'footer_copyright' => '© 2025 Yes Homework - Making homework happy, one worksheet at a time.',
+    'footer_copyright' => '© 2025 Wunderyoung - Making homework happy, one worksheet at a time.',
 
 
 
