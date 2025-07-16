@@ -1,0 +1,61 @@
+<section class="relative isolate w-full overflow-hidden bg-base-300 py-24 sm:py-32" id="reviews">
+    
+    <!-- Animated background elements -->
+    <div
+        class="absolute inset-0 z-0 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.base-300),theme(colors.base-100))] opacity-20">
+    </div>
+    <div
+        class="absolute inset-y-0 right-1/2 z-0 mr-16 w-[200%] origin-bottom-left -skew-x-[20deg] bg-base-200/50 shadow-xl ring-1 ring-white/5 sm:mr-28 xl:mr-0 xl:mr-16 xl:origin-center">
+    </div>
+
+    <!-- Content -->
+    <div class="mx-auto max-w-2xl xl:max-w-6xl px-4">
+        <figure>
+            <div class="grid grid-cols-1 items-center gap-12 xl:grid-cols-2 xl:gap-16">
+
+                <div class="relative w-full max-w-sm mx-auto xl:mx-0 xl:-left-10">
+                    <div class="relative rounded-xl bg-gradient-to-r from-primary to-accent p-px xl:-rotate-2">
+                        <div class="relative rounded-[11px] bg-base-300 p-2">
+                            <img alt="A student learning with the workbook"
+                                src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2787&auto=format&fit=crop"
+                                class="rounded-lg object-cover shadow-md w-full h-full">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <i class="fa-solid fa-quote-left absolute -top-4 left-0 text-8xl text-primary/10"></i>
+
+                    <blockquote
+                        class="relative text-xl font-medium leading-8 text-base-content sm:text-2xl sm:leading-10">
+                        “
+                        <?= __("testimonial_quote"); ?>”
+                    </blockquote>
+
+                    <figcaption
+                        class="mt-10 flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="text-base">
+                            <div class="font-['Teko'] text-3xl font-bold uppercase tracking-wider text-primary">
+                                <?= __("testimonial_author_name"); ?>
+                            </div>
+                            <div class="mt-1 text-base-content/90">
+                                <?= __("testimonial_author_desc"); ?>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-base-content/90">
+                            <span>
+                                <?= __("testimonial_partner_text"); ?>
+                            </span>
+                            <img alt="italki logo" src="https://workbookpdf.com/_next/static/media/italki.505fa862.png"
+                                class="h-12">
+                        </div>
+                    </figcaption>
+                </div>
+
+            </div>
+        </figure>
+    </div>
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary"></div>

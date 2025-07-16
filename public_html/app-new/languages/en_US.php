@@ -13,6 +13,7 @@ return [
 
     // ---------- Navbar ----------
     'website_name' => 'Wunderyoung',
+    'nav_how_its_works' => 'How its works',
     'nav_features' => 'Features',
     'nav_pricing' => 'Pricing',
     'nav_resources' => 'Resources',
@@ -59,10 +60,8 @@ return [
     'login_privacy_link' => 'Privacy Policy',
 
 
-    
     // ---------- Home-Page  ----------
-
-    // Hero Section
+    // Home Hero Section
     'hero_headline_part1' => 'Language workbooks created',
     'hero_headline_highlight' => 'just for you',
     'hero_subheadline' => 'Improve your grammar and vocabulary with exercises personalized for your level and interests — Learning made fun!',
@@ -74,6 +73,19 @@ return [
     'hero_image_text_2' => 'Master History with Stories 📜',
     'hero_image_text_3' => 'Explore Science with Fun Facts 🔬',
     'hero_play_me_button' => 'Play Me',
+
+    // Comparison Section
+    'comparison_title_prefix_part1' => 'Why?',
+    'comparison_title_prefix_part2' => 'Because Language Learning Tools Are',
+    'comparison_title_highlight' => 'Boring',
+    'comparison_title_suffix' => '🥱',
+    'comparison_annot_1' => 'all the same',
+    'comparison_annot_2' => 'generic',
+    'comparison_annot_3' => 'outdated',
+    'comparison_annot_4' => 'theoretical',
+    'feature_fun' => 'Fun',
+    'feature_easy' => 'Easy',
+    'feature_varied' => 'Varied',
 
     // Features Section 
     'features_title_part1' => 'Let\'s Make Learning a New Language',
@@ -142,6 +154,58 @@ return [
     'stat_3_value' => '4.9/5 Stars',
     'stat_3_title' => 'Parent Satisfaction',
 
+    // Start Trial Section
+    'cta_title' => 'Ready to Transform Your Child\'s Learning?',
+    'cta_subtitle' => 'Join hundreds of families who\'ve discovered the joy of stress-free, screen-free homework.',
+    'cta_form_placeholder' => 'Enter your email address',
+    'cta_button_text' => 'Get My First Worksheet',
+    'cta_form_subtext' => 'Free forever. Upgrade anytime. No credit card required.',
+    'cta_trust_1' => '100% Secure',
+    'cta_trust_2' => 'Instant Setup',
+    'cta_trust_3' => 'Parent Approved',
+
+
+    // ---------- Pricing-Page ----------
+    // Pricing Hero Section
+    'pricing_hero_badge' => 'Simple & Transparent',
+    'pricing_hero_title_part1' => 'Find The Perfect Plan',
+    'pricing_hero_title_part2' => 'For Your Family',
+    'pricing_hero_subtitle' => 'No subscriptions, no hidden fees. Just a simple one-time payment for unlimited learning and fun.',
+
+
+    // ---------- Free-Page ----------
+    // Free-Workbooks
+    'languages_title' => 'Free Workbooks',
+    'languages_subtitle' => 'Learn a language with our free workbooks. Available in PDF for 23+ languages.',
+    'language_english' => 'English',
+    'language_spanish' => 'Spanish',
+    'language_french' => 'French',
+    'language_korean' => 'Korean',
+    'language_japanese' => 'Japanese',
+    'language_chinese' => 'Chinese',
+    'language_hindi' => 'Hindi',
+    'language_german' => 'German',
+    'language_arabic' => 'Arabic',
+    'language_russian' => 'Russian',
+    'language_portuguese' => 'Portuguese',
+    'language_indonesian' => 'Indonesian',
+    'language_vietnamese' => 'Vietnamese',
+    'language_italian' => 'Italian',
+    'language_thai' => 'Thai',
+    'language_filipino' => 'Filipino',
+    'language_ukrainian' => 'Ukrainian',
+    'language_turkish' => 'Turkish',
+    'language_romanian' => 'Romanian',
+    'language_hebrew' => 'Hebrew',
+    'language_afrikaans' => 'Afrikaans',
+    'language_swedish' => 'Swedish',
+    'language_taiwanese' => 'Taiwanese',
+
+
+
+    /* ---------------------------------------------------------- */
+    /* -------------------- [Common Section] -------------------- */
+
     // Pricing Section
     'pricing_title_part1' => 'Language Workbooks',
     'pricing_title_part2' => 'You\'ll Love!',
@@ -191,20 +255,29 @@ return [
     'faq_q8_question' => 'Can I reuse the workbook for my students?',
     'faq_q8_answer_p1' => 'You need to purchase Commercial Rights ($9 per workbook). Then you have full ownership of the exercises generated. You can even resell them to your students! Reach out to our support team to get Commercial Rights.',
 
-    // Start Trial Section
-    'cta_title' => 'Ready to Transform Your Child\'s Learning?',
-    'cta_subtitle' => 'Join hundreds of families who\'ve discovered the joy of stress-free, screen-free homework.',
-    'cta_form_placeholder' => 'Enter your email address',
-    'cta_button_text' => 'Get My First Worksheet',
-    'cta_form_subtext' => 'Free forever. Upgrade anytime. No credit card required.',
-    'cta_trust_1' => '100% Secure',
-    'cta_trust_2' => 'Instant Setup',
-    'cta_trust_3' => 'Parent Approved',
+     // Testimonial Section
+    'testimonial_quote' => 'I fell in love with French food on my Paris trip. So I started to learn French to order delicious pastries and cheeses. These PDFs help me to practice the topics I need and it was so fun to learn with my personal interests! Thank you so much!',
+    'testimonial_author_name' => 'Jihyeon Won',
+    'testimonial_author_desc' => 'French student 🇫🇷 (A1)',
+    'testimonial_partner_text' => 'Verified on',
 
 
 
-    /* -------------------------------------------------- */
+    /* ----------------------------------------------------------- */
     /* -------------------- [Modals & Popups] -------------------- */
+
+    // Email Capture Popup
+    'modal_title' => 'Grab Your Free Workbook',
+    'modal_subtitle' => 'Get 10 fun & illustrated exercises to master your skills!',
+    'modal_language_label' => 'Pick a language',
+    'modal_language_placeholder' => 'Select Language',
+    'modal_form_label' => 'Where should we send it?',
+    'modal_form_placeholder' => 'your@email.com',
+    'modal_form_button' => 'Send Me The Workbook',
+    'modal_testimonial_quote' => 'This was so fun to learn with my personal interests!',
+    'modal_testimonial_author' => 'Jihyeon Won',
+
+
 
 ];
 

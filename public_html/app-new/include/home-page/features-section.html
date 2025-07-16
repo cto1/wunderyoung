@@ -21,7 +21,57 @@
 
 
         <!-- Cards Grid -->
-        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-3 lg:gap-8">
+        <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
+
+
+            <!-- Demo Preview Card -->
+            <div class="order-first lg:order-none">
+                <div class="relative z-20 mx-auto max-w-md">
+
+                    <div class="mb-4 flex justify-center items-center gap-4">
+                        <div class="relative flex-1">
+                            <select id="language-select"
+                                class="select w-full appearance-none rounded-lg border-b-2 border-base-content bg-base-100 pr-10 font-['Teko'] text-base uppercase tracking-wider focus:border-accent focus:outline-none focus:ring-0">
+                                <option disabled selected value="">
+                                    <?= __("features_select_language_placeholder"); ?>
+                                </option>
+                                <option>
+                                    <?= __("features_select_language_option_1"); ?>
+                                </option>
+                                <option>
+                                    <?= __("features_select_language_option_2"); ?>
+                                </option>
+                                <option>
+                                    <?= __("features_select_language_option_3"); ?>
+                                </option>
+                            </select>
+                        </div>
+                        <div class="flex justify-center items-center gap-2">
+                            <p class="font-['Teko'] text-2xl inline-block border-b-2 border-accent">
+                                <span class="bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
+                                    Scroll me
+                                </span>
+                            </p>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 36"
+                                class="w-9 lg:w-10 text-accent pt-4 hidden lg:block">
+                                <path opacity="1"
+                                    d="M0.276766 2.62072C2.01704 0.658289 4.31028 0.295086 6.44635 0.201076C9.4159 0.105352 12.3994 0.291267 15.2258 0.746364C28.1516 3.15236 37.6633 9.67512 44.0832 19.5586C45.7048 22.0775 46.9236 24.8788 48.4544 27.8587C50.9257 25.3571 51.4949 21.9375 53.8999 19.244C54.7147 20.3945 54.2572 21.4837 53.9045 22.3935C52.4413 26.1221 50.9036 29.8766 49.2693 33.5928C48.4673 35.374 47.543 35.8368 45.8038 35.1491C42.1545 33.761 39.4457 31.4749 37.774 28.3288C37.7298 28.2008 37.8869 27.9317 38.0743 27.5088C41.5212 27.1048 41.9926 30.8807 45.1915 31.207C44.8574 26.381 42.5036 22.4681 39.7471 18.8377C36.8497 15.0412 33.5716 11.5912 29.3309 8.97528C25.1868 6.3976 20.5409 4.78117 15.589 3.48545C10.6894 2.1 5.62218 1.91837 0.276766 2.62072Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div
+                        class="relative rounded-xl border border-base/10 bg-base-300/50 p-4 shadow-2xl backdrop-blur-lg border border-base-content">
+                        <div
+                            class="h-[500px] w-full rounded-md bg-base-100 flex items-center justify-center p-4 lg:h-auto lg:aspect-[0.71] border border-base-content/50">
+                            <p id="demo-output" class="font-sans text-base-content transition-all duration-300">
+                                Interactive Demo</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pointer-events-none absolute -inset-2 z-10 rounded-xl bg-secondary/5 blur-xl"></div>
+            </div>
 
             <!-- Left Cards -->
             <div class="space-y-12">
@@ -53,45 +103,7 @@
                         </p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Demo Preview Card -->
-            <div class="order-first lg:order-none">
-                <div class="relative z-20 mx-auto max-w-md">
-                    <div class="mb-4">
-                        <div class="relative">
-                            <select id="language-select"
-                                class="select w-full appearance-none rounded-xl rounded-b-none border-x border-t border-b-2 border-base-content bg-base-100 pr-10 font-['Teko'] text-base uppercase tracking-wider focus:border-accent focus:outline-none focus:ring-0">
-                                <option disabled selected value="">
-                                    <?= __("features_select_language_placeholder"); ?>
-                                </option>
-                                <option>
-                                    <?= __("features_select_language_option_1"); ?>
-                                </option>
-                                <option>
-                                    <?= __("features_select_language_option_2"); ?>
-                                </option>
-                                <option>
-                                    <?= __("features_select_language_option_3"); ?>
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div
-                        class="relative rounded-xl rounded-t-none border border-base/10 bg-base-300/50 p-4 shadow-2xl backdrop-blur-lg border border-base-content">
-                        <div
-                            class="h-[500px] w-full rounded-md bg-base-100 flex items-center justify-center p-4 lg:h-auto lg:aspect-[0.71] border border-base-content/50">
-                            <p id="demo-output" class="font-sans text-base-content transition-all duration-300">
-                                Interactive Demo</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="pointer-events-none absolute -inset-2 z-10 rounded-xl bg-secondary/5 blur-xl"></div>
-            </div>
-
-            <!-- Right Cards -->
-            <div class="space-y-12">
-                <div class="flex flex-col items-center gap-4 text-center lg:flex-row-reverse lg:text-right">
+                <div class="flex flex-col items-center gap-4 text-center lg:flex-row lg:text-left">
                     <div
                         class="grid h-16 w-16 flex-shrink-0 place-items-center rounded-md border border-accent/50 bg-accent/10 text-accent">
                         <i class="fa-solid fa-print text-3xl"></i>
@@ -105,7 +117,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="flex flex-col items-center gap-4 text-center lg:flex-row-reverse lg:text-right">
+                <div class="flex flex-col items-center gap-4 text-center lg:flex-row lg:text-left">
                     <div
                         class="grid h-16 w-16 flex-shrink-0 place-items-center rounded-md border-purple-500/50 bg-purple-500/10 text-purple-500">
                         <i class="fa-solid fa-palette text-3xl"></i>
