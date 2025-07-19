@@ -1,0 +1,38 @@
+<section class="relative w-full overflow-hidden bg-base-100 py-20 sm:py-28">
+
+    <!-- Animated background elements -->
+    <div
+        class="absolute top-0 left-0 h-full w-full transform-gpu bg-gradient-to-br from-primary/20 via-transparent to-accent/10 opacity-15">
+    </div>
+    <div
+        class="absolute top-0 right-0 h-full w-full transform-gpu bg-gradient-to-bl from-primary/20 via-transparent to-accent/10 opacity-15">
+    </div>
+    <div class="absolute inset-0 transform-gpu bg-gradient-to-tr from-accent/10 to-primary opacity-15"></div>
+    <div class="absolute inset-0 transform-gpu bg-gradient-to-tl from-accent/10 to-primary opacity-15"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-15"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 mx-auto max-w-4xl px-4 text-center">
+
+        <span
+            class="rounded-md bg-gradient-to-r from-accent to-secondary px-4 py-1.5 font-['Teko'] text-sm font-bold uppercase tracking-widest text-white">
+            <?= __("pricing_hero_badge"); ?>
+        </span>
+
+        <h1 class="mt-6 font-['Teko'] text-5xl font-bold uppercase tracking-tight text-base-content sm:text-7xl">
+            <?= __("pricing_hero_title_part1"); ?>
+                <br class="hidden lg:block">
+            <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                <?= __("pricing_hero_title_part2"); ?>
+            </span>
+        </h1>
+
+        <p class="mx-auto mt-4 max-w-2xl text-lg text-base-content/90">
+            <?= __("pricing_hero_subtitle"); ?>
+        </p>
+
+    </div>
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px mx-auto bg-gradient-to-r from-primary via-accent to-secondary"></div>

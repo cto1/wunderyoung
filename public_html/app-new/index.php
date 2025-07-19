@@ -8,28 +8,34 @@
     <!-- Home-Page Sections -->
     <main>
 
-        <!-- Home-Page Hero Section -->
-        <?php include 'include/home-page/hero-section.html'; ?>
+        <!-- [Home-Page] > Hero Section -->
+        <?php include 'include/home-page/home-hero-section.html'; ?>
         
-        <!-- Home-Page Features Section -->
+        <!-- [Home-Page] > Comparison Section -->
+        <?php include 'include/home-page/comparison-section.html'; ?>
+        
+        <!-- [Home-Page] > Features Section -->
         <?php include 'include/home-page/features-section.html'; ?>
         
-        <!-- Home-Page Get Worksheet Section -->
+        <!-- [Home-Page] > Get Worksheet Section -->
         <?php include 'include/home-page/get-worksheet-section.html'; ?>
         
-        <!-- Home-Page Steps Section -->
+        <!-- [Home-Page] > Steps Section -->
         <?php include 'include/home-page/steps-section.html'; ?>
-
-        <!-- Home-Page Social Proof Section -->
-        <?php include 'include/home-page/social-proof-section.html'; ?>
         
-        <!-- Home-Page Pricing Section -->
-        <?php include 'include/home-page/pricing-section.html'; ?>
+        <!-- [Common] > Testimonial Section -->
+        <?php include 'include/common/testimonial-section.html'; ?>
         
-        <!-- Home-Page FAQ Section -->
-        <?php include 'include/home-page/faq-section.html'; ?>
+        <!-- [Common] > Pricing Section -->
+        <?php include 'include/common/pricing-section.html'; ?>
+        
+        <!-- [Common] > FAQ Section -->
+        <?php include 'include/common/faq-section.html'; ?>
 
-        <!-- Home-Page Start Trial Section -->
+        <!-- [Common] > Social Proof Section -->
+        <?php include 'include/common/social-proof-section.html'; ?>
+
+        <!-- [Home-Page] > Start Trial Section -->
         <?php include 'include/home-page/start-trial-section.html'; ?>
         
     </main>
@@ -39,10 +45,13 @@
 
    
     <!-- ---------- Modals & Popups ---------- -->
+    <?php include 'include/popups/email-capture-popup.html'; ?>
 
-
+    
     <!-- ---------- JS Scripts ---------- -->
 
+    <!-- [Global Scripts] -->
+    <script src="js/global.js"></script>
     <!-- [Home-Page Scripts] -->
     <script src="js/home-page-scripts.js"></script>
 

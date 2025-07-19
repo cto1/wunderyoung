@@ -7,15 +7,12 @@
 
     <!-- Pricing-Page Sections -->
     <main>
-
-        <!-- [Pricing-Page] > Hero Section -->
-        <?php include 'include/pricing-page/pricing-hero-section.html'; ?>
                 
-        <!-- [Common] > Pricing Section -->
-        <?php include 'include/common/pricing-section.html'; ?>
+        <!-- [Free-Page] > Free workbooks Section -->
+        <?php include 'include/free-page/free-workbooks.html'; ?>
         
-        <!-- [Common] > FAQ Section -->
-        <?php include 'include/common/faq-section.html'; ?>
+        <!-- [Common] > Testimonial Section -->
+        <?php include 'include/common/testimonial-section.html'; ?>
         
     </main>
     
@@ -26,7 +23,7 @@
     <!-- ---------- Modals & Popups ---------- -->
     <?php include 'include/popups/email-capture-popup.html'; ?>
 
-    
+
     <!-- ---------- JS Scripts ---------- -->
 
     <!-- [Global Scripts] -->

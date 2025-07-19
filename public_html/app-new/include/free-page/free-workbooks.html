@@ -1,0 +1,129 @@
+<section class="relative w-full overflow-hidden bg-base-200 py-24 sm:py-32">
+   
+    <!-- Animated background elements -->
+    <div
+        class="absolute top-0 left-0 h-full w-full transform-gpu bg-gradient-to-br from-primary/20 via-transparent to-accent/10 opacity-15">
+    </div>
+    <div
+        class="absolute top-0 right-0 h-full w-full transform-gpu bg-gradient-to-bl from-primary/20 via-transparent to-accent/10 opacity-15">
+    </div>
+    <div class="absolute inset-0 transform-gpu bg-gradient-to-tr from-accent/10 to-primary opacity-15"></div>
+    <div class="absolute inset-0 transform-gpu bg-gradient-to-tl from-accent/10 to-primary opacity-15"></div>
+    <div class="absolute inset-0 bg-grid-pattern opacity-15"></div>
+    
+    <!-- Content -->
+    <div class="relative z-10 mx-auto max-w-7xl px-4">
+
+        <!-- Headline -->
+        <div class="flex flex-col text-center w-full mb-16">
+            <h2 class="font-['Teko'] text-5xl font-bold uppercase tracking-tight text-base-content sm:text-6xl">
+                <?= __("languages_title"); ?>
+            </h2>
+            <p class="lg:w-2/3 mx-auto mt-4 text-lg text-base-content/70">
+                <?= __("languages_subtitle"); ?>
+            </p>
+        </div>
+
+        <!-- Language Items -->
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇺🇸</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_english"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇪🇸</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_spanish"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇫🇷</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_french"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇰🇷</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_korean"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇯🇵</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_japanese"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇨🇳</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_chinese"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇮🇳</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_hindi"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇩🇪</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_german"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇸🇦</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_arabic"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇷🇺</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_russian"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇵🇹</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_portuguese"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇮🇩</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_indonesian"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇻🇳</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_vietnamese"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇮🇹</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_italian"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇹🇭</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_thai"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇵🇭</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_filipino"); ?></p>
+            </a>
+             <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇺🇦</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_ukrainian"); ?></p>
+            </a>
+             <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇹🇷</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_turkish"); ?></p>
+            </a>
+             <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇷🇴</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_romanian"); ?></p>
+            </a>
+             <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇮🇱</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_hebrew"); ?></p>
+            </a>
+             <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇿🇦</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_afrikaans"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇸🇪</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_swedish"); ?></p>
+            </a>
+            <a href="#" class="group flex h-32 flex-col items-center justify-center rounded-lg border border-white/10 bg-base-100/30 p-4 text-center backdrop-blur-lg transition-all duration-300 hover:border-primary/50 hover:bg-base-300">
+                <span class="text-4xl drop-shadow-lg transition-transform duration-300 group-hover:scale-110">🇹🇼</span>
+                <p class="mt-2 font-['Teko'] text-xl font-bold uppercase tracking-wider"><?= __("language_taiwanese"); ?></p>
+            </a>
+
+        </div>
+        
+    </div>
+</section>
+
+<!-- Gradient Border -->
+<div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary"></div>

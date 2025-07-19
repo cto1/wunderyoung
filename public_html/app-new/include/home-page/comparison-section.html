@@ -1,0 +1,116 @@
+<section class="relative w-full overflow-hidden bg-base-100 py-24 sm:py-32">
+
+    <!-- Animated background elements -->
+    <div class="animate-float absolute top-0 right-0 z-10 h-96 w-96 rounded-full bg-accent opacity-10 blur-3xl"
+        style="animation-delay: -4s;">
+    </div>
+    <div class="animate-float absolute bottom-0 left-0 z-10 h-96 w-96 rounded-full bg-secondary opacity-10 blur-3xl"
+        style="animation-delay: -4s;">
+    </div>
+
+    <!-- Content -->
+    <div class="mx-auto max-w-7xl px-4">
+
+        <!-- Headline -->
+        <div class="flex flex-col text-center w-full mb-24">
+            <h2 class="font-['Teko'] text-4xl sm:text-5xl font-bold uppercase leading-tight tracking-tight sm:text-6xl">
+                <?= __("comparison_title_prefix_part1"); ?>
+                <br />
+                <?= __("comparison_title_prefix_part2"); ?>
+                <br />
+                <span class="relative top-6 inline-block text-error">
+                    <span>
+                        <span class="relative z-10">
+                            <?= __("comparison_title_highlight"); ?>
+                        </span>
+                        <span
+                            class="absolute -top-7 -left-6 -rotate-6 font-sans text-base font-medium normal-case text-base-content/60">
+                            <?= __("comparison_annot_1"); ?>
+                        </span>
+                        <span
+                            class="absolute -top-7 -right-6 rotate-3 font-sans text-base font-medium normal-case text-base-content/60">
+                            <?= __("comparison_annot_2"); ?>
+                        </span>
+                        <span
+                            class="absolute -bottom-5 -right-5 -rotate-3 font-sans text-base font-medium normal-case text-base-content/60">
+                            <?= __("comparison_annot_3"); ?>
+                        </span>
+                        <span
+                            class="absolute -bottom-5 -left-5 rotate-2 font-sans text-base font-medium normal-case text-base-content/60">
+                            <?= __("comparison_annot_4"); ?>
+                        </span>
+                    </span>
+                    <?= __("comparison_title_suffix"); ?>
+                </span>
+            </h2>
+        </div>
+
+        <!-- Comparison Cards -->
+        <div
+            class="relative mx-auto max-w-3xl rounded-xl border border-primary bg-base-200/50 p-6 backdrop-blur-lg sm:p-8">
+            <div
+                class="pointer-events-none absolute top-0 left-0 h-8 w-8 rounded-tl-xl border-l-2 border-t-2 border-primary/80">
+            </div>
+            <div
+                class="pointer-events-none absolute top-0 right-0 h-8 w-8 rounded-tr-xl border-r-2 border-t-2 border-primary/80">
+            </div>
+            <div
+                class="pointer-events-none absolute bottom-0 left-0 h-8 w-8 rounded-bl-xl border-l-2 border-b-2 border-primary/80">
+            </div>
+            <div
+                class="pointer-events-none absolute bottom-0 right-0 h-8 w-8 rounded-br-xl border-r-2 border-b-2 border-primary/80">
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 text-center">
+                <div class="col-span-1"></div>
+                <div class="font-['Teko'] text-xl uppercase tracking-wider text-accent">
+                    <?= __("feature_fun"); ?>
+                </div>
+                <div class="font-['Teko'] text-xl uppercase tracking-wider text-accent">
+                    <?= __("feature_easy"); ?>
+                </div>
+                <div class="font-['Teko'] text-xl uppercase tracking-wider text-accent">
+                    <?= __("feature_varied"); ?>
+                </div>
+            </div>
+
+            <div class="h-px w-full my-2 bg-gradient-to-r from-primary via-accent to-secondary"></div>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-4 items-center gap-4 rounded-lg p-2">
+                    <div class="col-span-1 flex items-center gap-4">
+                        <img alt="Duolingo logo" src="https://workbookpdf.com/_next/static/media/duolingo.dd74a962.png"
+                            class="h-12 w-12 sm:h-16 sm:w-16 rounded-md">
+                    </div>
+                    <div class="text-center"><i class="fa-solid fa-circle-check text-2xl text-green-600"></i></div>
+                    <div class="text-center"><i class="fa-solid fa-circle-check text-2xl text-green-600"></i></div>
+                    <div class="text-center"><i class="fa-solid fa-circle-xmark text-2xl text-red-600"></i></div>
+                </div>
+                <div class="grid grid-cols-4 items-center gap-4 rounded-lg p-2">
+                    <div class="col-span-1 flex items-center gap-4">
+                        <img alt="Anki logo" src="https://workbookpdf.com/_next/static/media/anki.60c9f2a2.png"
+                            class="h-12 w-12 sm:h-16 sm:w-16 rounded-md">
+                    </div>
+                    <div class="text-center"><i class="fa-solid fa-circle-xmark text-2xl text-green-600"></i></div>
+                    <div class="text-center"><i class="fa-solid fa-circle-xmark text-2xl text-green-600"></i></div>
+                    <div class="text-center"><i class="fa-solid fa-circle-check text-2xl text-red-600"></i></div>
+                </div>
+                <div class="grid grid-cols-4 items-center gap-4 rounded-lg bg-primary/10 p-2 ring-1 ring-primary/50">
+                    <div class="col-span-1 flex items-center gap-4">
+                        <img alt="Workbooks logo"
+                            src="https://workbookpdf.com/_next/static/media/workbooks.cc0a9fbf.png"
+                            class="h-12 w-12 sm:h-16 sm:w-16 rounded-md">
+                    </div>
+                    <div class="text-center"><i class="fa-solid fa-circle-check text-2xl text-green-600"></i></div>
+                    <div class="text-center"><i class="fa-solid fa-circle-check text-2xl text-green-600"></i></div>
+                    <div class="text-center"><i class="fa-solid fa-circle-check text-2xl text-green-600"></i></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Gradient Border -->
+<div class="h-px w-full bg-gradient-to-r from-primary via-accent to-secondary"></div>
