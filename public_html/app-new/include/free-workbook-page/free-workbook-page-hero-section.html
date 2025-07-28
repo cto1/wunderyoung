@@ -1,0 +1,54 @@
+<section class="relative w-full overflow-hidden py-24 sm:py-32">
+    <div class="mx-auto grid max-w-5xl grid-cols-1 items-center gap-12 px-4 md:grid-cols-[1fr_1.5fr] md:gap-20">
+
+        <div class="relative flex h-full w-full flex-col items-center justify-center self-stretch">
+            <div class="flex items-center justify-start gap-2">
+                <p class="font-['Teko'] text-2xl text-base-content">
+                    <?= __("image_annotation_exercises"); ?>
+                </p>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 36" class="w-10 text-base-content pt-4">
+                    <path opacity="1"
+                        d="M0.276766 2.62072C2.01704 0.658289 4.31028 0.295086 6.44635 0.201076C9.4159 0.105352 12.3994 0.291267 15.2258 0.746364C28.1516 3.15236 37.6633 9.67512 44.0832 19.5586C45.7048 22.0775 46.9236 24.8788 48.4544 27.8587C50.9257 25.3571 51.4949 21.9375 53.8999 19.244C54.7147 20.3945 54.2572 21.4837 53.9045 22.3935C52.4413 26.1221 50.9036 29.8766 49.2693 33.5928C48.4673 35.374 47.543 35.8368 45.8038 35.1491C42.1545 33.761 39.4457 31.4749 37.774 28.3288C37.7298 28.2008 37.8869 27.9317 38.0743 27.5088C41.5212 27.1048 41.9926 30.8807 45.1915 31.207C44.8574 26.381 42.5036 22.4681 39.7471 18.8377C36.8497 15.0412 33.5716 11.5912 29.3309 8.97528C25.1868 6.3976 20.5409 4.78117 15.589 3.48545C10.6894 2.1 5.62218 1.91837 0.276766 2.62072Z"
+                        fill="currentColor"></path>
+                </svg>
+            </div>
+            <div class="relative inline-block rounded-xl bg-gradient-to-br from-primary to-accent p-px">
+                <img alt="Free Korean workbook sample" src="https://d2k6mdhdsocfm.cloudfront.net/ko_exercise_1.png"
+                    class="block max-h-[520px] rounded-[10px] object-contain">
+            </div>
+        </div>
+
+        <div class="text-center md:text-left">
+            <h3 class="font-['Teko'] text-4xl font-bold uppercase tracking-wider xl:text-5xl">
+                <span class="text-secondary">
+                    <?= __("section_free_workbook_highlight"); ?>
+                </span><span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    <?= __("section_free_workbook_title"); ?>
+                </span>
+            </h3>
+            <p class="mt-4 text-base-content/80">
+                <?= __("section_free_workbook_subtitle"); ?>
+            </p>
+
+            <form class="mt-6 space-y-3">
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">
+                            <?= __("form_label_send_to"); ?>
+                        </span>
+                    </label>
+                    <input placeholder="<?= __("form_placeholder_email"); ?>" type="email" class="input input-bordered
+                    w-full" required />
+                </div>
+                <button type="submit"
+                    class="btn h-auto min-h-0 w-full rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary !mt-6 p-3 font-['Teko'] text-xl uppercase tracking-wider text-white transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0]">
+                    <?= __("form_button_send_workbook"); ?>
+                </button>
+                <p class="pt-2 text-center text-sm text-base-content/60">
+                    <?= __("form_subtext_unlock_beauty"); ?>
+                </p>
+            </form>
+        </div>
+
+    </div>
+</section>

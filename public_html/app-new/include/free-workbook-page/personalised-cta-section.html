@@ -1,0 +1,49 @@
+<section class="bg-base-200 py-24 sm:py-32">
+    <div class="mx-auto max-w-4xl px-4">
+        <div class="relative">
+            <div
+                class="relative z-10 flex flex-col items-center gap-8 rounded-3xl bg-base-100 p-8 text-center backdrop-blur-lg md:p-16">
+
+                <div
+                    class="pointer-events-none absolute top-0 left-0 h-8 w-8 rounded-tl-xl border-l-2 border-t-2 border-primary/80">
+                </div>
+                <div
+                    class="pointer-events-none absolute top-0 right-0 h-8 w-8 rounded-tr-xl border-r-2 border-t-2 border-primary/80">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 left-0 h-8 w-8 rounded-bl-xl border-l-2 border-b-2 border-primary/80">
+                </div>
+                <div
+                    class="pointer-events-none absolute bottom-0 right-0 h-8 w-8 rounded-br-xl border-r-2 border-b-2 border-primary/80">
+                </div>
+
+                <div class="text-center">
+                    <h2 class="font-['Teko'] text-5xl font-bold uppercase tracking-tight sm:text-6xl">
+                        <?= __("final_cta_title"); ?>
+                    </h2>
+                    <p class="mt-4 max-w-xl text-lg text-base-content/70">
+                        <?= __("final_cta_subtitle_topics"); ?>
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3">
+                    <div class="badge badge-outline gap-2 border-white/20 p-4 font-sans font-bold">🥖
+                        <?= __("final_cta_topic_1"); ?>
+                    </div>
+                    <div class="badge badge-outline gap-2 border-white/20 p-4 font-sans font-bold">👠
+                        <?= __("final_cta_topic_2"); ?>
+                    </div>
+                    <div class="badge badge-outline gap-2 border-white/20 p-4 font-sans font-bold">🖼️
+                        <?= __("final_cta_topic_3"); ?>
+                    </div>
+                </div>
+
+                <a href="/french"
+                    class="btn h-auto min-h-[3.5rem] rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary p-4 font-['Teko'] text-xl uppercase tracking-wider text-base-100 transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0]">
+                    <?= __("final_cta_button"); ?>
+                    <i class="fa-solid fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

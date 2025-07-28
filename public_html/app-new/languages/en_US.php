@@ -202,6 +202,25 @@ return [
     'language_taiwanese' => 'Taiwanese',
 
 
+    // ---------- Free-workbook-Page ----------
+    // FREE Workbook Page Hero Section 
+    'image_annotation_exercises' => 'to exercises',
+    'section_free_workbook_highlight' => 'Free',
+    'section_free_workbook_title' => 'French workbook for beginners with printable PDF',
+    'section_free_workbook_subtitle' => 'Get 10 fun & illustrated exercises to master your French skills 🐲 We\'ll send you a PDF version you can print, with answers included.',
+    'form_label_send_to' => 'Where should we send it?',
+    'form_placeholder_email' => 'your.email@address.com',
+    'form_button_send_workbook' => 'Send me the workbook',
+    'form_subtext_unlock_beauty' => 'Unlock the beauty of French literature, art, and cuisine with a strong language foundation.',
+
+    // Personalised CTA Section
+    'final_cta_title' => 'Your Personalized French Learning Adventure Awaits!',
+    'final_cta_subtitle_topics' => 'Make your own French workbook based on your level and topics of interest. Learn French while exploring topics you love!',
+    'final_cta_topic_1' => 'Food',
+    'final_cta_topic_2' => 'Fashion',
+    'final_cta_topic_3' => 'Art',
+    'final_cta_button' => 'Personalized Workbooks',
+
 
     /* ---------------------------------------------------------- */
     /* -------------------- [Common Section] -------------------- */
@@ -255,7 +274,7 @@ return [
     'faq_q8_question' => 'Can I reuse the workbook for my students?',
     'faq_q8_answer_p1' => 'You need to purchase Commercial Rights ($9 per workbook). Then you have full ownership of the exercises generated. You can even resell them to your students! Reach out to our support team to get Commercial Rights.',
 
-     // Testimonial Section
+    // Testimonial Section
     'testimonial_quote' => 'I fell in love with French food on my Paris trip. So I started to learn French to order delicious pastries and cheeses. These PDFs help me to practice the topics I need and it was so fun to learn with my personal interests! Thank you so much!',
     'testimonial_author_name' => 'Jihyeon Won',
     'testimonial_author_desc' => 'French student 🇫🇷 (A1)',
