@@ -1,9 +1,10 @@
-<header class="bg-base-300 relativetop-0 z-50 shadow-lg shadow-black/20">
-    <div class="max-w-[1280px] mx-auto navbar flex justify-between px-4 py-3">
+<header class="bg-base-300 top-0 z-50 shadow-lg shadow-black/20">
+    <div class="max-w-[1280px] mx-auto px-4 py-3 flex items-center justify-between">
 
-        <!-- Left side Content -->
+        <!-- Left: Logo -->
         <div>
-            <a href="javascript:void(0);" class="flex items-center gap-3 text-2xl font-bold transition-all duration-300 hover:opacity-80"
+            <a href="javascript:void(0);"
+                class="flex items-center gap-3 text-2xl font-bold transition-all duration-300 hover:opacity-80"
                 aria-label="Homepage">
 
                 <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="484.000000pt" height="346.000000pt"
@@ -22,61 +23,103 @@
             </a>
         </div>
 
-        <!-- Right side Content -->
-        <div>
+        <!-- Center: Desktop NavLinks -->
+        <div class="hidden lg:flex justify-center flex-1 font-['Teko'] text-lg">
+            <ul class="menu menu-horizontal px-1 uppercase font-bold tracking-wider flex items-center text-lg">
+                <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
+                        <?= __("nav_how_its_works"); ?>
+                    </a></li>
+                <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
+                        <?= __("nav_features"); ?>
+                    </a></li>
+                <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
+                        <?= __("nav_pricing"); ?>
+                    </a></li>
+                <li>
+                    <details class="dropdown dropdown-end group" data-auto-close>
+                        <summary
+                            class="list-none flex items-center gap-2 px-4 py-1 cursor-pointer transition-colors duration-200 hover:text-accent">
+                            <span class="relative top-[1px]">
+                                <?= __("nav_resources"); ?>
+                            </span>
+                        </summary>
+                        <ul tabindex="0"
+                            class="dropdown-content z-[1] menu p-2 shadow-xl bg-base-200 rounded-md w-52 top-6 border border-white/10 uppercase">
+                            <li><a class="hover:text-accent">
+                                    <?= __("nav_resources_roi_calculator"); ?>
+                                </a></li>
+                            <li><a class="hover:text-accent">
+                                    <?= __("nav_resources_ai_analysis"); ?>
+                                </a></li>
+                            <li><a class="hover:text-accent">
+                                    <?= __("nav_resources_worksheets"); ?>
+                                </a></li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+        </div>
 
-            <!-- Desktop Navbar Content  -->
-            <div class="hidden lg:flex items-center font-['Teko'] text-lg">
-                <ul class="menu menu-horizontal px-1 uppercase font-bold tracking-wider flex items-center text-lg">
-                    <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
-                            <?= __("nav_how_its_works"); ?>
-                        </a></li>
-                    <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
-                            <?= __("nav_features"); ?>
-                        </a></li>
-                    <li><a class="px-4 transition-colors duration-200 hover:text-accent relative top-[1px] py-1">
-                            <?= __("nav_pricing"); ?>
-                        </a></li>
+        <!-- Right: CTA + Lang + Mobile Menu -->
+        <div class="flex items-center gap-2">
+            
+            <!-- Language Selector -->
+            <div>
+                <details class="dropdown dropdown-end group cursor-pointer" data-auto-close>
+                    <summary class="list-none flex items-center gap-2 px-0 sm:px-4 py-1 cursor-pointer hover:opacity-80 transition">
+                        <img src="https://flagcdn.com/w40/us.png" alt="EN" class="w-8 h-8 rounded-full object-cover" />
+                        <p>EN</p>
+                    </summary>
+                    <ul tabindex="0"
+                        class="dropdown-content z-[50] menu flex flex-col gap-2 p-4 shadow-xl bg-base-200 rounded-md w-60 mt-1 !right-2.5 border border-white/10 uppercase font-bold tracking-wider">
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent rounded"><img
+                                    src="https://flagcdn.com/w40/us.png" class="w-8 h-8 rounded-full" />English</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/es.png" class="w-8 h-8 rounded-full" />Spanish</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/pt.png" class="w-8 h-8 rounded-full" />Portuguese</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/ar.png" class="w-8 h-8 rounded-full" />Arabic</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/cn.png" class="w-8 h-8 rounded-full" />Chinese</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/jp.png" class="w-8 h-8 rounded-full" />Japanese</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/de.png" class="w-8 h-8 rounded-full" />German</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/fr.png" class="w-8 h-8 rounded-full" />French</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/kr.png" class="w-8 h-8 rounded-full" />Korean</a></li>
+                        <li><a class="flex items-center gap-3 p-2 hover:text-accent"><img
+                                    src="https://flagcdn.com/w40/it.png" class="w-8 h-8 rounded-full" />Italian</a></li>
+                    </ul>
+                </details>
+            </div>
 
-                    <li>
-                        <details class="dropdown dropdown-end group">
-                            <summary
-                                class="list-none flex items-center gap-2 px-4 py-1 cursor-pointer transition-colors duration-200 hover:text-accent"
-                                style="list-style: none;">
-                                <span class="relative top-[1px]">
-                                    <?= __("nav_resources"); ?>
-                                </span>
-                            </summary>
-                            <ul tabindex="0"
-                                class="dropdown-content z-[1] menu p-2 shadow-xl bg-base-200 rounded-md w-52 top-6 border border-white/10 uppercase">
-                                <li><a class="hover:text-accent">
-                                        <?= __("nav_resources_roi_calculator"); ?>
-                                    </a></li>
-                                <li><a class="hover:text-accent">
-                                        <?= __("nav_resources_ai_analysis"); ?>
-                                    </a></li>
-                                <li><a class="hover:text-accent">
-                                        <?= __("nav_resources_worksheets"); ?>
-                                    </a></li>
-                            </ul>
-                        </details>
-                    </li>
-                </ul>
-                <div class="w-px h-6 bg-accent mx-6 skew-x-[-15deg]"></div>
+            <!-- Desktop CTA -->
+            <div class="hidden lg:flex items-center">
+                <!-- <div class="w-px h-6 bg-accent mx-4 skew-x-[-15deg]"></div> -->
                 <a href="javascript:void(0);"
-                    class="py-2 px-4 rounded-md uppercase font-bold tracking-wider ml-4 transition-all duration-500 hover:-translate-y-0.5 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
+                    class="py-2 px-4 rounded-md uppercase font-bold tracking-wider transition-all duration-500 hover:-translate-y-0.5 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
                     <?= __("nav_get_started"); ?>
                 </a>
             </div>
 
-            <!-- Mobile Navbar Content -->
-            <div class="flex items-center lg:hidden">
-                <details class="dropdown dropdown-end">
-                    <summary class="btn btn-ghost sm:mr-3">
+            <!-- Tablet only CTA (outside menu) -->
+            <a href="javascript:void(0);"
+                class="hidden sm:flex lg:hidden py-2 px-4 rounded-md uppercase font-bold tracking-wider transition-all duration-500 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
+                <?= __("nav_get_started"); ?>
+            </a>
+
+            <!-- Tablet/Mobile: Hamburger Menu -->
+            <div class="lg:hidden flex items-center gap-2">
+                <details class="dropdown dropdown-end" data-auto-close>
+                    <summary class="btn btn-ghost sm:mr-2">
                         <i class="fa-solid fa-bars text-2xl"></i>
                     </summary>
                     <ul tabindex="0"
                         class="dropdown-content z-[50] menu p-4 shadow-xl bg-base-200 rounded-md w-72 mt-1 !right-2.5 border border-white/10 uppercase font-bold tracking-wider">
+                        
                         <li><a class="hover:text-accent">
                                 <?= __("nav_how_its_works"); ?>
                             </a></li>
@@ -101,20 +144,17 @@
                                 <?= __("nav_resources_worksheets"); ?>
                             </a></li>
 
-                        <div class="sm:hidden divider my-4 h-px border-0 bg-gradient-to-r from-primary to-accent"></div>
+                        <div class="divider my-4 h-px border-0 bg-gradient-to-r from-primary to-accent"></div>
+
+                        <!-- CTA button visible only on mobile inside dropdown -->
                         <a href="javascript:void(0);"
                             class="flex sm:hidden btn btn-primary rounded-md uppercase font-bold tracking-wider ml-2 transition-all duration-500 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
                             <?= __("nav_get_started"); ?>
                         </a>
-
                     </ul>
                 </details>
-                <a href="javascript:void(0);"
-                    class="hidden sm:flex py-2 px-4 rounded-md uppercase font-bold tracking-wider transition-all duration-500 bg-gradient-to-r from-primary via-accent to-secondary bg-[length:200%_auto] hover:bg-[position:100%_0] text-white">
-                    <?= __("nav_get_started"); ?>
-                </a>
-            </div>
 
+            </div>
         </div>
 
     </div>
