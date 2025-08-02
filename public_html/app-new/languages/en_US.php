@@ -222,6 +222,27 @@ return [
     'final_cta_button' => 'Personalized Workbooks',
 
 
+    // ---------- New-Page ----------
+    'generator_step1_title' => 'I want to practice...',
+    'generator_step1_placeholder' => 'Search for a language...',
+    'generator_step2_title' => 'My current level is...',
+    'level_a1' => 'Beginner',
+    'level_a2' => 'Elementary',
+    'level_b1' => 'Intermediate',
+    'level_b2' => 'Upper',
+    'level_c1' => 'Advanced',
+    'level_c2' => 'Mastery',
+    'generator_step3_title' => 'My favorite topics are...',
+    'generator_step3_subtitle' => 'Add up to 3 topics, or leave empty for a random selection.',
+    'generator_step3_placeholder' => 'K-Pop, Food, Culture...',
+    'generator_step3_add_button' => 'Add',
+    'generator_step3_no_topics' => 'Your added topics will appear here.',
+    'generator_cta_button' => 'Create Workbook',
+    'generator_cta_subtext1' => 'We\'ll generate a custom PDF workbook for you.',
+    'generator_cta_subtext2' => '~3 hours of exercises with answers at the end.',
+    'generator_step3_error_limit' => 'You can add a maximum of 3 topics.',
+
+
     /* ---------------------------------------------------------- */
     /* -------------------- [Common Section] -------------------- */
 
