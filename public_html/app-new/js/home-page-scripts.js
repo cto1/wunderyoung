@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedText = event.target.options[event.target.selectedIndex].text;
             demoOutput.textContent = selectedText;
             demoOutput.classList.remove('text-base-content/40');
-            demoOutput.classList.add('text-base-content', 'font-bold', 'text-2xl', 'font-[\'Teko\']', 'tracking-wider');
+            demoOutput.classList.add('text-base-content', 'font-bold', 'text-2xl', 'font-[\'Nunito\']', 'tracking-wider');
         });
     }
 

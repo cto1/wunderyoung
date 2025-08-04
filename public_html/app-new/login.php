@@ -35,16 +35,16 @@
 
                     <!-- Login Form Title + SubTitle -->
                     <div id="login-form-title">
-                        <h2 class="mt-2 font-['Teko'] font-bold uppercase tracking-tight leading-tight">
-                            <span class="text-5xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"><?= __("login_title_password"); ?></span>
+                        <h2 class="mt-2 font-['Nunito'] font-bold uppercase tracking-tight leading-tight">
+                            <span class="text-4xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"><?= __("login_title_password"); ?></span>
                         </h2>
                         <p class="text-base-content"><?= __("login_subtitle_password"); ?></p>
                     </div>
 
                     <!-- Magic Form Title + SubTitle -->
                     <div id="magic-form-title" class="hidden">
-                        <h2 class="mt-2 font-['Teko'] font-bold uppercase tracking-tight leading-tight">
-                            <span class="text-5xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"><?= __("login_title_part1"); ?></span>
+                        <h2 class="mt-2 font-['Nunito'] font-bold uppercase tracking-tight leading-tight">
+                            <span class="text-4xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"><?= __("login_title_part1"); ?></span>
                             <br>
                             <span class="text-3xl relative -top-2"><?= __("login_title_part2"); ?></span>
                         </h2>
@@ -86,7 +86,7 @@
                     </div>
 
                     <!-- Button -->
-                    <button type="button" id="loginButton" class="btn h-auto min-h-0 w-full rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary py-3.5 font-['Teko'] text-xl uppercase tracking-wider text-white transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0]">
+                    <button type="button" id="loginButton" class="btn h-auto min-h-0 w-full rounded-md border-none bg-gradient-to-r from-primary via-accent to-secondary py-3.5 font-['Nunito'] text-xl uppercase tracking-wider text-white transition-all duration-500 hover:-translate-y-0.5 bg-[length:200%_auto] hover:bg-[position:100%_0]">
                     </button>
 
                     <!-- Message Container -->
