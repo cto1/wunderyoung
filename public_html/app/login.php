@@ -10,8 +10,8 @@ include 'include/header.html';
             <h2 class="card-title text-2xl font-bold text-center mb-6">✨ Magic Link Access</h2>
             
             <div class="text-center mb-6">
-                <p class="text-gray-600">Enter your email to sign in or create an account</p>
-                <p class="text-sm text-gray-500 mt-2">We'll send you a secure link - no passwords needed!</p>
+                <p class="text-base-content">Enter your email to sign in or create an account</p>
+                <p class="text-sm text-base-content mt-2">We'll send you a secure link - no passwords needed!</p>
             </div>
             
             <!-- Success Message -->
@@ -56,7 +56,7 @@ include 'include/header.html';
             </div>
 
             <div class="text-center mt-6">
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-base-content">
                     By continuing, you agree to our 
                     <a href="/terms.php" class="link link-primary">Terms of Service</a> and 
                     <a href="/privacy.php" class="link link-primary">Privacy Policy</a>

@@ -10,20 +10,20 @@ include '../app/include/header.html';
             <div id="loading" class="space-y-4">
                 <div class="loading loading-spinner loading-lg text-primary"></div>
                 <h2 class="text-xl font-semibold">🔐 Signing you in...</h2>
-                <p class="text-gray-600">Please wait while we verify your magic link</p>
+                <p class="text-base-content">Please wait while we verify your magic link</p>
             </div>
             
             <div id="success" class="space-y-4 hidden">
                 <div class="text-6xl">✨</div>
                 <h2 class="text-2xl font-bold text-success">Welcome back!</h2>
-                <p class="text-gray-600">You have been successfully signed in.</p>
-                <p class="text-sm text-gray-500">Redirecting to your dashboard...</p>
+                <p class="text-base-content">You have been successfully signed in.</p>
+                <p class="text-sm text-base-content">Redirecting to your dashboard...</p>
             </div>
             
             <div id="error" class="space-y-4 hidden">
                 <div class="text-6xl">❌</div>
                 <h2 class="text-2xl font-bold text-error">Login Failed</h2>
-                <p id="error-message" class="text-gray-600"></p>
+                <p id="error-message" class="text-base-content"></p>
                 <a href="/app/login.php" class="btn btn-primary">Try Again</a>
             </div>
         </div>

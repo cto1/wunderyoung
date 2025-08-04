@@ -9,16 +9,16 @@ include 'website/include/header.html';
 <section class="w-full py-16 bg-gradient-to-br from-blue-50 to-purple-50">
     <div class="w-full">
         <div class="container mx-auto max-w-6xl px-4 text-center">
-            <h1 class="text-5xl font-bold mb-6 text-gray-800">
+            <h1 class="text-5xl font-bold mb-6 text-base-content">
                 Final Pricing Plans
             </h1>
-            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p class="text-xl text-base-content mb-8 max-w-3xl mx-auto">
                 Screen-free learning that fits every family. Start free, upgrade when you're ready.
             </p>
             <div class="flex justify-center items-center gap-4 mb-8">
-                <span class="text-gray-600">Monthly</span>
+                <span class="text-base-content">Monthly</span>
                 <div class="badge badge-success">No Annual Lock-in</div>
-                <span class="text-gray-600">Cancel Anytime</span>
+                <span class="text-base-content">Cancel Anytime</span>
             </div>
         </div>
     </div>
@@ -36,12 +36,12 @@ include 'website/include/header.html';
                         <div class="text-center mb-6">
                             <div class="text-4xl mb-4">🆓</div>
                             <h3 class="text-2xl font-bold mb-2">Family Free</h3>
-                            <p class="text-gray-600">"Perfect for getting started"</p>
+                            <p class="text-base-content">"Perfect for getting started"</p>
                         </div>
                         
                         <div class="text-center mb-6">
-                            <div class="text-4xl font-bold text-gray-800">£0</div>
-                            <div class="text-gray-600">/month</div>
+                            <div class="text-4xl font-bold text-base-content">£0</div>
+                            <div class="text-base-content">/month</div>
                         </div>
                         
                         <div class="space-y-3 mb-8">
@@ -71,7 +71,7 @@ include 'website/include/header.html';
                             </div>
                         </div>
                         
-                        <div class="text-sm text-gray-600 mb-6 p-3 bg-gray-50 rounded-lg">
+                        <div class="text-sm text-base-content mb-6 p-3 bg-gray-50 rounded-lg">
                             <strong>Perfect for:</strong> Small families wanting to try the service
                         </div>
                         
@@ -93,12 +93,12 @@ include 'website/include/header.html';
                         <div class="text-center mb-6">
                             <div class="text-4xl mb-4">💎</div>
                             <h3 class="text-2xl font-bold mb-2 text-primary">Family Plus</h3>
-                            <p class="text-gray-600">"Most families choose this!"</p>
+                            <p class="text-base-content">"Most families choose this!"</p>
                         </div>
                         
                         <div class="text-center mb-6">
                             <div class="text-4xl font-bold text-primary">£6</div>
-                            <div class="text-gray-600">/month</div>
+                            <div class="text-base-content">/month</div>
                             <div class="text-sm text-green-600 font-semibold mt-1">
                                 Less than £2 per week - cheaper than a coffee!
                             </div>
@@ -135,7 +135,7 @@ include 'website/include/header.html';
                             </div>
                         </div>
                         
-                        <div class="text-sm text-gray-600 mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div class="text-sm text-base-content mb-6 p-3 bg-blue-50 rounded-lg border border-blue-200">
                             <strong>Perfect for:</strong> Most UK families (2-4 kids)
                         </div>
                         
@@ -152,12 +152,12 @@ include 'website/include/header.html';
                         <div class="text-center mb-6">
                             <div class="text-4xl mb-4">🏫</div>
                             <h3 class="text-2xl font-bold mb-2">Classroom</h3>
-                            <p class="text-gray-600">"For teachers & educators"</p>
+                            <p class="text-base-content">"For teachers & educators"</p>
                         </div>
                         
                         <div class="text-center mb-6">
-                            <div class="text-4xl font-bold text-gray-800">£25</div>
-                            <div class="text-gray-600">/month</div>
+                            <div class="text-4xl font-bold text-base-content">£25</div>
+                            <div class="text-base-content">/month</div>
                             <div class="text-sm text-green-600 font-semibold mt-1">
                                 Just 83p per child per month
                             </div>
@@ -198,7 +198,7 @@ include 'website/include/header.html';
                             </div>
                         </div>
                         
-                        <div class="text-sm text-gray-600 mb-6 p-3 bg-gray-50 rounded-lg">
+                        <div class="text-sm text-base-content mb-6 p-3 bg-gray-50 rounded-lg">
                             <strong>Perfect for:</strong> Teachers, homeschool groups, tutoring centers
                         </div>
                         

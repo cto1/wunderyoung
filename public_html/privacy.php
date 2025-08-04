@@ -9,7 +9,7 @@ include 'website/include/header.html';
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <div class="prose prose-lg max-w-none">
             <h1 class="text-4xl font-bold mb-6">Privacy Policy</h1>
-            <p class="text-gray-600 mb-8">Last updated: <?php echo date('d F Y'); ?></p>
+            <p class="text-base-content mb-8">Last updated: <?php echo date('d F Y'); ?></p>
 
             <div class="bg-base-200 p-6 rounded-lg mb-8">
                 <p class="text-lg leading-relaxed">
